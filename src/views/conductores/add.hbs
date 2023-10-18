@@ -1,0 +1,36 @@
+<div class="container p-4">
+    <div class="row">
+        <form class="needs-validation" action="/addconductor" method="post" novalidate>
+            <div class="col-md-9 mx-auto">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <h3 class="text-uppercase">AGREGAR CONDUCTORES</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="input-group mt-3 ">
+                            <label for="id_conductor" class="input-group-text">CEDULA: </label>
+                            <input class="form-control" type="text" name="id_conductor" id="id_conductor"
+                                value="{{conductor.id_conductor}}" placeholder="" autofocus required>
+                        </div>
+                        <div class="input-group mt-3">
+                            <label for="nombre" class="input-group-text">NOMBRE: </label>
+                            <input class="form-control" type="text" name="nombre" id="nombre"
+                                value="{{conductor.nombre}}" placeholder="">
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label for="telefono" class="input-group-text">TELEFONO: </label>
+                            <input class="form-control" type="text" name="telefono" id="telefono"
+                                value="{{conductor.telefono}}" placeholder="">
+                        </div>
+
+                        <br>
+                        <div class="card text-center">
+                            <button type="submit" class="btn btn-success">Inspeccionar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

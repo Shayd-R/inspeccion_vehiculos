@@ -1,0 +1,191 @@
+<style>
+    body {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .respuesta-seleccionada {
+        color: #fff !important;
+    }
+
+    .accordion-body {
+        background-color: rgb(204, 226, 248);
+    }
+
+    .preguntas {
+        padding: 35px 40px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        width: 100%;
+        background-color: #fffffffb;
+    }
+
+    .botones {
+        text-align: center;
+        width: 100%;
+    }
+
+
+    .accordion-button:not(.collapsed) {
+        background-color: rgb(255, 255, 255);
+        color: #000000;
+    }
+
+    .accordion-button:is(.collapsed) {
+        background-color: rgb(255, 255, 255);
+        color: #000000;
+    }
+
+    .accordion-button::after {
+        display: none;
+    }
+
+    .accordion-button:is(.collapsed)::after {
+        box-shadow: none;
+
+    }
+
+    .accordion-button:not(.collapsed)::after {
+        box-shadow: none;
+
+    }
+</style>
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-9  mx-auto">
+
+            <form id="encuestaForm">
+                {{#each especificacion}}
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item" style="margin-top: 10px;">
+                        <div class="accordion-header" style=" background-color: rgb(204, 226, 248);">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#_acor{{id_especificaciones}}" aria-expanded="true"
+                                aria-controls="_acor{{id_especificaciones}}" style="border-radius: 20px;">
+                                <h4 style="font-family: 'Open Sans', sans-serif; font-weight: 600; width:100%">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span>{{id_especificaciones}}. {{detalle}}</span>
+                                        </div>
+                                        <div class="col d-flex justify-content-end">
+                                            <i class="fa-solid fa-chevron-up" style="color: #000000; display:none;"></i>
+                                            <i class="fa-solid fa-chevron-down" style="color: #000000; "></i>
+                                        </div>
+                                    </div>
+                                </h4>
+                            </button>
+                        </div>
+                        <div id="_acor{{id_especificaciones}}" class="accordion-collapse collapse"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                {{#each ../subespecificacion}}
+                                {{#if (eq especificacion_id ../id_especificaciones)}}
+                                <div class="preguntas" style="">
+
+                                    <h5>{{detalle}}</h5>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col">
+                                            <button type="button" class="respuesta btn btn-outline-success botones"
+                                                data-pregunta="{{id_subEspecificaciones}}"
+                                                data-respuesta="bueno">Bueno</button>
+                                        </div>
+                                        <div class="col">
+                                            <button type="button" class="respuesta btn btn-outline-danger botones"
+                                                data-pregunta="{{id_subEspecificaciones}}"
+                                                data-respuesta="malo">Malo</button>
+                                        </div>
+                                        <div class="col">
+                                            <button type="button" class="respuesta btn btn-outline-secondary botones"
+                                                data-pregunta="{{id_subEspecificaciones}}" data-respuesta="no-aplica">No
+                                                Aplica</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                {{/if}}
+                                {{/each}}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                {{/each}}
+                <br>
+               <div class="card text-center" style="">
+                    <button type="submit"  class="btn btn-success">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+    var respuestas = {};
+    var botonesRespuesta = document.querySelectorAll('.respuesta');
+    botonesRespuesta.forEach(function (boton) {
+        boton.addEventListener('click', function () {
+            var pregunta = this.getAttribute('data-pregunta');
+            var respuesta = this.getAttribute('data-respuesta');
+            respuestas[pregunta] = respuesta;
+
+            botonesRespuesta.forEach(function (otroBoton) {
+                if (otroBoton.getAttribute('data-pregunta') === pregunta) {
+                    otroBoton.classList.remove('respuesta-seleccionada');
+                    otroBoton.style.backgroundColor = '';
+                }
+            });
+            if (respuesta === 'bueno') {
+                this.style.backgroundColor = 'green';
+            } else if (respuesta === 'malo') {
+                this.style.backgroundColor = 'red';
+            } else if (respuesta === 'no-aplica') {
+                this.style.backgroundColor = 'grey';
+            }
+            this.classList.add('respuesta-seleccionada');
+            console.log(respuestas);
+        });
+    });
+
+    document.getElementById('encuestaForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        // Realizar una solicitud HTTP POST a la ruta deseada
+        fetch('/inpectVehiculos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(respuestas)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Manejar la respuesta de la ruta si es necesario
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+    // Obtener todos los botones del acordeón
+    const accordionButtons = document.querySelectorAll('.accordion-button');
+    // Agregar evento click a cada botón
+    accordionButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Obtener el icono chevron-down y chevron-right del botón
+            const chevronDown = button.querySelector('.fa-chevron-down');
+            const chevronRight = button.querySelector('.fa-chevron-up');
+
+            // Verificar si el acordeón está abierto o cerrado
+            if (button.getAttribute('aria-expanded') === 'true') {
+                // Mostrar el icono chevron-right y ocultar el icono chevron-down
+                chevronDown.style.display = 'none';
+                chevronRight.style.display = 'inline-block';
+            } else {
+                // Mostrar el icono chevron-down y ocultar el icono chevron-right
+                chevronDown.style.display = 'inline-block';
+                chevronRight.style.display = 'none';
+            }
+        });
+    });
+</script>

@@ -1,0 +1,273 @@
+<style>
+    .display-Input {
+        display: none;
+    }
+</style>
+<div class="container p-4">
+    <div class="row">
+        <form class="needs-validation" action="/add" method="post" novalidate>
+            <div class="col-md-9 mx-auto">
+                <div class="card text-center">
+                    <div class="card-header" style="background-color: rgb(179, 197, 216);">
+                        <h3 class="text-uppercase" >1. INFORMACION DEL VEHICULO</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="input-group mt-3">
+                            <label for="id_placa" class="input-group-text">PLACA </label>
+                            <input class="form-control" type="text" name="id_placa" id="id_placa" placeholder="XXX-XXX"
+                                required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3">
+                            <label for="conductor_id" class="input-group-text">CONDUCTOR </label>
+                            <input class="form-control" type="text" name="conductor_id" id="conductor_id" placeholder=""
+                                required>
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label for="numeroLicenciaTransito" class="input-group-text">N° LICENCIA DE TRANSITO
+                            </label>
+                            <input class="form-control" type="text" name="numeroLicenciaTransito"
+                                id="numeroLicenciaTransito" placeholder="" required>
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label class="input-group-text">TIPO DE VEHICULO</label>
+                            <select id="opcion" name="opcion" class="form-select ">
+                                <option value="sencillo">Sencillo</option>
+                                <option value="doble_troque">Doble Troque</option>
+                                <option value="tracto_camion">Tracto Camión</option>
+                                <option value="contingencia">Contingencia</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                            <div id="otroCampo" class="displayInput">
+                                <input class="form-control" type="text" id="otroValor" name="otroValor"
+                                    onblur="hideInput()" oninput="showSelectIfEmpty()"
+                                    style="display: none; width: 753px;" disabled required>
+                            </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label for="vencimientoLicenciaConduccion" class="input-group-text">VENCIMIENTO DE LICENCIA
+                                DE CONDUCCION:
+                            </label>
+                            <input class="form-control" type="date" name="vencimientoLicenciaConduccion"
+                                id="vencimientoLicenciaConduccion" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label for="vencimientoRevisionTecnicoMecanica" class="input-group-text">VENCIMIENTO
+                                REVISION TECNICO
+                                MECANICA: </label>
+                            <input class="form-control" type="date" name="vencimientoRevisionTecnicoMecanica"
+                                id="vencimientoRevisionTecnicoMecanica" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label for="vencimientoSoat" class="input-group-text">VENCIMIENTO SOAT: </label>
+                            <input class="form-control" type="date" name="vencimientoSoat" id="vencimientoSoat"
+                                required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label for="vencimientoLineaVida" class="input-group-text">VENCIMIENTO LINEA DE VIDA:
+                            </label>
+                            <input class="form-control" type="date" name="vencimientoLineaVida"
+                                id="vencimientoLineaVida" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label for="vencimientoPolizaResponsabilidadCivil" class="input-group-text">VENCIMIENTO
+                                POLIZA DE RESPONSABILIDAD CIVIL:
+                            </label>
+                            <input class="form-control" type="date" name="vencimientoPolizaResponsabilidadCivil"
+                                id="vencimientoPolizaResponsabilidadCivil" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label for="vencimientoPolizaCivilHidrocarburos" class="input-group-text">VENCIMIENTO POLIZA
+                                CIVIL HIDRICARBUROS:
+                            </label>
+                            <input class="form-control" type="date" name="vencimientoPolizaCivilHidrocarburos"
+                                id="vencimientoPolizaCivilHidrocarburos" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="card text-center">
+                    <div class="card-header" style="background-color: rgb(179, 197, 216);">
+                        <h3 class="text-uppercase" >2. INFORMACION DEL TANQUE</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group mt-3">
+                            <label for="id_placaTrailer" class="input-group-text">PLACA TRAILER </label>
+                            <input class="form-control" type="text" name="id_placaTrailer" id="id_placaTrailer"
+                                placeholder="XXX-XXX" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3">
+                            <label for="tablaAforo" class="input-group-text">TABLA DE AFORO </label>
+                            <input class="form-control" type="text" name="tablaAforo" id="tablaAforo" placeholder=""
+                                required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3">
+                            <label for="vencimientoHidroestatica" class="input-group-text">VENCIMIENTO HIDROESTATICA
+                            </label>
+                            <input class="form-control" type="date" name="vencimientoHidroestatica"
+                                id="vencimientoHidroestatica" placeholder="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3">
+                            <label for="vencimientoQuintaRueda" class="input-group-text">VENCIMIENTO QUINTA RUEDA
+                            </label>
+                            <input class="form-control" type="date" name="vencimientoQuintaRueda"
+                                id="vencimientoQuintaRueda" placeholder="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                        <div class="input-group mt-3">
+                            <label for="vencimientoKingPin" class="input-group-text">VENCIMIENTO KING PIN </label>
+                            <input class="form-control" type="date" name="vencimientoKingPin" id="vencimientoKingPin"
+                                placeholder="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="card text-center">
+                    <button type="submit" class="btn btn-success">Registrar</button>
+                </div>
+        </form>
+    </div>
+
+</div>
+</div>
+
+<script>
+    function hideSelect() {
+        document.getElementById("opcion").style.display = "none";
+    }
+
+    function showSelect() {
+        document.getElementById("opcion").style.display = "block";
+    }
+
+    function hideInput() {
+        const otroValor = document.getElementById("otroValor");
+        const otroCampo = document.getElementById("otroCampo");
+        if (otroValor.value === "") {
+            otroValor.style.display = "none";
+            otroValor.disabled = true;
+            otroCampo.classList.remove("displayInput");
+            showSelect(); // Mostrar el select original
+        }
+    }
+
+    /*function showSelectIfEmpty() {
+        const otroValor = document.getElementById("otroValor");
+        if (otroValor.value === "") {
+            showSelect(); // Mostrar el select original
+        }
+    }*/
+
+
+
+    document.getElementById("opcion").addEventListener("change", function () {
+        const otroValor = document.getElementById("otroValor");
+        const otroCampo = document.getElementById("otroCampo");
+        const opcionSeleccionada = this.value;
+        console.log(opcionSeleccionada);
+        if (opcionSeleccionada === "otro") {
+            otroValor.style.display = "inline";
+            otroValor.disabled = false;
+            otroCampo.classList.add("displayInput");
+            hideSelect();
+            document.getElementById("otroValor").focus();
+        } else {
+            otroValor.style.display = "none";
+            otroValor.disabled = true;
+            otroCampo.classList.remove("displayInput");
+            showSelect();
+        }
+    });
+
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
