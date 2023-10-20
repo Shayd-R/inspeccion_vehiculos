@@ -8,13 +8,19 @@
         color: #fff !important;
     }
 
+    .accordion-item{
+        border: none;
+    }
+
     .accordion-body {
-        background-color: rgb(204, 226, 248);
+        background-color: #385c7e;
+        border-radius: 0px;
+       
     }
 
     .preguntas {
         padding: 35px 40px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 20px #385c7e;
         border-radius: 20px;
         width: 100%;
         background-color: #fffffffb;
@@ -58,7 +64,7 @@
                 {{#each especificacion}}
                 <div class="accordion" id="accordionExample">
                     <div class="accordion-item" style="margin-top: 10px;">
-                        <div class="accordion-header" style=" background-color: rgb(204, 226, 248);">
+                        <div class="accordion-header" style=" background-color: rgb(56,92,126)">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#_acor{{id_especificaciones}}" aria-expanded="true"
                                 aria-controls="_acor{{id_especificaciones}}" style="border-radius: 20px;">

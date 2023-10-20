@@ -44,6 +44,15 @@ router.get('/list', async (req, res) => {
         if (find) {
             const query = 'SELECT informacionVehiculo.`conductor_id`,  conductores.nombre, informacionvehiculo.`id_placa`, informacionvehiculo.`tipoVehiculo` FROM informacionVehiculo INNER JOIN conductores ON informacionVehiculo.conductor_id = conductores.id_conductor WHERE informacionVehiculo.conductor_id = ' + find + ' OR informacionVehiculo.id_placa = ' + find
             const [result] = await pool.query(query, [find]);
+            if (result[0] === undefined) {
+                const noData = 'No hay registros con esa cedula.';
+                res.render('inspeccionar/inspect.hbs', { inspecciones: result, find, noData });
+            } else {
+                res.render('inspeccionar/inspect.hbs', { inspecciones: result, find });
+            }
+
+        } else if (find === '') {
+            const [result] = await pool.query('SELECT informacionVehiculo.`conductor_id`,  conductores.nombre, informacionvehiculo.`id_placa`, informacionvehiculo.`tipoVehiculo` FROM informacionVehiculo INNER JOIN conductores ON informacionVehiculo.conductor_id = conductores.id_conductor');
             res.render('inspeccionar/inspect.hbs', { inspecciones: result });
         } else {
             const [result] = await pool.query('SELECT informacionVehiculo.`conductor_id`,  conductores.nombre, informacionvehiculo.`id_placa`, informacionvehiculo.`tipoVehiculo` FROM informacionVehiculo INNER JOIN conductores ON informacionVehiculo.conductor_id = conductores.id_conductor');
@@ -108,7 +117,7 @@ router.get('/inpectVehiculo/:id_placa', async (req, res) => {
             const conductor_id = conductor[0].conductor_id;
             const newInspeccion = { conductor_id, placa_id, fecha };
             await pool.query('INSERT INTO inspeccion SET ?', [newInspeccion]);
-        } 
+        }
         const [especificacion] = await pool.query('SELECT * FROM especificaciones');
         const [subespecificacion] = await pool.query('SELECT *  FROM subespecificaciones');
         res.render('inspeccionar/inspectVehiculo.hbs', { especificacion, subespecificacion });

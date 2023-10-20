@@ -1,61 +1,64 @@
 <div class="container">
     <div class="row mt-5">
-        <h1>Buscar Usuario</h1>
+        <h1 class="text-light">Buscar Usuario</h1>
         <div class="row align-items-center">
             <div class="col">
-                <form action="/list/" method="GET" class="form-inline" style="background-color: #fff;">
+                <form action="/list/" method="GET" class="form-inline">
                     <div class="row">
                         <div class="input-group">
                             <label for="find" class="input-group-text"
                                 style="background-color: #fff; top: 12px; left: 12px; "><i
                                     class="fa-solid fa-magnifying-glass" style="color: #6b788e;"></i></label>
-                            <input type="text" id="find" name="find" class="form-control" placeholder="Buscar">
+                            <input type="text" id="find" name="find" class="form-control" placeholder="Buscar"
+                                value="{{find}}">
+                            <button type="submit" class="btn btn-info">Buscar</button>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="col d-flex justify-content-end" style="">
                 <a href="/add" style="text-decoration: none;">
-                    <button class="btn btn-primary">
-                        Registrar vehiculo
-                    </button>
+                    <button class="btn btn-info">Registrar vehiculo</button>
                 </a>
             </div>
         </div>
-
-
-
-
+        {{#if noData}}
+        <div class="col md-3" style="padding-top: 20px;">
+            <center style="padding-top: 100px;">
+                <h1>{{noData}}</h1>
+            </center>
+        </div>
+        {{/if}}
         {{#if inspecciones}}
         <div class="col md-3" style="padding-top: 20px;">
             <table class="table text-center">
                 <thead>
-                    <tr class="table-dark">
+                    <tr class="table-white">
                         <th>Conductor</th>
                         <th>Nombre</th>
                         <th>Placa</th>
                         <th>Tipo de carro</th>
-
-                        <th></th>
+                        <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each inspecciones}}
-                    <tr>
+                    <tr class="table-secondary">
                         <th>{{conductor_id}}</th>
                         <th>{{nombre}}</th>
                         <th>{{id_placa}}</th>
                         <th>{{tipoVehiculo}}</th>
                         <th>
-                            <a href="/edit/{{id_placa}}" class="btn btn-primary">Info. Vehiculo</a>
-                            <a href="/inpectVehiculo/{{id_placa}}" class="btn btn-primary"><i class="fa-solid fa-pencil"></i> Inspeccionar</a>
+                            <a href="/edit/{{id_placa}}" class="btn btn-warning">Info. Vehiculo</a>
+                            <a href="/inpectVehiculo/{{id_placa}}" class="btn btn-primary"><i
+                                    class="fa-solid fa-pencil"></i> Inspeccionar</a>
 
                         </th>
                     </tr>
                     {{/each}}
                 </tbody>
                 <tfoot>
-                    <tr class="table-dark">
+                    <tr class="table-white">
                         <td colspan="12">
                             Registro de conductores
                         </td>
