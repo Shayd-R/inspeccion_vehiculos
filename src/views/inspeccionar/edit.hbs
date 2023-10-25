@@ -15,8 +15,8 @@
                     <div class="card-body">
                         <div class="input-group mt-3">
                             <label for="id_placa" class="input-group-text">PLACA </label>
-                            <input class="form-control" type="text" name="id_placa" id="id_placa" placeholder="XXX-XXX" value="{{vehiculo.id_placa}}"
-                                required>
+                            <input class="form-control" type="text" name="id_placa" id="id_placa" placeholder="XXX-XXX"
+                                value="{{vehiculo.id_placa}}" required>
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -26,47 +26,36 @@
                         </div>
                         <div class="input-group mt-3">
                             <label for="conductor_id" class="input-group-text">CONDUCTOR </label>
-                            <input class="form-control" type="text" name="conductor_id" id="conductor_id" placeholder="" value="{{vehiculo.conductor_id}}"
-                                required>
+                            <input class="form-control" type="text" name="conductor_id" id="conductor_id" placeholder=""
+                                value="{{vehiculo.conductor_id}}" required>
                         </div>
                         <div class="input-group mt-3 ">
                             <label for="numeroLicenciaTransito" class="input-group-text">N° LICENCIA DE TRANSITO
                             </label>
                             <input class="form-control" type="text" name="numeroLicenciaTransito"
-                                id="numeroLicenciaTransito" placeholder="" value="{{vehiculo.numeroLicenciaTransito}}" required>
+                                id="numeroLicenciaTransito" placeholder="" value="{{vehiculo.numeroLicenciaTransito}}"
+                                required>
                         </div>
-
 
                         <div class="input-group mt-3 ">
                             <label class="input-group-text">TIPO DE VEHICULO: </label>
-                            <div class="eselect">
-                                <div class="row ">
-                                    <div class="col">
-                                        <input type="text" id="tipoVehiculoInput" name="tipoVehiculoInput" class="form-control"
-                                            value="{{vehiculo.tipoVehiculo}}" style="width: 645px;" disabled>
-                                    </div>
-                                    <div class="col justify-content-end">
-                                        <button type="button" id="editarTipoVehiculo" class="btn btn-primary"
-                                            style="width:80px;">Editar</button>
-                                    </div>
-                                </div>
+                            <select id="opcion" name="opcion" class="form-select">
+                                <option value="{{vehiculo.tipoVehiculo}}" selected>{{vehiculo.tipoVehiculo}}</option>
+                                <option value="Sencillo">Sencillo</option>
+                                <option value="Doble_Troque">Doble_Troque</option>
+                                <option value="Tracto_Camion">Tracto_Camión</option>
+                                <option value="Contingencia">Contingencia</option>
+                                <option value="otro">Otro</option>
+                            </select>
+
+                            <input class="form-control" type="text" id="otroValor" name="otroValor" onblur="hideInput()"
+                                oninput="showSelectIfEmpty()" style="display: none;" disabled required>
+
+                            <div class="valid-feedback">
+                                Looks good!
                             </div>
-                            <div class="aselect" style="width: 81.3%">
-
-                                <select id="opcion" name="opcion" class="form-select"  value="{{vehiculo.tipoVehiculo}}">
-                                    <option value="sencillo">Sencillo</option>
-                                    <option value="doble_troque">Doble Troque</option>
-                                    <option value="tracto_camion">Tracto Camión</option>
-                                    <option value="contingencia">Contingencia</option>
-                                    <option value="otro">Otro</option>
-                                </select>
-
-                                <div id="otroCampo" class="displayInput">
-                                    <input class="form-control" type="text" id="otroValor" name="otroValor"
-                                        onblur="hideInput()" oninput="showSelectIfEmpty()"
-                                        style="display: none; width: 753px;" disabled
-                                        required>
-                                </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
                             </div>
 
                         </div>
@@ -75,7 +64,8 @@
                                 DE CONDUCCION:
                             </label>
                             <input class="form-control" type="date" name="vencimientoLicenciaConduccion"
-                                id="vencimientoLicenciaConduccion" value="{{vehiculo.vencimientoLicenciaConduccion}}" required>
+                                id="vencimientoLicenciaConduccion" value="{{vehiculo.vencimientoLicenciaConduccion}}"
+                                required>
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -88,7 +78,8 @@
                                 REVISION TECNICO
                                 MECANICA: </label>
                             <input class="form-control" type="date" name="vencimientoRevisionTecnicoMecanica"
-                                id="vencimientoRevisionTecnicoMecanica" value="{{vehiculo.vencimientoRevisionTecnicoMecanica}}" required>
+                                id="vencimientoRevisionTecnicoMecanica"
+                                value="{{vehiculo.vencimientoRevisionTecnicoMecanica}}" required>
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -124,7 +115,8 @@
                                 POLIZA DE RESPONSABILIDAD CIVIL:
                             </label>
                             <input class="form-control" type="date" name="vencimientoPolizaResponsabilidadCivil"
-                                id="vencimientoPolizaResponsabilidadCivil" value="{{vehiculo.vencimientoPolizaResponsabilidadCivil}}" required>
+                                id="vencimientoPolizaResponsabilidadCivil"
+                                value="{{vehiculo.vencimientoPolizaResponsabilidadCivil}}" required>
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -137,7 +129,8 @@
                                 CIVIL HIDRICARBUROS:
                             </label>
                             <input class="form-control" type="date" name="vencimientoPolizaCivilHidrocarburos"
-                                id="vencimientoPolizaCivilHidrocarburos" value="{{vehiculo.vencimientoPolizaCivilHidrocarburos}}" required>
+                                id="vencimientoPolizaCivilHidrocarburos"
+                                value="{{vehiculo.vencimientoPolizaCivilHidrocarburos}}" required>
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -150,7 +143,7 @@
                 <br>
                 <div class="card text-center">
                     <div class="card-header" style="background-color: rgb(179, 197, 216);">
-                        <h3 class="text-uppercase" >2. INFORMACION DEL TANQUE</h3>
+                        <h3 class="text-uppercase">2. INFORMACION DEL TANQUE</h3>
                     </div>
                     <div class="card-body">
                         <div class="input-group mt-3">
@@ -179,7 +172,8 @@
                             <label for="vencimientoHidroestatica" class="input-group-text">VENCIMIENTO HIDROESTATICA
                             </label>
                             <input class="form-control" type="date" name="vencimientoHidroestatica"
-                                id="vencimientoHidroestatica" placeholder="" value="{{vehiculo.vencimientoHidroestatica}}" required>
+                                id="vencimientoHidroestatica" placeholder=""
+                                value="{{vehiculo.vencimientoHidroestatica}}" required>
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -191,7 +185,8 @@
                             <label for="vencimientoQuintaRueda" class="input-group-text">VENCIMIENTO QUINTA RUEDA
                             </label>
                             <input class="form-control" type="date" name="vencimientoQuintaRueda"
-                                id="vencimientoQuintaRueda" placeholder="" value="{{vehiculo.vencimientoQuintaRueda}}" required>
+                                id="vencimientoQuintaRueda" placeholder="" value="{{vehiculo.vencimientoQuintaRueda}}"
+                                required>
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -213,14 +208,14 @@
                     </div>
                 </div>
                 <br>
-                <div class="card text-center">
+                <div class="card text-center" style="border: none;">
                     <button type="submit" class="btn btn-success">Inspeccionar</button>
                 </div>
         </form>
     </div>
 </div>
 <script>
-  function hideSelect() {
+    function hideSelect() {
         document.getElementById("opcion").style.display = "none";
     }
 
@@ -230,39 +225,25 @@
 
     function hideInput() {
         const otroValor = document.getElementById("otroValor");
-        const otroCampo = document.getElementById("otroCampo");
+        const opcion = document.getElementById("opcion");
         if (otroValor.value === "") {
             otroValor.style.display = "none";
             otroValor.disabled = true;
-            otroCampo.classList.remove("displayInput");
-            showSelect(); // Mostrar el select original
+            showSelect();
         }
     }
 
-    /*function showSelectIfEmpty() {
-        const otroValor = document.getElementById("otroValor");
-        if (otroValor.value === "") {
-            showSelect(); // Mostrar el select original
-        }
-    }*/
-
-
-
     document.getElementById("opcion").addEventListener("change", function () {
         const otroValor = document.getElementById("otroValor");
-        const otroCampo = document.getElementById("otroCampo");
         const opcionSeleccionada = this.value;
-        console.log(opcionSeleccionada);
         if (opcionSeleccionada === "otro") {
-            otroValor.style.display = "inline";
-            otroValor.disabled = false;
-            otroCampo.classList.add("displayInput");
             hideSelect();
-            document.getElementById("otroValor").focus();
+            otroValor.style.display = "block";
+            otroValor.disabled = false;
+            otroValor.focus();
         } else {
             otroValor.style.display = "none";
             otroValor.disabled = true;
-            otroCampo.classList.remove("displayInput");
             showSelect();
         }
     });
@@ -277,20 +258,21 @@
                     event.stopPropagation()
                 }
 
-                form.classList.add('was-validated')
+                form.classList.add('was-validated');
             }, false)
         })
     })()
 
-    const tipoVehiculoInput = document.getElementById('tipoVehiculoInput');
-    const eselectContainer = document.querySelector('.eselect');
-    const aselectContainer = document.querySelector('.aselect');
-    const editarTipoVehiculo = document.getElementById('editarTipoVehiculo');
+    var selectElement = document.getElementById("opcion");
+    var options = selectElement.options;
+    var selectedValue = "{{vehiculo.tipoVehiculo}}";
 
-    editarTipoVehiculo.addEventListener('click', () => {
-        tipoVehiculoInput.style.display = 'none'; // Hide the input in the 'eselect' container.
-        eselectContainer.style.display = 'none'; // Hide the 'eselect' container.
-        aselectContainer.style.display = 'block'; // Show the 'aselect' container.
-    });
-
+    for (var i = 1; i < options.length; i++) {
+        var option = options[i];
+        if (option.value === selectedValue) {
+            option.style.display = "none";
+        } else {
+            option.style.display = "";
+        }
+    }
 </script>

@@ -9,7 +9,7 @@
             <div class="col-md-9 mx-auto">
                 <div class="card text-center">
                     <div class="card-header" style="background-color: rgb(179, 197, 216);">
-                        <h3 class="text-uppercase" >1. INFORMACION DEL VEHICULO</h3>
+                        <h3 class="text-uppercase">1. INFORMACION DEL VEHICULO</h3>
                     </div>
 
                     <div class="card-body">
@@ -28,27 +28,34 @@
                             <label for="conductor_id" class="input-group-text">CONDUCTOR </label>
                             <input class="form-control" type="text" name="conductor_id" id="conductor_id" placeholder=""
                                 required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
                         </div>
-                        <div class="input-group mt-3 ">
+                        <div class="input-group mt-3">
                             <label for="numeroLicenciaTransito" class="input-group-text">N° LICENCIA DE TRANSITO
                             </label>
                             <input class="form-control" type="text" name="numeroLicenciaTransito"
                                 id="numeroLicenciaTransito" placeholder="" required>
                         </div>
-                        <div class="input-group mt-3 ">
+
+                        <div class="input-group mt-3">
+
                             <label class="input-group-text">TIPO DE VEHICULO</label>
-                            <select id="opcion" name="opcion" class="form-select ">
+                            <select id="opcion" name="opcion" class="form-select">
                                 <option value="sencillo">Sencillo</option>
                                 <option value="doble_troque">Doble Troque</option>
                                 <option value="tracto_camion">Tracto Camión</option>
                                 <option value="contingencia">Contingencia</option>
                                 <option value="otro">Otro</option>
                             </select>
-                            <div id="otroCampo" class="displayInput">
-                                <input class="form-control" type="text" id="otroValor" name="otroValor"
-                                    onblur="hideInput()" oninput="showSelectIfEmpty()"
-                                    style="display: none; width: 753px;" disabled required>
-                            </div>
+
+                            <input class="form-control" type="text" id="otroValor" name="otroValor" onblur="hideInput()"
+                                oninput="showSelectIfEmpty()" style="display: none;" disabled required>
+
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -136,7 +143,7 @@
                 <br>
                 <div class="card text-center">
                     <div class="card-header" style="background-color: rgb(179, 197, 216);">
-                        <h3 class="text-uppercase" >2. INFORMACION DEL TANQUE</h3>
+                        <h3 class="text-uppercase">2. INFORMACION DEL TANQUE</h3>
                     </div>
                     <div class="card-body">
                         <div class="input-group mt-3">
@@ -199,7 +206,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="card text-center">
+                <div class="card text-center" style="border: none;">
                     <button type="submit" class="btn btn-success">Registrar</button>
                 </div>
         </form>
@@ -219,39 +226,25 @@
 
     function hideInput() {
         const otroValor = document.getElementById("otroValor");
-        const otroCampo = document.getElementById("otroCampo");
+        const opcion = document.getElementById("opcion");
         if (otroValor.value === "") {
             otroValor.style.display = "none";
             otroValor.disabled = true;
-            otroCampo.classList.remove("displayInput");
-            showSelect(); // Mostrar el select original
+            showSelect();
         }
     }
 
-    /*function showSelectIfEmpty() {
-        const otroValor = document.getElementById("otroValor");
-        if (otroValor.value === "") {
-            showSelect(); // Mostrar el select original
-        }
-    }*/
-
-
-
     document.getElementById("opcion").addEventListener("change", function () {
         const otroValor = document.getElementById("otroValor");
-        const otroCampo = document.getElementById("otroCampo");
         const opcionSeleccionada = this.value;
-        console.log(opcionSeleccionada);
         if (opcionSeleccionada === "otro") {
-            otroValor.style.display = "inline";
-            otroValor.disabled = false;
-            otroCampo.classList.add("displayInput");
             hideSelect();
-            document.getElementById("otroValor").focus();
+            otroValor.style.display = "block";
+            otroValor.disabled = false;
+            otroValor.focus();
         } else {
             otroValor.style.display = "none";
             otroValor.disabled = true;
-            otroCampo.classList.remove("displayInput");
             showSelect();
         }
     });
@@ -266,7 +259,7 @@
                     event.stopPropagation()
                 }
 
-                form.classList.add('was-validated')
+                form.classList.add('was-validated');
             }, false)
         })
     })()

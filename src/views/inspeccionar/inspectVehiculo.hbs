@@ -4,32 +4,28 @@
         justify-content: center;
     }
 
-    .respuesta-seleccionada {
-        color: #fff !important;
+   
+
+
+    .accordion-button:focus {
+        box-shadow: none;
     }
 
-    .accordion-item{
-        border: none;
-    }
+  
 
+   
     .accordion-body {
         background-color: #385c7e;
-        border-radius: 0px;
-       
     }
 
     .preguntas {
         padding: 35px 40px;
-        box-shadow: 0 0 20px #385c7e;
+       
         border-radius: 20px;
         width: 100%;
         background-color: #fffffffb;
     }
 
-    .botones {
-        text-align: center;
-        width: 100%;
-    }
 
 
     .accordion-button:not(.collapsed) {
@@ -41,70 +37,62 @@
         background-color: rgb(255, 255, 255);
         color: #000000;
     }
-
-    .accordion-button::after {
-        display: none;
-    }
-
-    .accordion-button:is(.collapsed)::after {
-        box-shadow: none;
-
-    }
-
-    .accordion-button:not(.collapsed)::after {
-        box-shadow: none;
-
-    }
 </style>
 <div class="container p-4">
     <div class="row">
         <div class="col-md-9  mx-auto">
 
-            <form id="encuestaForm">
+            <form action="/inspectVehiculos/{{id_placa}}" id="encuestaForm" method="post">
+                <div class="row" style="align-items: center; justify-content: center;">
+                    <div class="col-2">
+                        <input type="date" name="fecha" id="fecha">
+                    </div>
+                </div>
+
+           
                 {{#each especificacion}}
-                <div class="accordion" id="accordionExample">
+                <div class="accordion accordion-flush" id="accordionFlushExample">
                     <div class="accordion-item" style="margin-top: 10px;">
-                        <div class="accordion-header" style=" background-color: rgb(56,92,126)">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#_acor{{id_especificaciones}}" aria-expanded="true"
-                                aria-controls="_acor{{id_especificaciones}}" style="border-radius: 20px;">
-                                <h4 style="font-family: 'Open Sans', sans-serif; font-weight: 600; width:100%">
-                                    <div class="row">
-                                        <div class="col">
-                                            <span>{{id_especificaciones}}. {{detalle}}</span>
-                                        </div>
-                                        <div class="col d-flex justify-content-end">
-                                            <i class="fa-solid fa-chevron-up" style="color: #000000; display:none;"></i>
-                                            <i class="fa-solid fa-chevron-down" style="color: #000000; "></i>
-                                        </div>
-                                    </div>
-                                </h4>
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#_acor{{id_especificaciones}}" aria-expanded="false"
+                                aria-controls="#_acor{{id_especificaciones}}"
+                                style="font-family: 'Open Sans', sans-serif;">
+                                {{id_especificaciones}}. {{detalle}}
+
                             </button>
-                        </div>
+                        </h2>
                         <div id="_acor{{id_especificaciones}}" class="accordion-collapse collapse"
-                            data-bs-parent="#accordionExample">
+                            data-bs-parent="#accordionFlushExample">
                             <div class="accordion-body">
                                 {{#each ../subespecificacion}}
                                 {{#if (eq especificacion_id ../id_especificaciones)}}
-                                <div class="preguntas" style="">
-
+                                <div class="preguntas">
                                     <h5>{{detalle}}</h5>
                                     <br>
-                                    <div class="row">
-                                        <div class="col">
-                                            <button type="button" class="respuesta btn btn-outline-success botones"
-                                                data-pregunta="{{id_subEspecificaciones}}"
-                                                data-respuesta="bueno">Bueno</button>
+                                    <div class="row" name="{{id_subEspecificaciones}}">
+                                        <div class="col-4">
+                                            <input type="radio" class="btn-check respuesta"
+                                                name="{{id_subEspecificaciones}}" id="{{id_subEspecificaciones}}bueno"
+                                                autocomplete="off" value="1">
+                                            <label class="btn btn-outline-success" style="width: 100%;"
+                                                for="{{id_subEspecificaciones}}bueno">Bueno</label>
                                         </div>
-                                        <div class="col">
-                                            <button type="button" class="respuesta btn btn-outline-danger botones"
-                                                data-pregunta="{{id_subEspecificaciones}}"
-                                                data-respuesta="malo">Malo</button>
+                                        <div class="col-4">
+                                            <input type="radio" class="btn-check respuesta"
+                                                name="{{id_subEspecificaciones}}" id="{{id_subEspecificaciones}}malo"
+                                                autocomplete="off" value="2">
+                                            <label class="btn btn-outline-danger" style="width: 100%;"
+                                                for="{{id_subEspecificaciones}}malo">Malo</label>
                                         </div>
-                                        <div class="col">
-                                            <button type="button" class="respuesta btn btn-outline-secondary botones"
-                                                data-pregunta="{{id_subEspecificaciones}}" data-respuesta="no-aplica">No
-                                                Aplica</button>
+                                        <div class="col-4">
+                                            <input type="radio" class="btn-check respuesta"
+                                                name="{{id_subEspecificaciones}}"
+                                                id="{{id_subEspecificaciones}}no_aplica" autocomplete="off"
+                                                value="3">
+                                            <label class="btn btn-outline-secondary" style="width: 100%;"
+                                                for="{{id_subEspecificaciones}}no_aplica">No
+                                                Aplica</label>
                                         </div>
                                     </div>
                                 </div>
@@ -113,84 +101,38 @@
                                 {{/each}}
                             </div>
                         </div>
-
                     </div>
-
                 </div>
                 {{/each}}
                 <br>
-               <div class="card text-center" style="">
-                    <button type="submit"  class="btn btn-success">Registrar</button>
+                <div class="card text-center" style="border: none;">
+                    <button type="submit" class="btn btn-success">Registrar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
-    var respuestas = {};
-    var botonesRespuesta = document.querySelectorAll('.respuesta');
-    botonesRespuesta.forEach(function (boton) {
-        boton.addEventListener('click', function () {
-            var pregunta = this.getAttribute('data-pregunta');
-            var respuesta = this.getAttribute('data-respuesta');
-            respuestas[pregunta] = respuesta;
-
-            botonesRespuesta.forEach(function (otroBoton) {
-                if (otroBoton.getAttribute('data-pregunta') === pregunta) {
-                    otroBoton.classList.remove('respuesta-seleccionada');
-                    otroBoton.style.backgroundColor = '';
+    $(document).ready(function () {
+        $('#encuestaForm').submit(function (e) {
+            var unansweredQuestions = [];
+            const alreadyChecked = new Set();
+            $('input[type="radio"]').each(function () {
+                const name = $(this).attr('name');
+                if (!alreadyChecked.has(name)) {
+                    alreadyChecked.add(name);
+                    if ($(`input[name="${name}"]:checked`).length === 0) {
+                        const pregunta = $(this).closest('.preguntas').find('h5').text().trim();
+                        unansweredQuestions.push("Pregunta " + name + ": " + pregunta);
+                    }
                 }
             });
-            if (respuesta === 'bueno') {
-                this.style.backgroundColor = 'green';
-            } else if (respuesta === 'malo') {
-                this.style.backgroundColor = 'red';
-            } else if (respuesta === 'no-aplica') {
-                this.style.backgroundColor = 'grey';
-            }
-            this.classList.add('respuesta-seleccionada');
-            console.log(respuestas);
-        });
-    });
 
-    document.getElementById('encuestaForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        // Realizar una solicitud HTTP POST a la ruta deseada
-        fetch('/inpectVehiculos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(respuestas)
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data); // Manejar la respuesta de la ruta si es necesario
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    });
-
-    // Obtener todos los botones del acordeón
-    const accordionButtons = document.querySelectorAll('.accordion-button');
-    // Agregar evento click a cada botón
-    accordionButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // Obtener el icono chevron-down y chevron-right del botón
-            const chevronDown = button.querySelector('.fa-chevron-down');
-            const chevronRight = button.querySelector('.fa-chevron-up');
-
-            // Verificar si el acordeón está abierto o cerrado
-            if (button.getAttribute('aria-expanded') === 'true') {
-                // Mostrar el icono chevron-right y ocultar el icono chevron-down
-                chevronDown.style.display = 'none';
-                chevronRight.style.display = 'inline-block';
-            } else {
-                // Mostrar el icono chevron-down y ocultar el icono chevron-right
-                chevronDown.style.display = 'inline-block';
-                chevronRight.style.display = 'none';
+            if (unansweredQuestions.length > 0) {
+                e.preventDefault();
+                var message = "Por favor, responde las siguientes preguntas:\n" + unansweredQuestions.join("\n");
+                alert(message);
             }
         });
     });

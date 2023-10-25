@@ -42,7 +42,8 @@ router.get('/list', async (req, res) => {
     try {
         const find = req.query.find;
         if (find) {
-            const query = 'SELECT informacionVehiculo.`conductor_id`,  conductores.nombre, informacionvehiculo.`id_placa`, informacionvehiculo.`tipoVehiculo` FROM informacionVehiculo INNER JOIN conductores ON informacionVehiculo.conductor_id = conductores.id_conductor WHERE informacionVehiculo.conductor_id = ' + find + ' OR informacionVehiculo.id_placa = ' + find
+            const query = "SELECT informacionVehiculo.conductor_id, conductores.nombre, informacionvehiculo.id_placa, informacionvehiculo.tipoVehiculo FROM informacionVehiculo INNER JOIN conductores ON informacionVehiculo.conductor_id = conductores.id_conductor WHERE informacionVehiculo.conductor_id LIKE '%" + find + "%' OR informacionVehiculo.id_placa LIKE '%" + find + "%'"
+
             const [result] = await pool.query(query, [find]);
             if (result[0] === undefined) {
                 const noData = 'No hay registros con esa cedula.';
@@ -80,9 +81,7 @@ router.post('/edit/:id_placa', async (req, res) => {
             vencimientoSoat, vencimientoLineaVida, vencimientoPolizaResponsabilidadCivil, vencimientoPolizaCivilHidrocarburos,
             id_placaTrailer, tablaAforo, vencimientoHidroestatica, vencimientoQuintaRueda, vencimientoKingPin } = req.body;
         const id_placa = req.params.id_placa;
-
-        const opcionSeleccionada = req.body.tipoVehiculoInput;
-        console.log(opcionSeleccionada);
+        console.log(id_placa);
 
         let tipoVehiculo = '';
 
@@ -107,31 +106,55 @@ router.post('/edit/:id_placa', async (req, res) => {
     }
 });
 
-router.get('/inpectVehiculo/:id_placa', async (req, res) => {
+router.get('/inspectVehiculo/:id_placa', async (req, res) => {
     try {
-        const placa_id = req.params.id_placa;
-        const [inspeccion] = await pool.query('SELECT * FROM inspeccion WHERE placa_id = ?', [placa_id]);
-        if (inspeccion[0].placa_id == null) {
-            const fecha = new Date().toISOString().slice(0, 10);
-            const [conductor] = await pool.query('SELECT conductor_id FROM informacionvehiculo WHERE id_placa = ?', [placa_id]);
-            const conductor_id = conductor[0].conductor_id;
-            const newInspeccion = { conductor_id, placa_id, fecha };
-            await pool.query('INSERT INTO inspeccion SET ?', [newInspeccion]);
-        }
+        const id_placa = req.params.id_placa;
         const [especificacion] = await pool.query('SELECT * FROM especificaciones');
         const [subespecificacion] = await pool.query('SELECT *  FROM subespecificaciones');
-        res.render('inspeccionar/inspectVehiculo.hbs', { especificacion, subespecificacion });
+        res.render('inspeccionar/inspectVehiculo.hbs', { especificacion, subespecificacion, id_placa });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-router.post('/inpectVehiculos', async (req, res) => {
-    const respuestas = req.body;
+router.post('/inspectVehiculos/:id_placa', async (req, res) => {
+
+    const id_placa = req.params.id_placa;
+
+
+
+    const fecha = req.body.fecha;
+    const [conductor] = await pool.query('SELECT conductor_id FROM informacionvehiculo WHERE id_placa = ?', [id_placa]);
+    const conductor_id = conductor[0].conductor_id;
+    const placa_id = id_placa;
+    const inspeccion = { conductor_id, placa_id, fecha };
+    await pool.query('INSERT INTO inspeccion SET ?', [inspeccion]);
+
+    const sql = 'SELECT * FROM inspeccion WHERE conductor_id = ? AND placa_id = ? AND fecha = ?';
+
+    const id_inspeccion = await pool.query(sql, [inspeccion.conductor_id, inspeccion.placa_id, inspeccion.fecha]);
+    console.log(id_inspeccion[0]);
+
+    const respuestas = {};
+    const [total] = await pool.query('SELECT COUNT(*) as total FROM subespecificaciones;');
+    for (let i = 1; i <= total[0].total; i++) {
+        const pregunta = `${i}`;
+        const respuesta = req.body[pregunta];
+        respuestas[pregunta] = respuesta;
+    }
     console.log(respuestas);
-
-
+    res.redirect(`/inspectVehiculo/${id_placa}`);
 });
+
+/*const query = 'INSERT INTO estado SET ?';
+db.query(query, respuestas, (err, result) => {
+    if (err) {
+        throw err;
+    }
+    console.log('Respuestas guardadas en la base de datos');
+    res.send('Respuestas guardadas en la base de datos');
+});*/
+
 
 
 
