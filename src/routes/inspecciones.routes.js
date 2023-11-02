@@ -1,6 +1,9 @@
 import { Router } from "express"
 import pool from '../database.js'
 
+
+
+
 const router = Router();
 
 router.get('/add', async (req, res) => {
@@ -115,39 +118,55 @@ router.get('/inspectVehiculo/:id_placa', async (req, res) => {
 });
 
 router.post('/inspectVehiculos/:id_placa', async (req, res) => {
-    const id_placa = req.params.id_placa;
-    const fecha = req.body.fecha;
-
-    const [conductor] = await pool.query('SELECT conductor_id FROM informacionvehiculo WHERE id_placa = ?', [id_placa]);
-    const conductor_id = conductor[0].conductor_id;
-    const placa_id = id_placa;
-    const inspeccion = { conductor_id, placa_id, fecha };
-    await pool.query('INSERT INTO inspeccion SET ?', [inspeccion]);
-
-    const sql = 'SELECT id_inspeccion FROM inspeccion WHERE conductor_id = ? AND placa_id = ? AND fecha = ?';
-    const [id_inspecciones] = await pool.query(sql, [inspeccion.conductor_id, inspeccion.placa_id, inspeccion.fecha]);
-    const inspeccion_id = id_inspecciones[0].id_inspeccion;
+    try {
+      
+      
+        // La firma se encuentra en req.file.buffer (en formato binario)
+        const imagePath = req.file.path;
+        console.log(imagePath);
+        const { firma } = req.file;
+        console.log(firma);
 
 
-    const [total] = await pool.query('SELECT COUNT(*) as total FROM subespecificaciones;');
+        /*
+               const id_placa = req.params.id_placa;
+               const fecha = req.body.fecha;
+       
+               const [conductor] = await pool.query('SELECT conductor_id FROM informacionvehiculo WHERE id_placa = ?', [id_placa]);
+               const conductor_id = conductor[0].conductor_id;
+               const placa_id = id_placa;
+               const inspeccion = { conductor_id, placa_id, fecha };
+               await pool.query('INSERT INTO inspeccion SET ?', [inspeccion]);
+       
+               const sql = 'SELECT id_inspeccion FROM inspeccion WHERE conductor_id = ? AND placa_id = ? AND fecha = ?';
+               const [id_inspecciones] = await pool.query(sql, [inspeccion.conductor_id, inspeccion.placa_id, inspeccion.fecha]);
+               const inspeccion_id = id_inspecciones[0].id_inspeccion;
+       
+       
+               const [total] = await pool.query('SELECT COUNT(*) as total FROM subespecificaciones;');
+       
+               const values = [];
+               for (let i = 1; i <= total[0].total; i++) {
+                   const pregunta = `${i}`;
+                   const respuesta = req.body[pregunta];
+                   values.push(`(${inspeccion_id}, ${pregunta},  ${respuesta})`);
+               }
+       
+               const query = 'INSERT INTO estado (inspeccion_id,subespecificaciones_id, convenciones) VALUES ' + `${values.join(', ')}` + ';';
+               //await pool.query(query);
+       */
+        //libreria para mostrar mensajes (para mostrar que se ha echo el resgistro de la inspeccion) y redireccionar a informes 
+        res.redirect(`/inspectVehiculo/${id_placa}`);
+        //res.render('informes/informes.hbs');
+        //res.redirect('/list');
 
-    const values = [];
-    for (let i = 1; i <= total[0].total; i++) {
-        const pregunta = `${i}`;
-        const respuesta = req.body[pregunta];
-        values.push(`(${inspeccion_id}, ${pregunta},  ${respuesta})`);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
-
-    const query = 'INSERT INTO estado (inspeccion_id,subespecificaciones_id, convenciones) VALUES ' + `${values.join(', ')}`+ ';';
-    await pool.query(query);
-
-
-    //libreria para mostrar mensajes (para mostrar que se ha echo el resgistro de la inspeccion) y redireccionar a informes 
-    res.redirect(`/inspectVehiculo/${id_placa}`);
 });
 
 
-//----------------------------------------------------------------
+/*
 router.get('/delete/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -157,5 +176,5 @@ router.get('/delete/:id', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
-
+*/
 export default router;

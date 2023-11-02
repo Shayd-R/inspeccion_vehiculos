@@ -4,23 +4,23 @@
         justify-content: center;
     }
 
-   
+
 
 
     .accordion-button:focus {
         box-shadow: none;
     }
 
-  
 
-   
+
+
     .accordion-body {
         background-color: #385c7e;
     }
 
     .preguntas {
         padding: 35px 40px;
-       
+
         border-radius: 20px;
         width: 100%;
         background-color: #fffffffb;
@@ -42,14 +42,17 @@
     <div class="row">
         <div class="col-md-9  mx-auto">
 
-            <form action="/inspectVehiculos/{{id_placa}}" id="encuestaForm" method="post">
+            <form action="/inspectVehiculos/{{id_placa}}" id="encuestaForm" method="post" enctype="multipart/form-data">
                 <div class="row" style="align-items: center; justify-content: center;">
-                    <div class="col-2">
-                        <input type="date" name="fecha" id="fecha">
+                    <div class="col-6">
+                        <div class="input-group ">
+                            <label for="fecha" class="input-group-text">Fecha de inspeccion: </label>
+                            <input class="form-control" type="date" name="fecha" id="fecha">
+                        </div>
                     </div>
                 </div>
+                <br>
 
-           
                 {{#each especificacion}}
                 <div class="accordion accordion-flush" id="accordionFlushExample">
                     <div class="accordion-item" style="margin-top: 10px;">
@@ -88,8 +91,7 @@
                                         <div class="col-4">
                                             <input type="radio" class="btn-check respuesta"
                                                 name="{{id_subEspecificaciones}}"
-                                                id="{{id_subEspecificaciones}}no_aplica" autocomplete="off"
-                                                value="3">
+                                                id="{{id_subEspecificaciones}}no_aplica" autocomplete="off" value="3">
                                             <label class="btn btn-outline-secondary" style="width: 100%;"
                                                 for="{{id_subEspecificaciones}}no_aplica">No
                                                 Aplica</label>
@@ -104,17 +106,116 @@
                     </div>
                 </div>
                 {{/each}}
+
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item" style="margin-top: 10px;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#_acor" aria-expanded="false" aria-controls="#_acor"
+                                style="font-family: 'Open Sans', sans-serif;">
+                                FINALIZACIÓN
+
+                            </button>
+                        </h2>
+                        <div id="_acor" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+
+                                <div class="preguntas">
+                                    <h5>Nombre completo y firma del inspecctor</h5>
+                                    <br>
+                                    <div class="row" name="">
+                                        <div class="col-9">
+                                            <div class="input-group" style="border-color: black !important;">
+                                                <input type="text" name="inspector" id="inspector" class="form-control"
+                                                    placeholder="Nombre completo">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="input-group" style="border-color: black !important;">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#modalFirma" style="width: 100%;">
+                                                    Reemplazar firma
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                <img id="firmaPrevia" name="firma" src="" alt="" style="max-width: 20%;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <br>
+               
                 <div class="card text-center" style="border: none;">
                     <button type="submit" class="btn btn-success">Registrar</button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalFirma" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Añadir Firma</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="inputFirma" class="input-group-text">Seleccionar una imagen de firma</label>
+                    <input type="file" class="form-control-file" id="inputFirma" >
+                </div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#dibujarFirmaModal">Dibujar Firma</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dibujarFirmaModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Dibujar Firma</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="row">
+                    <div class="border-primary" >
+                        <canvas id="firma" style="touch-action: none; border: 1px solid; border-radius: 10px;" width="400" height="200"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <button id="guardarFirma" class="btn btn-primary mt-3" style="width: 100%;">Guardar</button>
+                    </div>
+                    <div class="col-6">
+                        <button id="borrarFirma" class="btn btn-secondary mt-3" style="width: 100%;">Borrar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
 <script>
-    $(document).ready(function () {
+   /* $(document).ready(function () {
         $('#encuestaForm').submit(function (e) {
             var unansweredQuestions = [];
             const alreadyChecked = new Set();
@@ -135,5 +236,61 @@
                 alert(message);
             }
         });
+    });*/
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        try {
+            document.getElementById('inputFirma').addEventListener('change', function () {
+                var inputFirma = document.getElementById('inputFirma');
+                var firmaPrevia = document.getElementById('firmaPrevia');
+
+                if (inputFirma.files.length > 0) {
+                    var selectedImage = inputFirma.files[0];
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        var imageData = e.target.result;
+                        firmaPrevia.src = imageData; // Muestra la imagen previamente cargada
+                        firmaPrevia.style.display = 'block';
+
+                        $('#modalFirma').modal('hide');
+                    };
+
+                    reader.readAsDataURL(selectedImage);
+                }
+            });
+        } catch (error) {
+            console.error("Se produjo un error:", error);
+        }
+
+
+        try {
+            // JavaScript para la funcionalidad de dibujo y previsualización en el modal "Dibujar Firma"
+            var canvas = document.getElementById('firma');
+            var signaturePad = new SignaturePad(canvas);
+
+            document.getElementById('guardarFirma').addEventListener('click', function () {
+                var signatureData = signaturePad.toDataURL(); // Obtiene la firma como una imagen en formato base64
+
+                // Actualiza la fuente de la imagen con la firma previa
+                var firmaPrevia = document.getElementById('firmaPrevia');
+                firmaPrevia.src = signatureData;
+                firmaPrevia.style.display = 'block';
+
+                $('#dibujarFirmaModal').modal('hide');
+            });
+
+            document.getElementById('borrarFirma').addEventListener('click', function () {
+                signaturePad.clear(); // Borra la firma en el canvas
+
+                // Borra la firma previa
+                var firmaPrevia = document.getElementById('firmaPrevia');
+                firmaPrevia.src = '';
+                firmaPrevia.style.display = 'none';
+            });
+        } catch (error) {
+            console.error("Se produjo un error:", error);
+        }
     });
+
 </script>

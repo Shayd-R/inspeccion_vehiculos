@@ -7,6 +7,8 @@ import inspeccionesRoutes from './routes/inspecciones.routes.js'
 import conductoresRoutes from './routes/conductores.routes.js'
 import informesRoutes from './routes/informes.routes.js'
 
+
+
 //INICIALIZATION
 
 const app = express();
