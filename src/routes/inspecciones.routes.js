@@ -1,9 +1,6 @@
 import { Router } from "express"
 import pool from '../database.js'
 
-
-
-
 const router = Router();
 
 router.get('/add', async (req, res) => {
@@ -81,12 +78,8 @@ router.post('/edit/:id_placa', async (req, res) => {
             vencimientoSoat, vencimientoLineaVida, vencimientoPolizaResponsabilidadCivil, vencimientoPolizaCivilHidrocarburos,
             id_placaTrailer, tablaAforo, vencimientoHidroestatica, vencimientoQuintaRueda, vencimientoKingPin } = req.body;
         const id_placa = req.params.id_placa;
-        console.log(id_placa);
-
         let tipoVehiculo = '';
-
         const opcionSeleccionada1 = req.body.opcion;
-        console.log(opcionSeleccionada1);
         if (opcionSeleccionada1 === 'otro') {
             tipoVehiculo = req.body.otroValor;
         } else {
@@ -98,7 +91,6 @@ router.post('/edit/:id_placa', async (req, res) => {
             vencimientoSoat, vencimientoLineaVida, vencimientoPolizaResponsabilidadCivil, vencimientoPolizaCivilHidrocarburos,
             id_placaTrailer, tablaAforo, vencimientoHidroestatica, vencimientoQuintaRueda, vencimientoKingPin
         }
-        console.log(editVehiculo);
         await pool.query('UPDATE informacionVehiculo SET ? WHERE id_placa = ?', [editVehiculo, id_placa]);
         res.redirect('/list');
     } catch (err) {
@@ -117,54 +109,62 @@ router.get('/inspectVehiculo/:id_placa', async (req, res) => {
     }
 });
 
-router.post('/inspectVehiculos/:id_placa', async (req, res) => {
+router.post('/inspectVehiculo/:id_placa', async (req, res) => {
     try {
-      
-      
-        // La firma se encuentra en req.file.buffer (en formato binario)
-        const imagePath = req.file.path;
-        console.log(imagePath);
-        const { firma } = req.file;
-        console.log(firma);
+        const fecha = req.body.fecha;
+        const id_placa = req.params.id_placa;
+        const signature = req.body.firma;
 
 
-        /*
-               const id_placa = req.params.id_placa;
-               const fecha = req.body.fecha;
-       
-               const [conductor] = await pool.query('SELECT conductor_id FROM informacionvehiculo WHERE id_placa = ?', [id_placa]);
-               const conductor_id = conductor[0].conductor_id;
-               const placa_id = id_placa;
-               const inspeccion = { conductor_id, placa_id, fecha };
-               await pool.query('INSERT INTO inspeccion SET ?', [inspeccion]);
-       
-               const sql = 'SELECT id_inspeccion FROM inspeccion WHERE conductor_id = ? AND placa_id = ? AND fecha = ?';
-               const [id_inspecciones] = await pool.query(sql, [inspeccion.conductor_id, inspeccion.placa_id, inspeccion.fecha]);
-               const inspeccion_id = id_inspecciones[0].id_inspeccion;
-       
-       
-               const [total] = await pool.query('SELECT COUNT(*) as total FROM subespecificaciones;');
-       
-               const values = [];
-               for (let i = 1; i <= total[0].total; i++) {
-                   const pregunta = `${i}`;
-                   const respuesta = req.body[pregunta];
-                   values.push(`(${inspeccion_id}, ${pregunta},  ${respuesta})`);
-               }
-       
-               const query = 'INSERT INTO estado (inspeccion_id,subespecificaciones_id, convenciones) VALUES ' + `${values.join(', ')}` + ';';
-               //await pool.query(query);
-       */
+
+        const [conductor] = await pool.query('SELECT conductor_id FROM informacionvehiculo WHERE id_placa = ?', [id_placa]);
+        const conductor_id = conductor[0].conductor_id;
+        const placa_id = id_placa;
+        const casf = "SELECT * FROM inspeccion WHERE conductor_id = '" + conductor_id + "' AND placa_id = '" + placa_id + "' AND fecha = '" + fecha + "'";
+        const [fecha_bd] = await pool.query(casf);
+        
+        if (fecha_bd[0] === undefined) {
+            await pool.query("INSERT INTO Firms (signature) VALUES ('" + signature + "')");
+            const [firma] = await pool.query("SELECT id_Firms FROM Firms WHERE signature='" + signature + "'");
+            const Firms_Id = firma[0].id_Firms;
+            console.log("2");
+            const inspeccion = { conductor_id, placa_id, fecha, Firms_Id };
+
+            await pool.query('INSERT INTO inspeccion SET ?', [inspeccion]);
+
+            /*
+            const sql = 'SELECT id_inspeccion FROM inspeccion WHERE conductor_id = ? AND placa_id = ? AND fecha = ?';
+            const [id_inspecciones] = await pool.query(sql, [inspeccion.conductor_id, inspeccion.placa_id, inspeccion.fecha]);
+            const inspeccion_id = id_inspecciones[0].id_inspeccion;
+            const [total] = await pool.query('SELECT COUNT(*) as total FROM subespecificaciones;');
+
+            const values = [];
+            for (let i = 1; i <= total[0].total; i++) {
+                const pregunta = `${i}`;
+                const respuesta = req.body[pregunta];
+                values.push(`(${inspeccion_id}, ${pregunta},  ${respuesta})`);
+            }
+
+
+
+            
+
+            const query = 'INSERT INTO estado (inspeccion_id,subespecificaciones_id, convenciones) VALUES ' + `${values.join(', ')}` + ';';
+            await pool.query(query);*/
+        } else if (fecha_bd[0].fecha === fecha) {
+            console.log('actualizar: \n1-' + fecha_bd[0].fecha + '\n2-' + fecha);
+        } 
+
+
+
         //libreria para mostrar mensajes (para mostrar que se ha echo el resgistro de la inspeccion) y redireccionar a informes 
         res.redirect(`/inspectVehiculo/${id_placa}`);
         //res.render('informes/informes.hbs');
         //res.redirect('/list');
-
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
-
 
 /*
 router.get('/delete/:id', async (req, res) => {
