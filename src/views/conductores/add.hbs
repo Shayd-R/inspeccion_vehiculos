@@ -1,33 +1,52 @@
 <div class="container p-4">
-    <div class="row">
+    <div class="row" style="margin-top: 5%;">
         <form class="needs-validation" action="/addconductor" method="post" novalidate>
-            <div class="col-md-9 mx-auto">
+            <div class="col-md-7 mx-auto">
                 <div class="card text-center">
                     <div class="card-header" style="background-color: rgb(179, 197, 216);">
-                        <h3 class="text-uppercase">AGREGAR CONDUCTORES</h3>
+                        <h3 class="text">Agregar conductor</h3>
                     </div>
-
                     <div class="card-body">
                         <div class="input-group mt-3 ">
-                            <label for="id_conductor" class="input-group-text">CEDULA: </label>
-                            <input class="form-control" type="text" name="id_conductor" id="id_conductor"
-                                value="{{conductor.id_conductor}}" placeholder="" autofocus required>
+                            <label for="idDriver" class="input-group-text">Cédula: </label>
+                            <input class="form-control" type="text" name="idDriver" id="idDriver" value=""
+                                placeholder="" autofocus required>
                         </div>
                         <div class="input-group mt-3">
-                            <label for="nombre" class="input-group-text">NOMBRE: </label>
-                            <input class="form-control" type="text" name="nombre" id="nombre"
-                                value="{{conductor.nombre}}" placeholder="">
+                            <label for="name" class="input-group-text">Nombres completos: </label>
+                            <input class="form-control text-uppercase" type="text" name="name" id="name" value="">
                         </div>
                         <div class="input-group mt-3 ">
-                            <label for="telefono" class="input-group-text">TELEFONO: </label>
-                            <input class="form-control" type="text" name="telefono" id="telefono"
-                                value="{{conductor.telefono}}" placeholder="">
+                            <label for="cellPhoneNumber" class="input-group-text">Celular: </label>
+                            <input class="form-control" type="text" name="cellPhoneNumber" id="cellPhoneNumber"
+                                value="">
                         </div>
+                        <div class="input-group mt-3 ">
+                            <label for="licenseNumber" class="input-group-text">N° licencia: </label>
+                            <input class="form-control number" type="text" name="licenseNumber" id="licenseNumber"
+                                value="">
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label for="licenseCategoryId" class="input-group-text">Categoria: </label>
+                            <select id="licenseCategoryId" name="licenseCategoryId" class="form-select">
+                                <option value="" selected>--seleccionar categoria--</option>
+                                {{#each category}}
+                                <option value="{{idLicenseCategory}}">{{category}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="input-group mt-3 ">
+                            <label for="driversLicenseExpiration" class="input-group-text">Fecha de vencimiento:
+                            </label>
+                            <input class="form-control" type="date" name="driversLicenseExpiration"
+                                id="driversLicenseExpiration" value="">
+                        </div>
+
                     </div>
                 </div>
                 <br>
                 <div class="card text-center" style="border: none;">
-                    <button type="submit" class="btn btn-success">Inspeccionar</button>
+                    <button type="submit" class="btn btn-success">Agregar</button>
                 </div>
             </div>
         </form>

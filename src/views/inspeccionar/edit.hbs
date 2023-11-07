@@ -5,137 +5,167 @@
 </style>
 <div class="container p-4">
     <div class="row">
-        <form class="needs-validation" action="/edit/{{vehiculo.id_placa}}" method="post" novalidate>
-            <div class="col-md-9 mx-auto">
+        <form class="needs-validation" action="/edit/{{vehicle.idLicensePlate}}" method="post" novalidate>
+            <div class="col-md-12 mx-auto">
                 <div class="card text-center">
                     <div class="card-header" style="background-color: rgb(179, 197, 216);">
-                        <h3 class="text-uppercase">1. INFORMACION DEL VEHICULO</h3>
+                        <h3 class="text">1. Información del vehiculo</h3>
                     </div>
 
                     <div class="card-body">
-                        <div class="input-group mt-3">
-                            <label for="id_placa" class="input-group-text">PLACA </label>
-                            <input class="form-control" type="text" name="id_placa" id="id_placa" placeholder="XXX-XXX"
-                                value="{{vehiculo.id_placa}}" required>
-                            <div class="valid-feedback">
-                                Looks good!
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mt-3">
+                                    <label for="idLicensePlate" class="input-group-text">Placa: </label>
+                                    <input class="form-control" type="text" name="idLicensePlate" id="idLicensePlate"
+                                        placeholder="XXX-XXX" value="{{vehicle.idLicensePlate}}" required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
+                            <div class="col">
+                                <div class="input-group mt-3">
+                                    <label for="driverId" class="input-group-text">Cedula de conductor: </label>
+                                    <input class="form-control" type="text" name="driverId" id="driverId" placeholder=""
+                                        value="{{vehicle.driverId}}" required>
+                                </div>
                             </div>
                         </div>
-                        <div class="input-group mt-3">
-                            <label for="conductor_id" class="input-group-text">CONDUCTOR </label>
-                            <input class="form-control" type="text" name="conductor_id" id="conductor_id" placeholder=""
-                                value="{{vehiculo.conductor_id}}" required>
-                        </div>
-                        <div class="input-group mt-3 ">
-                            <label for="numeroLicenciaTransito" class="input-group-text">N° LICENCIA DE TRANSITO
-                            </label>
-                            <input class="form-control" type="text" name="numeroLicenciaTransito"
-                                id="numeroLicenciaTransito" placeholder="" value="{{vehiculo.numeroLicenciaTransito}}"
-                                required>
-                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mt-3 ">
+                                    <label for="trafficLicenseNumber" class="input-group-text">N° Licencia de transito:
+                                    </label>
+                                    <input class="form-control" type="text" name="trafficLicenseNumber"
+                                        id="trafficLicenseNumber" placeholder=""
+                                        value="{{vehicle.trafficLicenseNumber}}" required>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group mt-3 ">
+                                    <label class="input-group-text">Tipo de vehiculo: </label>
+                                    <select id="opcion" name="opcion" class="form-select">
+                                        <option value="{{vehicle.vehicleType}}" selected>{{vehicle.vehicleType}}
+                                        </option>
+                                        <option value="Sencillo">Sencillo</option>
+                                        <option value="Doble troque">Doble troque</option>
+                                        <option value="Tracto camión">Tracto camión</option>
+                                        <option value="Contingencia">Contingencia</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
 
-                        <div class="input-group mt-3 ">
-                            <label class="input-group-text">TIPO DE VEHICULO: </label>
-                            <select id="opcion" name="opcion" class="form-select">
-                                <option value="{{vehiculo.tipoVehiculo}}" selected>{{vehiculo.tipoVehiculo}}</option>
-                                <option value="Sencillo">Sencillo</option>
-                                <option value="Doble_Troque">Doble_Troque</option>
-                                <option value="Tracto_Camion">Tracto_Camión</option>
-                                <option value="Contingencia">Contingencia</option>
-                                <option value="otro">Otro</option>
-                            </select>
+                                    <input class="form-control" type="text" id="vehicleType" name="vehicleType"
+                                        onblur="hideInput()" oninput="showSelectIfEmpty()" style="display: none;"
+                                        disabled required>
 
-                            <input class="form-control" type="text" id="otroValor" name="otroValor" onblur="hideInput()"
-                                oninput="showSelectIfEmpty()" style="display: none;" disabled required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
 
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
-                            </div>
-
-                        </div>
-                        <div class="input-group mt-3 ">
-                            <label for="vencimientoLicenciaConduccion" class="input-group-text">VENCIMIENTO DE LICENCIA
-                                DE CONDUCCION:
-                            </label>
-                            <input class="form-control" type="date" name="vencimientoLicenciaConduccion"
-                                id="vencimientoLicenciaConduccion" value="{{vehiculo.vencimientoLicenciaConduccion}}"
-                                required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
+                                </div>
                             </div>
                         </div>
-                        <div class="input-group mt-3 ">
-                            <label for="vencimientoRevisionTecnicoMecanica" class="input-group-text">VENCIMIENTO
-                                REVISION TECNICO
-                                MECANICA: </label>
-                            <input class="form-control" type="date" name="vencimientoRevisionTecnicoMecanica"
-                                id="vencimientoRevisionTecnicoMecanica"
-                                value="{{vehiculo.vencimientoRevisionTecnicoMecanica}}" required>
-                            <div class="valid-feedback">
-                                Looks good!
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mt-3 ">
+                                    <label for="driversLicenseExpiration" class="input-group-text">Vencimiento licencia
+                                        de
+                                        conducción:
+                                    </label>
+                                    <input class="form-control" type="date" name="driversLicenseExpiration"
+                                        id="driversLicenseExpiration" value="{{vehicle.driversLicenseExpiration}}"
+                                        required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
-                            </div>
-                        </div>
-                        <div class="input-group mt-3 ">
-                            <label for="vencimientoSoat" class="input-group-text">VENCIMIENTO SOAT: </label>
-                            <input class="form-control" type="date" name="vencimientoSoat" id="vencimientoSoat"
-                                value="{{vehiculo.vencimientoSoat}}" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
-                            </div>
-                        </div>
-                        <div class="input-group mt-3 ">
-                            <label for="vencimientoLineaVida" class="input-group-text">VENCIMIENTO LINEA DE VIDA:
-                            </label>
-                            <input class="form-control" type="date" name="vencimientoLineaVida"
-                                id="vencimientoLineaVida" value="{{vehiculo.vencimientoLineaVida}}" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
+                            <div class="col">
+                                <div class="input-group mt-3 ">
+                                    <label for="technomechanicsReviewExpiry" class="input-group-text">Vencimiento
+                                        revisión tecnico mecanica: </label>
+                                    <input class="form-control" type="date" name="technomechanicsReviewExpiry"
+                                        id="technomechanicsReviewExpiry" value="{{vehicle.technomechanicsReviewExpiry}}"
+                                        required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="input-group mt-3 ">
-                            <label for="vencimientoPolizaResponsabilidadCivil" class="input-group-text">VENCIMIENTO
-                                POLIZA DE RESPONSABILIDAD CIVIL:
-                            </label>
-                            <input class="form-control" type="date" name="vencimientoPolizaResponsabilidadCivil"
-                                id="vencimientoPolizaResponsabilidadCivil"
-                                value="{{vehiculo.vencimientoPolizaResponsabilidadCivil}}" required>
-                            <div class="valid-feedback">
-                                Looks good!
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mt-3 ">
+                                    <label for="soatExpiration" class="input-group-text">Vencimiento SOAT: </label>
+                                    <input class="form-control" type="date" name="soatExpiration" id="soatExpiration"
+                                        value="{{vehicle.soatExpiration}}" required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
+                            <div class="col">
+                                <div class="input-group mt-3 ">
+                                    <label for="expiryLifeLine" class="input-group-text">Vencimietno linea de vida:
+                                    </label>
+                                    <input class="form-control" type="date" name="expiryLifeLine" id="expiryLifeLine"
+                                        value="{{vehicle.expiryLifeLine}}" required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="input-group mt-3 ">
-                            <label for="vencimientoPolizaCivilHidrocarburos" class="input-group-text">VENCIMIENTO POLIZA
-                                CIVIL HIDRICARBUROS:
-                            </label>
-                            <input class="form-control" type="date" name="vencimientoPolizaCivilHidrocarburos"
-                                id="vencimientoPolizaCivilHidrocarburos"
-                                value="{{vehiculo.vencimientoPolizaCivilHidrocarburos}}" required>
-                            <div class="valid-feedback">
-                                Looks good!
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mt-3 ">
+                                    <label for="expiryCivilLiabilityPolicy" class="input-group-text">Vencimiento
+                                        poliza de responsabilidad civil: </label>
+                                    <input class="form-control" type="date" name="expiryCivilLiabilityPolicy"
+                                        id="expiryCivilLiabilityPolicy" value="{{vehicle.expiryCivilLiabilityPolicy}}"
+                                        required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
+                            <div class="col">
+                                <div class="input-group mt-3 ">
+                                    <label for="expiryCivilHydrocarbonsPolicy" class="input-group-text">Vencimiento
+                                        porliza civil de hidrocarburos:
+                                    </label>
+                                    <input class="form-control" type="date" name="expiryCivilHydrocarbonsPolicy"
+                                        id="expiryCivilHydrocarbonsPolicy"
+                                        value="{{vehicle.expiryCivilHydrocarbonsPolicy}}" required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -143,73 +173,94 @@
                 <br>
                 <div class="card text-center">
                     <div class="card-header" style="background-color: rgb(179, 197, 216);">
-                        <h3 class="text-uppercase">2. INFORMACION DEL TANQUE</h3>
+                        <h3 class="text">2. Información de tanque</h3>
                     </div>
                     <div class="card-body">
-                        <div class="input-group mt-3">
-                            <label for="id_placaTrailer" class="input-group-text">PLACA TRAILER </label>
-                            <input class="form-control" type="text" name="id_placaTrailer" id="id_placaTrailer"
-                                placeholder="XXX-XXX" value="{{vehiculo.id_placaTrailer}}" required>
-                            <div class="valid-feedback">
-                                Looks good!
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mt-3">
+                                    <label for="idTrailerPlate" class="input-group-text">Placa de tráiler: </label>
+                                    <input class="form-control" type="text" name="idTrailerPlate" id="idTrailerPlate"
+                                        placeholder="XXX-XXX" value="{{vehicle.idTrailerPlate}}" required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
-                            </div>
-                        </div>
-                        <div class="input-group mt-3">
-                            <label for="tablaAforo" class="input-group-text">TABLA DE AFORO </label>
-                            <input class="form-control" type="text" name="tablaAforo" id="tablaAforo" placeholder=""
-                                value="{{vehiculo.tablaAforo}}" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
-                            </div>
-                        </div>
-                        <div class="input-group mt-3">
-                            <label for="vencimientoHidroestatica" class="input-group-text">VENCIMIENTO HIDROESTATICA
-                            </label>
-                            <input class="form-control" type="date" name="vencimientoHidroestatica"
-                                id="vencimientoHidroestatica" placeholder=""
-                                value="{{vehiculo.vencimientoHidroestatica}}" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
+                            <div class="col">
+                                <div class="input-group mt-3">
+                                    <label for="capacityTable" class="input-group-text">Tabla de aforo: </label>
+                                    <input class="form-control" type="text" name="capacityTable" id="capacityTable"
+                                        placeholder="" value="{{vehicle.capacityTable}}" required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="input-group mt-3">
-                            <label for="vencimientoQuintaRueda" class="input-group-text">VENCIMIENTO QUINTA RUEDA
-                            </label>
-                            <input class="form-control" type="date" name="vencimientoQuintaRueda"
-                                id="vencimientoQuintaRueda" placeholder="" value="{{vehiculo.vencimientoQuintaRueda}}"
-                                required>
-                            <div class="valid-feedback">
-                                Looks good!
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mt-3">
+                                    <label for="hydrostaticExpiration" class="input-group-text">Vencimietno
+                                        hidroestática:
+                                    </label>
+                                    <input class="form-control" type="date" name="hydrostaticExpiration"
+                                        id="hydrostaticExpiration" placeholder=""
+                                        value="{{vehicle.hydrostaticExpiration}}" required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
+                            <div class="col">
+
+                                <div class="input-group mt-3">
+                                    <label for="expiryFifthWheel" class="input-group-text">Vencimiento quinta rueda:
+                                    </label>
+                                    <input class="form-control" type="date" name="expiryFifthWheel"
+                                        id="expiryFifthWheel" placeholder="" value="{{vehicle.expiryFifthWheel}}"
+                                        required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="input-group mt-3">
-                            <label for="vencimientoKingPin" class="input-group-text">VENCIMIENTO KING PIN </label>
-                            <input class="form-control" type="date" name="vencimientoKingPin" id="vencimientoKingPin"
-                                placeholder="" value="{{vehiculo.vencimientoKingPin}}" required>
-                            <div class="valid-feedback">
-                                Looks good!
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col-6">
+                                <div class="input-group mt-3">
+                                    <label for="kingPinExpiry" class="input-group-text">Vencimiento king pin: </label>
+                                    <input class="form-control" type="date" name="kingPinExpiry" id="kingPinExpiry"
+                                        placeholder="" value="{{vehicle.kingPinExpiry}}" required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="invalid-feedback">
-                                Please choose a username.
-                            </div>
+                            <div class="col-3"></div>
                         </div>
+
                     </div>
                 </div>
                 <br>
                 <div class="card text-center" style="border: none;">
-                    <button type="submit" class="btn btn-success">Inspeccionar</button>
+                    <button type="submit" class="btn btn-success">Editar registro</button>
                 </div>
         </form>
     </div>
@@ -224,26 +275,26 @@
     }
 
     function hideInput() {
-        const otroValor = document.getElementById("otroValor");
+        const vehicleType = document.getElementById("vehicleType");
         const opcion = document.getElementById("opcion");
-        if (otroValor.value === "") {
-            otroValor.style.display = "none";
-            otroValor.disabled = true;
+        if (vehicleType.value === "") {
+            vehicleType.style.display = "none";
+            vehicleType.disabled = true;
             showSelect();
         }
     }
 
     document.getElementById("opcion").addEventListener("change", function () {
-        const otroValor = document.getElementById("otroValor");
+        const vehicleType = document.getElementById("vehicleType");
         const opcionSeleccionada = this.value;
         if (opcionSeleccionada === "otro") {
             hideSelect();
-            otroValor.style.display = "block";
-            otroValor.disabled = false;
-            otroValor.focus();
+            vehicleType.style.display = "block";
+            vehicleType.disabled = false;
+            vehicleType.focus();
         } else {
-            otroValor.style.display = "none";
-            otroValor.disabled = true;
+            vehicleType.style.display = "none";
+            vehicleType.disabled = true;
             showSelect();
         }
     });
@@ -257,7 +308,6 @@
                     event.preventDefault()
                     event.stopPropagation()
                 }
-
                 form.classList.add('was-validated');
             }, false)
         })
@@ -265,7 +315,7 @@
 
     var selectElement = document.getElementById("opcion");
     var options = selectElement.options;
-    var selectedValue = "{{vehiculo.tipoVehiculo}}";
+    var selectedValue = "{{vehicle.vehicleType}}";
 
     for (var i = 1; i < options.length; i++) {
         var option = options[i];

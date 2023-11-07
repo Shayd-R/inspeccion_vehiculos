@@ -10,25 +10,25 @@ router.get('/add', async (req, res) => {
 router.post('/add', async (req, res) => {
     //hacer validaciones
     try {
-        const { id_placa, conductor_id, numeroLicenciaTransito, vencimientoLicenciaConduccion, vencimientoRevisionTecnicoMecanica, vencimientoSoat, vencimientoLineaVida, vencimientoPolizaResponsabilidadCivil, vencimientoPolizaCivilHidrocarburos,
-            id_placaTrailer, tablaAforo, vencimientoHidroestatica, vencimientoQuintaRueda, vencimientoKingPin
+        const { idLicensePlate, driverId, trafficLicenseNumber, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
+            idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
         } = req.body;
 
         const opcionSeleccionada = req.body.opcion;
-        let tipovehiculo = '';
+        let vehicleType = '';
 
         if (opcionSeleccionada === 'otro') {
-            tipovehiculo = req.body.otroValor;
+            vehicleType = req.body.vehicleType;
         } else {
-            tipovehiculo = opcionSeleccionada;
+            vehicleType = opcionSeleccionada;
         }
 
-        const newVehiculo = {
-            id_placa, conductor_id, numeroLicenciaTransito, tipovehiculo, vencimientoLicenciaConduccion, vencimientoRevisionTecnicoMecanica, vencimientoSoat, vencimientoLineaVida, vencimientoPolizaResponsabilidadCivil, vencimientoPolizaCivilHidrocarburos,
-            id_placaTrailer, tablaAforo, vencimientoHidroestatica, vencimientoQuintaRueda, vencimientoKingPin
+        const newVehicle = {
+            idLicensePlate, driverId, trafficLicenseNumber, vehicleType, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
+            idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
         }
 
-        await pool.query('INSERT INTO informacionvehiculo SET ?', [newVehiculo]);
+        await pool.query('INSERT INTO vehicleinformation SET ?', [newVehicle]);
         res.redirect('/list');
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -39,126 +39,115 @@ router.get('/list', async (req, res) => {
     try {
         const find = req.query.find;
         if (find) {
-            const query = "SELECT informacionVehiculo.conductor_id, conductores.nombre, informacionvehiculo.id_placa, informacionvehiculo.tipoVehiculo FROM informacionVehiculo INNER JOIN conductores ON informacionVehiculo.conductor_id = conductores.id_conductor WHERE informacionVehiculo.conductor_id LIKE '%" + find + "%' OR informacionVehiculo.id_placa LIKE '%" + find + "%'"
-
+            const query = "SELECT vehicleinformation.`driverId`, drivers.`name`, vehicleinformation.`idLicensePlate`, vehicleinformation.`vehicleType` FROM vehicleinformation INNER JOIN drivers ON vehicleinformation.`driverId` = drivers.`idDriver` WHERE vehicleinformation.`driverId` LIKE '%" + find + "%' OR vehicleinformation.`idLicensePlate` LIKE '%" + find + "%'"
             const [result] = await pool.query(query, [find]);
             if (result[0] === undefined) {
                 const noData = 'No hay registros con esa cedula.';
-                res.render('inspeccionar/inspect.hbs', { inspecciones: result, find, noData });
+                res.render('inspeccionar/inspect.hbs', { inspections: result, find, noData });
             } else {
-                res.render('inspeccionar/inspect.hbs', { inspecciones: result, find });
+                res.render('inspeccionar/inspect.hbs', { inspections: result, find });
             }
 
         } else if (find === '') {
-            const [result] = await pool.query('SELECT informacionVehiculo.`conductor_id`,  conductores.nombre, informacionvehiculo.`id_placa`, informacionvehiculo.`tipoVehiculo` FROM informacionVehiculo INNER JOIN conductores ON informacionVehiculo.conductor_id = conductores.id_conductor');
-            res.render('inspeccionar/inspect.hbs', { inspecciones: result });
+            const [result] = await pool.query('SELECT vehicleinformation.`driverId`, drivers.`name`, vehicleinformation.`idLicensePlate`, vehicleinformation.`vehicleType` FROM vehicleinformation INNER JOIN drivers ON vehicleinformation.`driverId` = drivers.`idDriver`');
+            res.render('inspeccionar/inspect.hbs', { inspections: result });
         } else {
-            const [result] = await pool.query('SELECT informacionVehiculo.`conductor_id`,  conductores.nombre, informacionvehiculo.`id_placa`, informacionvehiculo.`tipoVehiculo` FROM informacionVehiculo INNER JOIN conductores ON informacionVehiculo.conductor_id = conductores.id_conductor');
-            res.render('inspeccionar/inspect.hbs', { inspecciones: result });
+            const [result] = await pool.query('SELECT vehicleinformation.`driverId`, drivers.`name`, vehicleinformation.`idLicensePlate`, vehicleinformation.`vehicleType` FROM vehicleinformation INNER JOIN drivers ON vehicleinformation.`driverId` = drivers.`idDriver`');
+            res.render('inspeccionar/inspect.hbs', { inspections: result });
         }
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-router.get('/edit/:id_placa', async (req, res) => {
+router.get('/edit/:idLicensePlate', async (req, res) => {
     try {
-        const id_placa = req.params.id_placa;
-        const [vehiculo] = await pool.query("SELECT * FROM informacionVehiculo WHERE id_placa = '" + id_placa + "'");
-        const vehiculoEdit = vehiculo[0];
-        res.render('inspeccionar/edit.hbs', { vehiculo: vehiculoEdit });
+        const idLicensePlate = req.params.idLicensePlate;
+        const [vehicle] = await pool.query("SELECT * FROM vehicleinformation WHERE idLicensePlate = '" + idLicensePlate + "'");
+        const vehicleEdit = vehicle[0];
+        res.render('inspeccionar/edit.hbs', { vehicle: vehicleEdit });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-router.post('/edit/:id_placa', async (req, res) => {
+router.post('/edit/:idLicensePlate', async (req, res) => {
     try {
-        const { conductor_id, numeroLicenciaTransito, vencimientoLicenciaConduccion, vencimientoRevisionTecnicoMecanica,
-            vencimientoSoat, vencimientoLineaVida, vencimientoPolizaResponsabilidadCivil, vencimientoPolizaCivilHidrocarburos,
-            id_placaTrailer, tablaAforo, vencimientoHidroestatica, vencimientoQuintaRueda, vencimientoKingPin } = req.body;
-        const id_placa = req.params.id_placa;
-        let tipoVehiculo = '';
-        const opcionSeleccionada1 = req.body.opcion;
-        if (opcionSeleccionada1 === 'otro') {
-            tipoVehiculo = req.body.otroValor;
+        const { driverId, trafficLicenseNumber, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
+            idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
+        } = req.body;
+
+        const idLicensePlate = req.params.idLicensePlate;
+        const opcionSeleccionada = req.body.opcion;
+        let vehicleType = '';
+
+        if (opcionSeleccionada === 'otro') {
+            vehicleType = req.body.vehicleType;
         } else {
-            tipoVehiculo = opcionSeleccionada1;
+            vehicleType = opcionSeleccionada;
         }
 
-        const editVehiculo = {
-            conductor_id, numeroLicenciaTransito, tipoVehiculo, vencimientoLicenciaConduccion, vencimientoRevisionTecnicoMecanica,
-            vencimientoSoat, vencimientoLineaVida, vencimientoPolizaResponsabilidadCivil, vencimientoPolizaCivilHidrocarburos,
-            id_placaTrailer, tablaAforo, vencimientoHidroestatica, vencimientoQuintaRueda, vencimientoKingPin
+        const editVehicle = {
+            driverId, trafficLicenseNumber, vehicleType, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
+            idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
         }
-        await pool.query('UPDATE informacionVehiculo SET ? WHERE id_placa = ?', [editVehiculo, id_placa]);
+        await pool.query('UPDATE vehicleinformation SET ? WHERE idLicensePlate = ?', [editVehicle, idLicensePlate]);
         res.redirect('/list');
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-router.get('/inspectVehiculo/:id_placa', async (req, res) => {
+router.get('/inspectVehiculo/:idLicensePlate', async (req, res) => {
     try {
-        const id_placa = req.params.id_placa;
-        const [especificacion] = await pool.query('SELECT * FROM especificaciones');
-        const [subespecificacion] = await pool.query('SELECT *  FROM subespecificaciones');
-        res.render('inspeccionar/inspectVehiculo.hbs', { especificacion, subespecificacion, id_placa });
+        const idLicensePlate = req.params.idLicensePlate;
+        const [specifications] = await pool.query('SELECT * FROM specifications');
+        const [subspecifications] = await pool.query('SELECT *  FROM subspecifications');
+        res.render('inspeccionar/inspectVehiculo.hbs', { specifications, subspecifications, idLicensePlate });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-router.post('/inspectVehiculo/:id_placa', async (req, res) => {
+router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
     try {
-        const fecha = req.body.fecha;
-        const id_placa = req.params.id_placa;
-        const signature = req.body.firma;
+        const date = req.body.date;
+        const idLicensePlate = req.params.idLicensePlate;
+        const signature = req.body.signature;
 
+        const [driver] = await pool.query('SELECT driverId FROM vehicleinformation WHERE idLicensePlate = ?', [idLicensePlate]);
+        const driverId = driver[0].driverId;
+        const [date_bd] = await pool.query("SELECT * FROM inspectiondata WHERE driverId = '" + driverId + "' AND licensePlateId = '" + idLicensePlate + "' AND date = '" + date + "'");
 
-
-        const [conductor] = await pool.query('SELECT conductor_id FROM informacionvehiculo WHERE id_placa = ?', [id_placa]);
-        const conductor_id = conductor[0].conductor_id;
-        const placa_id = id_placa;
-        const casf = "SELECT * FROM inspeccion WHERE conductor_id = '" + conductor_id + "' AND placa_id = '" + placa_id + "' AND fecha = '" + fecha + "'";
-        const [fecha_bd] = await pool.query(casf);
-        
-        if (fecha_bd[0] === undefined) {
-            await pool.query("INSERT INTO Firms (signature) VALUES ('" + signature + "')");
-            const [firma] = await pool.query("SELECT id_Firms FROM Firms WHERE signature='" + signature + "'");
-            const Firms_Id = firma[0].id_Firms;
-            console.log("2");
-            const inspeccion = { conductor_id, placa_id, fecha, Firms_Id };
-
-            await pool.query('INSERT INTO inspeccion SET ?', [inspeccion]);
-
-            /*
-            const sql = 'SELECT id_inspeccion FROM inspeccion WHERE conductor_id = ? AND placa_id = ? AND fecha = ?';
-            const [id_inspecciones] = await pool.query(sql, [inspeccion.conductor_id, inspeccion.placa_id, inspeccion.fecha]);
-            const inspeccion_id = id_inspecciones[0].id_inspeccion;
-            const [total] = await pool.query('SELECT COUNT(*) as total FROM subespecificaciones;');
+        if (date_bd[0] === undefined) {
+            await pool.query("INSERT INTO firms (signature) VALUES ('" + signature + "')");
+            const [idFirms] = await pool.query("SELECT idFirms FROM firms WHERE signature='" + signature + "'");
+            const firmsId = idFirms[0].idFirms;
+            const licensePlateId = idLicensePlate;
+            const inspectiondata = { driverId, licensePlateId, date, firmsId };
+            await pool.query('INSERT INTO inspectiondata SET ?', [inspectiondata]);
+            const sql = "SELECT idInspection FROM inspectiondata WHERE driverId = ? AND licensePlateId = ? AND date = ?";
+            const [idIns] = await pool.query(sql, [inspectiondata.driverId, inspectiondata.licensePlateId, inspectiondata.date]);
+            const inspectionId = idIns[0].idInspection;
+            console.log(idIns+"--"+inspectionId);
+            const [total] = await pool.query('SELECT COUNT(*) as total FROM subspecifications;');
 
             const values = [];
             for (let i = 1; i <= total[0].total; i++) {
                 const pregunta = `${i}`;
                 const respuesta = req.body[pregunta];
-                values.push(`(${inspeccion_id}, ${pregunta},  ${respuesta})`);
+                values.push(`(${inspectionId}, ${pregunta},  ${respuesta})`);
             }
-
-
-
-            
-
-            const query = 'INSERT INTO estado (inspeccion_id,subespecificaciones_id, convenciones) VALUES ' + `${values.join(', ')}` + ';';
-            await pool.query(query);*/
-        } else if (fecha_bd[0].fecha === fecha) {
-            console.log('actualizar: \n1-' + fecha_bd[0].fecha + '\n2-' + fecha);
-        } 
+            await pool.query('INSERT INTO inspection (inspectionId, subSpecificationsId, conventionId) VALUES ' + `${values.join(', ')}` + ';');
+        } else if (date_bd[0].date === date) {
+            // que se actualice
+            console.log('actualizar: \n1-' + date_bd[0].date + '\n2-' + date);
+        }
 
 
 
         //libreria para mostrar mensajes (para mostrar que se ha echo el resgistro de la inspeccion) y redireccionar a informes 
-        res.redirect(`/inspectVehiculo/${id_placa}`);
+        res.redirect(`/inspectVehiculo/${idLicensePlate}`);
         //res.render('informes/informes.hbs');
         //res.redirect('/list');
     } catch (err) {
