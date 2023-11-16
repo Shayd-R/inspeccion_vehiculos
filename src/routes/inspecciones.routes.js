@@ -10,7 +10,7 @@ router.get('/add', async (req, res) => {
 router.post('/add', async (req, res) => {
     //hacer validaciones
     try {
-        const { idLicensePlate, driverId, trafficLicenseNumber, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
+        const { idLicensePlate, driverId, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
             idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
         } = req.body;
 
@@ -24,7 +24,7 @@ router.post('/add', async (req, res) => {
         }
 
         const newVehicle = {
-            idLicensePlate, driverId, trafficLicenseNumber, vehicleType, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
+            idLicensePlate, driverId, vehicleType, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
             idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
         }
 
@@ -73,7 +73,7 @@ router.get('/edit/:idLicensePlate', async (req, res) => {
 
 router.post('/edit/:idLicensePlate', async (req, res) => {
     try {
-        const { driverId, trafficLicenseNumber, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
+        const { driverId, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
             idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
         } = req.body;
 
@@ -88,7 +88,7 @@ router.post('/edit/:idLicensePlate', async (req, res) => {
         }
 
         const editVehicle = {
-            driverId, trafficLicenseNumber, vehicleType, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
+            driverId, vehicleType, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
             idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
         }
         await pool.query('UPDATE vehicleinformation SET ? WHERE idLicensePlate = ?', [editVehicle, idLicensePlate]);
@@ -114,7 +114,7 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
         const date = req.body.date;
         const idLicensePlate = req.params.idLicensePlate;
         const signature = req.body.signature;
-
+        const licensePlateId = idLicensePlate;
         const [driver] = await pool.query('SELECT driverId FROM vehicleinformation WHERE idLicensePlate = ?', [idLicensePlate]);
         const driverId = driver[0].driverId;
         const [date_bd] = await pool.query("SELECT * FROM inspectiondata WHERE driverId = '" + driverId + "' AND licensePlateId = '" + idLicensePlate + "' AND date = '" + date + "'");
@@ -123,15 +123,12 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
             await pool.query("INSERT INTO firms (signature) VALUES ('" + signature + "')");
             const [idFirms] = await pool.query("SELECT idFirms FROM firms WHERE signature='" + signature + "'");
             const firmsId = idFirms[0].idFirms;
-            const licensePlateId = idLicensePlate;
             const inspectiondata = { driverId, licensePlateId, date, firmsId };
             await pool.query('INSERT INTO inspectiondata SET ?', [inspectiondata]);
             const sql = "SELECT idInspection FROM inspectiondata WHERE driverId = ? AND licensePlateId = ? AND date = ?";
             const [idIns] = await pool.query(sql, [inspectiondata.driverId, inspectiondata.licensePlateId, inspectiondata.date]);
             const inspectionId = idIns[0].idInspection;
-            console.log(idIns+"--"+inspectionId);
             const [total] = await pool.query('SELECT COUNT(*) as total FROM subspecifications;');
-
             const values = [];
             for (let i = 1; i <= total[0].total; i++) {
                 const pregunta = `${i}`;
@@ -139,13 +136,20 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
                 values.push(`(${inspectionId}, ${pregunta},  ${respuesta})`);
             }
             await pool.query('INSERT INTO inspection (inspectionId, subSpecificationsId, conventionId) VALUES ' + `${values.join(', ')}` + ';');
+        
         } else if (date_bd[0].date === date) {
-            // que se actualice
-            console.log('actualizar: \n1-' + date_bd[0].date + '\n2-' + date);
+
+            const sql = "SELECT idInspection FROM inspectiondata WHERE driverId = ? AND licensePlateId = ? AND date = ?";
+            const [idIns] = await pool.query(sql, [driverId, licensePlateId, date]);
+            const inspectionId = idIns[0].idInspection;
+            const [total] = await pool.query('SELECT COUNT(*) as total FROM subspecifications;');
+            const values = [];
+            for (let i = 1; i <= total[0].total; i++) {
+                const pregunta = `${i}`;
+                const respuesta = req.body[pregunta];
+                await pool.query("UPDATE inspection SET conventionId= "+`${respuesta}`+" WHERE inspectionId = "+inspectionId+" AND subSpecificationsId= "+`${pregunta}`)
+            }
         }
-
-
-
         //libreria para mostrar mensajes (para mostrar que se ha echo el resgistro de la inspeccion) y redireccionar a informes 
         res.redirect(`/inspectVehiculo/${idLicensePlate}`);
         //res.render('informes/informes.hbs');

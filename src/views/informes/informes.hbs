@@ -1,65 +1,80 @@
-<form id="firmaForm" action="/guardar-firma" method="post">
-    <canvas id="firmaCanvas" width="400" height="200"></canvas>
-    <button type="submit">Guardar Firma</button>
-</form>
-<script>
-    const firmaForm = document.getElementById('firmaForm');
-    const canvas = document.getElementById('firmaCanvas');
-    const ctx = canvas.getContext('2d');
-    let isDrawing = false;
-    let lastX = 0;
-    let lastY = 0;
+<style>
+    p {
+        font-weight: 400;
+    }
+</style>
+<div class="container">
+    <div class="row mt-5">
+        <h1 class="text-light">Buscar informe</h1>
+        <div class="row align-items-center">
+            <div class="col">
+                <form action="" method="get" class="form-inline">
+                    <div class="row">
+                        <div class="input-group">
+                            <label for="find" class="input-group-text"
+                                style="background-color: #fff; top: 12px; left: 12px; "><i
+                                    class="fa-solid fa-magnifying-glass" style="color: #6b788e;"></i></label>
+                            <input type="text" id="find" name="find" class="form-control"
+                                placeholder="Buscar por cédula" value="{{find}}">
+                            <button type="submit" class="btn btn-light">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col d-flex justify-content-end" style="">
+            </div>
+        </div>
+        {{#if noData}}
+        <div class="col md-3" style="padding-top: 20px;">
+            <center style="padding-top: 100px;">
+                <h1>{{noData}}</h1>
+            </center>
+        </div>
+        {{/if}}
+        {{#if inspectionData}}
+        <div class="col md-3" style="padding-top: 20px;">
+            <table class="table text-center">
+                <thead>
+                    <tr class="table-white">
+                        <th>Cédula</th>
+                        <th>Nombre</th>
+                        <th>Placa</th>
+                        <th>Fecha de inspeccion</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each inspectionData}}
+                    <tr class="table-secondary">
+                        <th>
+                            <p>{{driverId}}</p>
+                        </th>
+                        <th>
+                            <p>{{name}}</p>
+                        </th>
+                        <th>
+                            <p>{{licensePlateId}}</p>
+                        </th>
+                        <th>
+                            <p>{{date}}</p>
+                        </th>
+                        <th>
+                            <a href="" class="btn btn-info">Mirar informe</a>
+                            <a href="/pdf/{{idInspection}}" class="btn btn-primary">Descargar informe</a>
 
-    canvas.addEventListener('mousedown', (e) => {
-        isDrawing = true;
-        [lastX, lastY] = [e.offsetX, e.offsetY];
-    });
-
-    canvas.addEventListener('mousemove', (e) => {
-        if (!isDrawing) return;
-
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-
-        [lastX, lastY] = [e.offsetX, e.offsetY];
-    });
-
-    canvas.addEventListener('mouseup', () => {
-        isDrawing = false;
-    });
-
-    canvas.addEventListener('mouseout', () => {
-        isDrawing = false;
-    });
-
-    firmaForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const firmaImagen = canvas.toDataURL('image/png');
-
-        // Agregar la firma como un campo en el formulario antes de enviarlo
-        const firmaInput = document.createElement('input');
-        firmaInput.type = 'hidden';
-        firmaInput.name = 'firma';
-        firmaInput.value = firmaImagen;
-        firmaForm.appendChild(firmaInput);
-
-        // Envía el formulario con la firma al servidor
-        fetch('/guardar-firma', {
-            method: 'POST',
-            body: new FormData(firmaForm),
-        })
-            .then((response) => response.text())
-            .then((message) => {
-                alert(message);
-            })
-            .catch((error) => {
-                console.error('Error al guardar la firma:', error);
-            });
-    });
-
-</script>
+                        </th>
+                    </tr>
+                    {{/each}}
+                </tbody>
+                <tfoot>
+                    <tr class="table-white">
+                        <td colspan="12">
+                            Registro de informes
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        {{/if}}
+    </div>
+</div>
