@@ -3,8 +3,9 @@
         font-weight: 400;
     }
 </style>
+
 <div class="container">
-    <div class="row mt-5" >
+    <div class="row mt-5">
         <h1 class="text-light">Buscar usuario</h1>
         <div class="row align-items-center">
             <div class="col">
@@ -22,7 +23,7 @@
                 </form>
             </div>
             <div class="col d-flex justify-content-end" style="">
-                <a href="/add" style="text-decoration: none;">
+                <a href="/addInspect" style="text-decoration: none;">
                     <button class="btn btn-info">Registrar vehiculo</button>
                 </a>
             </div>
@@ -46,13 +47,21 @@
                         <th>Opciones</th>
                     </tr>
                 </thead>
-                <tbody >
+                <tbody>
                     {{#each inspections}}
                     <tr class="table-secondary">
-                        <th><p>{{driverId}}</p></th>
-                        <th><p>{{name}}</p></th>
-                        <th><p>{{idLicensePlate}}</p></th>
-                        <th><p>{{vehicleType}}</p></th>
+                        <th>
+                            <p>{{driverId}}</p>
+                        </th>
+                        <th>
+                            <p>{{name}}</p>
+                        </th>
+                        <th>
+                            <p>{{idLicensePlate}}</p>
+                        </th>
+                        <th>
+                            <p>{{vehicleType}}</p>
+                        </th>
                         <th>
                             <a href="/edit/{{idLicensePlate}}" class="btn btn-warning">Info. Vehiculo</a>
                             <a href="/inspectVehiculo/{{idLicensePlate}}" class="btn btn-primary"><i

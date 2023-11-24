@@ -1,0 +1,145 @@
+.topheader {
+    position: fixed;
+    box-shadow: 0 4px 5px var(--navbar-shallow-color);
+    background-color: var(--theme-color);
+    left: 0;
+    top: 0;
+    width: 100%;
+
+}
+
+.topnav {
+    display: flex;
+    justify-content: space-between;
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.logo img {
+    border-radius: 30%;
+}
+
+.menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu li {
+    padding: 0 15px;
+}
+
+.menu a {
+    color: var(--text-color);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 70px;
+    text-transform: uppercase;
+    position: relative;
+
+}
+
+.menu a::after {
+    content: "";
+    background-color: var(--secondary-color);
+    position: absolute;
+    left: 0;
+    top: calc(100% + 4px);
+    width: 100%;
+    height: 4px;
+
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.menu a.selected::after,
+.menu a:hover::after {
+    opacity: 0.8;
+}
+
+.menu a:hover {
+    color: var(--primary-color);
+}
+
+.open-menu,
+.close-menu {
+    display: none;
+}
+
+@media (max-width: 950px) {
+    .logo {
+        height: 70px;
+    }
+
+    .logo img {
+        border-radius: 30%;
+    }
+
+    .menu {
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        align-items: center;
+        background-color: var(--primary-color);
+        height: 100%;
+        overflow: auto;
+
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+
+    .menu li {
+        padding: 0 15px;
+    }
+
+    .menu a {
+        color: var(--theme-color);
+        line-height: 60px;
+        font-size: 25px;
+    }
+
+    .open-menu,
+    .close-menu {
+        display: block;
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+    .close-menu {
+        align-self: flex-end;
+        padding: 23px 8px;
+        color: var(--theme-color);
+    }
+
+    .menu_opend {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .open-menu:focus:not(:focus-visible),
+    .close-menu:focus:not(:focus-visible) {
+        outline: none;
+    }
+
+    .menu a::after {
+        content: none;
+    }
+
+    .menu a:hover,
+    .menu a.selected {
+        color: var(--secondary-color);
+    }
+}

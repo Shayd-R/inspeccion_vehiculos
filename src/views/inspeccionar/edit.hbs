@@ -3,6 +3,7 @@
         display: none;
     }
 </style>
+
 <div class="container p-4">
     <div class="row">
         <form class="needs-validation" action="/edit/{{vehicle.idLicensePlate}}" method="post" novalidate>
@@ -72,7 +73,8 @@
                         <div class="row">
                             <div class="col">
                                 <div class="input-group mt-3 ">
-                                    <label for="driversLicenseExpiration" class="input-group-text">Vencimiento licencia
+                                    <label for="driversLicenseExpiration" class="input-group-text">Vencimiento
+                                        licencia
                                         de
                                         conducción:
                                     </label>
@@ -239,7 +241,8 @@
                             <div class="col-3"></div>
                             <div class="col-6">
                                 <div class="input-group mt-3">
-                                    <label for="kingPinExpiry" class="input-group-text">Vencimiento king pin: </label>
+                                    <label for="kingPinExpiry" class="input-group-text">Vencimiento king pin:
+                                    </label>
                                     <input class="form-control" type="date" name="kingPinExpiry" id="kingPinExpiry"
                                         placeholder="" value="{{vehicle.kingPinExpiry}}" required>
                                     <div class="valid-feedback">
@@ -262,6 +265,7 @@
         </form>
     </div>
 </div>
+
 <script>
     function hideSelect() {
         document.getElementById("opcion").style.display = "none";

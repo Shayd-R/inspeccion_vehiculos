@@ -3,11 +3,11 @@ import pool from '../database.js'
 
 const router = Router();
 
-router.get('/add', async (req, res) => {
-    res.render('inspeccionar/add.hbs');
+router.get('/addInspect', async (req, res) => {
+    res.render('inspeccionar/addInspect.hbs');
 });
 
-router.post('/add', async (req, res) => {
+router.post('/addInspect', async (req, res) => {
     //hacer validaciones
     try {
         const { idLicensePlate, driverId, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,

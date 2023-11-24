@@ -1,0 +1,175 @@
+<style>
+    .display-Input {
+        display: none;
+    }
+</style>
+
+
+<div class="addInspect" id="addInspect">
+    <header>Registro de vehiculo</header>
+    <form action="/addInspect" method="post">
+        <div class="form first">
+            <div class="details addvehicle">
+                <span class="title-addvehicle">Información del vehiculo</span>
+                <div class="fields">
+                    <div class="input-field">
+                        <label>Placa</label>
+                        <input type="text" name="idLicensePlate" id="idLicensePlate" placeholder="Ingresa la placa"
+                            required>
+                    </div>
+                    <div class="input-field">
+                        <label>Cédula de conductor</label>
+                        <input type="text" name="driverId" id="driverId" placeholder="Ingresar cédula" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Tipo de vehiculo</label>
+                        <select id="opcion" name="opcion">
+                            <option value="Sencillo">Sencillo</option>
+                            <option value="Doble troque">Doble troque</option>
+                            <option value="Tracto camion">Tracto camión</option>
+                            <option value="Contingencia">Contingencia</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                        <input type="text" id="vehicleType" name="vehicleType" onblur="hideInput()"
+                            oninput="showSelectIfEmpty()" style="display: none;" disabled required>
+                    </div>
+                    <div class="input-field">
+                        <label>V.
+                            licencia de conducción
+                        </label>
+                        <input type="date" name="driversLicenseExpiration" id="driversLicenseExpiration" required>
+                    </div>
+                    <div class="input-field">
+                        <label>V.
+                            revisión tecnico mecanica</label>
+                        <input type="date" name="technomechanicsReviewExpiry" id="technomechanicsReviewExpiry" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Vencimietno SOAT</label>
+                        <input type="date" name="soatExpiration" id="soatExpiration" required>
+                    </div>
+                    <div class="input-field">
+                        <label>V. liena de
+                            vida</label>
+                        <input type="date" name="expiryLifeLine" id="expiryLifeLine" required>
+                    </div>
+                    <div class="input-field">
+                        <label>V.
+                            póliza
+                            de responsabilidad civil
+                        </label>
+                        <input type="date" name="expiryCivilLiabilityPolicy" id="expiryCivilLiabilityPolicy" required>
+                    </div>
+                    <div class="input-field">
+                        <label>V.
+                            póliza civil hidrocarburos
+                        </label>
+                        <input type="date" name="expiryCivilHydrocarbonsPolicy" id="expiryCivilHydrocarbonsPolicy"
+                            required>
+                    </div>
+                </div>
+                <button class="nextBtn">
+                    <span class="btnText">Siguente</span>
+                    <i class="fa-solid fa-angles-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form second">
+            <div class="details addtank">
+                <span class="title-addvehicle">Informacion del tanque</span>
+                <div class="fields">
+                    <div class="input-field">
+                        <label>Placa tráiler</label>
+                        <input type="text" name="idTrailerPlate" id="idTrailerPlate" placeholder="XXX-XXX" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Tabla aforo</label>
+                        <input type="text" name="capacityTable" id="capacityTable" placeholder="" required>
+                    </div>
+                    <div class="input-field">
+                        <label>V. hidroestática</label>
+                        <input type="date" name="hydrostaticExpiration" id="hydrostaticExpiration" required>
+                    </div>
+                    <div class="input-field">
+                        <label>V. quinta rueda</label>
+                        <input type="date" name="expiryFifthWheel" id="expiryFifthWheel" placeholder="" required>
+                    </div>
+                    <div class="input-field">
+                        <label>V. king pin</label>
+                        <input type="date" name="kingPinExpiry" id="kingPinExpiry" placeholder="" required>
+                    </div>
+
+                    <div class="input-field">
+
+                    </div>
+
+
+                </div>
+                <br><br><br></b><br>
+                <div class="buttons">
+                    <div class="backBtn">
+                        <i class="fa-solid fa-angles-left"></i>
+                        <span class="btnText">Atras</span>
+                    </div>
+                    <button class="nextBtn">
+                        <span class="btnText">Siguente</span>
+                        <i class="fa-solid fa-angles-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<script>
+    function hideSelect() {
+        document.getElementById("opcion").style.display = "none";
+    }
+
+    function showSelect() {
+        document.getElementById("opcion").style.display = "block";
+    }
+
+    function hideInput() {
+        const vehicleType = document.getElementById("vehicleType");
+        const opcion = document.getElementById("opcion");
+        if (vehicleType.value === "") {
+            vehicleType.style.display = "none";
+            vehicleType.disabled = true;
+            showSelect();
+        }
+    }
+
+    document.getElementById("opcion").addEventListener("change", function () {
+        const vehicleType = document.getElementById("vehicleType");
+        const opcionSeleccionada = this.value;
+        if (opcionSeleccionada === "otro") {
+            hideSelect();
+            vehicleType.style.display = "block";
+            vehicleType.disabled = false;
+            vehicleType.focus();
+        } else {
+            vehicleType.style.display = "none";
+            vehicleType.disabled = true;
+            showSelect();
+        }
+    });
+
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated');
+            }, false)
+        })
+    })()
+</script>

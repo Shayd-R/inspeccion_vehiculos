@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@700&display=swap');
+
+.inicio {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    max-width: 950px;
+    min-width: 400px;
+    margin: 0 auto;
+}
+
+
+.inicio-btn {
+    margin-bottom: 25px;
+}
+
+.icon-button {
+    width: 90%;
+    font-size: 40px;
+    font-weight: bold;
+    margin: 0;
+    font-family: 'Noto Sans', sans-serif;
+    background-color: var(--primary-color);
+    color: var(--text-color-inverse);
+    padding: 0.5em 1em;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+}
+
+.icon-button:hover {
+    filter: brightness(130%);
+}
+
+.icon-button i {
+    color: var(--icon-color);
+}
+
+
+
+/*----------------------------------------------------------------------------------*/
+
+@media (min-width: 950px) {
+
+    .inicio {
+        display: flex;
+        flex-direction: row;
+        margin: 13% auto;
+        left: 0;
+        top: 0;
+    }
+
+    .inicio-btn {
+        margin: 1rem;
+        padding: 0.5em 0.7em;
+    }
+
+    .icon-button {
+        width: 100%;
+        height: 100%;
+        font-size: 40px;
+        font-weight: bold;
+        margin: 0;
+        font-family: 'Noto Sans', sans-serif;
+        background-color: var(--primary-color);
+        color: var(--text-color-inverse);
+        border-radius: 7px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .icon-button:hover {
+        filter: brightness(130%);
+    }
+}
