@@ -37,24 +37,8 @@ router.post('/addInspect', async (req, res) => {
 
 router.get('/list', async (req, res) => {
     try {
-        const find = req.query.find;
-        if (find) {
-            const query = "SELECT vehicleinformation.`driverId`, drivers.`name`, vehicleinformation.`idLicensePlate`, vehicleinformation.`vehicleType` FROM vehicleinformation INNER JOIN drivers ON vehicleinformation.`driverId` = drivers.`idDriver` WHERE vehicleinformation.`driverId` LIKE '%" + find + "%' OR vehicleinformation.`idLicensePlate` LIKE '%" + find + "%'"
-            const [result] = await pool.query(query, [find]);
-            if (result[0] === undefined) {
-                const noData = 'No hay registros con esa cedula.';
-                res.render('inspeccionar/inspect.hbs', { inspections: result, find, noData });
-            } else {
-                res.render('inspeccionar/inspect.hbs', { inspections: result, find });
-            }
-
-        } else if (find === '') {
-            const [result] = await pool.query('SELECT vehicleinformation.`driverId`, drivers.`name`, vehicleinformation.`idLicensePlate`, vehicleinformation.`vehicleType` FROM vehicleinformation INNER JOIN drivers ON vehicleinformation.`driverId` = drivers.`idDriver`');
-            res.render('inspeccionar/inspect.hbs', { inspections: result });
-        } else {
-            const [result] = await pool.query('SELECT vehicleinformation.`driverId`, drivers.`name`, vehicleinformation.`idLicensePlate`, vehicleinformation.`vehicleType` FROM vehicleinformation INNER JOIN drivers ON vehicleinformation.`driverId` = drivers.`idDriver`');
-            res.render('inspeccionar/inspect.hbs', { inspections: result });
-        }
+        const [result] = await pool.query('SELECT vehicleinformation.`driverId`, drivers.`name`, vehicleinformation.`idLicensePlate`, vehicleinformation.`vehicleType` FROM vehicleinformation INNER JOIN drivers ON vehicleinformation.`driverId` = drivers.`idDriver`');
+        res.render('inspeccionar/inspect.hbs', { inspections: result });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -136,7 +120,7 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
                 values.push(`(${inspectionId}, ${pregunta},  ${respuesta})`);
             }
             await pool.query('INSERT INTO inspection (inspectionId, subSpecificationsId, conventionId) VALUES ' + `${values.join(', ')}` + ';');
-        
+
         } else if (date_bd[0].date === date) {
 
             const sql = "SELECT idInspection FROM inspectiondata WHERE driverId = ? AND licensePlateId = ? AND date = ?";
@@ -147,7 +131,7 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
             for (let i = 1; i <= total[0].total; i++) {
                 const pregunta = `${i}`;
                 const respuesta = req.body[pregunta];
-                await pool.query("UPDATE inspection SET conventionId= "+`${respuesta}`+" WHERE inspectionId = "+inspectionId+" AND subSpecificationsId= "+`${pregunta}`)
+                await pool.query("UPDATE inspection SET conventionId= " + `${respuesta}` + " WHERE inspectionId = " + inspectionId + " AND subSpecificationsId= " + `${pregunta}`)
             }
         }
         //libreria para mostrar mensajes (para mostrar que se ha echo el resgistro de la inspeccion) y redireccionar a informes 

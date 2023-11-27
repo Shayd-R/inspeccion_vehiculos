@@ -1,11 +1,11 @@
 .topheader {
+    z-index: 2;
     position: fixed;
     box-shadow: 0 4px 5px var(--navbar-shallow-color);
     background-color: var(--theme-color);
     left: 0;
     top: 0;
     width: 100%;
-
 }
 
 .topnav {
@@ -83,7 +83,7 @@
     .logo img {
         border-radius: 30%;
     }
-
+    
     .menu {
         flex-direction: column;
         position: fixed;
@@ -94,7 +94,6 @@
         background-color: var(--primary-color);
         height: 100%;
         overflow: auto;
-
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s;
@@ -124,7 +123,8 @@
         color: var(--theme-color);
     }
 
-    .menu_opend {
+    .menu-opend{
+        z-index: 99;
         opacity: 1;
         pointer-events: all;
     }

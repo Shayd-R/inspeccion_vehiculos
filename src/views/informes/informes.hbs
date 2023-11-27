@@ -3,6 +3,7 @@
         font-weight: 400;
     }
 </style>
+
 <div class="container">
     <div class="row mt-5">
         <h1 class="text-light">Buscar informe</h1>
@@ -33,9 +34,9 @@
         {{/if}}
         {{#if inspectionData}}
         <div class="col md-3" style="padding-top: 20px;">
-            <table class="table text-center">
+            <table id="example" class="table table-striped" style="width: 100%;">
                 <thead>
-                    <tr class="table-white">
+                    <tr>
                         <th>Cédula</th>
                         <th>Nombre</th>
                         <th>Placa</th>
@@ -45,7 +46,7 @@
                 </thead>
                 <tbody>
                     {{#each inspectionData}}
-                    <tr class="table-secondary">
+                    <tr>
                         <th>
                             <p>{{driverId}}</p>
                         </th>
@@ -66,13 +67,7 @@
                     </tr>
                     {{/each}}
                 </tbody>
-                <tfoot>
-                    <tr class="table-white">
-                        <td colspan="12">
-                            Registro de informes
-                        </td>
-                    </tr>
-                </tfoot>
+          
             </table>
         </div>
         {{/if}}

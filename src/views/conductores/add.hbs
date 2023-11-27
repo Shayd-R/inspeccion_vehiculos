@@ -1,89 +1,48 @@
-<div class="container">
-    <div class="row mt-5" >
-        <form class="needs-validation" action="/addconductor" method="post" novalidate>
-            <div class="col-md-10 mx-auto">
-                <div class="card text-center">
-                    <div class="card-header" style="background-color: rgb(179, 197, 216);">
-                        <h3 class="text">Agregar conductor</h3>
+<section class="inspect" id="inspect">
+    <header>Registrar conductor</header>
+    <form action="/addconductor" method="post">
+        <div class="form first">
+            <div class="details addvehicle">
+                <span class="title-addvehicle">Datos del conductor</span>
+                <div class="fields">
+                    <div class="input-field">
+                        <label>Cédula </label>
+                        <input type="text" name="idDriver" id="idDriver" placeholder="Ingresar la cédula" autofocus
+                            required>
                     </div>
-                    <div class="card-body">
-                        <div class="input-group mt-3 ">
-                            <label for="idDriver" class="input-group-text">Cédula: </label>
-                            <input class="form-control" type="text" name="idDriver" id="idDriver" value=""
-                                placeholder="" autofocus required>
-                            <div class="valid-feedback">
-                                ¡Esta bien!
-                            </div>
-                            <div class="invalid-feedback">
-                                ¡Falta rellenar!
-                            </div>
-                        </div>
-                        <div class="input-group mt-3">
-                            <label for="name" class="input-group-text">Nombres completos: </label>
-                            <input class="form-control text-uppercase" type="text" name="name" id="name" value=""
-                                required>
-
-                            <div class="valid-feedback">
-                                ¡Esta bien!
-                            </div>
-                            <div class="invalid-feedback">
-                                ¡Falta rellenar!
-                            </div>
-                        </div>
-                        <div class="input-group mt-3 ">
-                            <label for="cellPhoneNumber" class="input-group-text">Celular: </label>
-                            <input class="form-control" type="text" name="cellPhoneNumber" id="cellPhoneNumber" value=""
-                                required>
-
-                            <div class="valid-feedback">
-                                ¡Esta bien!
-                            </div>
-                            <div class="invalid-feedback">
-                                ¡Falta rellenar!
-                            </div>
-                        </div>
-                        <div class="input-group mt-3 ">
-                            <label for="licenseNumber" class="input-group-text">N° licencia: </label>
-                            <input class="form-control number" type="text" name="licenseNumber" id="licenseNumber"
-                                value="" required>
-
-                            <div class="valid-feedback">
-                                ¡Esta bien!
-                            </div>
-                            <div class="invalid-feedback">
-                                ¡Falta rellenar!
-                            </div>
-                        </div>
-                        <div class="input-group mt-3 ">
-                            <label for="licenseCategoryId" class="input-group-text">Categoria: </label>
-                            <select id="licenseCategoryId" name="licenseCategoryId" class="form-select">
-                                <option value="" selected>--seleccionar categoria--</option>
-                                {{#each category}}
-                                <option value="{{idLicenseCategory}}">{{category}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                        <div class="input-group mt-3 ">
-                            <label for="driversLicenseExpiration" class="input-group-text">Fecha de vencimiento:
-                            </label>
-                            <input class="form-control" type="date" name="driversLicenseExpiration"
-                                id="driversLicenseExpiration" value="" required>
-
-                            <div class="valid-feedback">
-                                ¡Esta bien!
-                            </div>
-                            <div class="invalid-feedback">
-                                ¡Falta rellenar!
-                            </div>
-                        </div>
-
+                    <div class="input-field">
+                        <label>Nombres completos: </label>
+                        <input type="text" name="name" id="name" placeholder="Ingresar nombres completos" required>
                     </div>
-                </div>
-                <br>
-                <div class="card text-center" style="border: none;">
-                    <button type="submit" class="btn btn-success">Agregar</button>
+                    <div class="input-field">
+                        <label>Celular</label>
+                        <input type="number" name="cellPhoneNumber" id="cellPhoneNumber"
+                            placeholder="Ingresar número de celular" required>
+                    </div>
+                    <div class="input-field">
+                        <label>N° licencia </label>
+                        <input type="text" name="licenseNumber" id="licenseNumber"
+                            placeholder="Ingresar número de licencia" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Categoria</label>
+                        <select id="licenseCategoryId" name="licenseCategoryId" class="opcion">
+                            <option value="" hidden>seleccionar categoria</option>
+                            {{#each category}}
+                            <option value="{{idLicenseCategory}}">{{category}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Fecha de vencimiento</label>
+                        <input type="date" name="driversLicenseExpiration" id="driversLicenseExpiration" required>
+                    </div>
                 </div>
             </div>
-        </form>
-    </div>
-</div>
+            <br>
+            <div>
+                <button type="submit">Registrar</button>
+            </div>
+        </div>
+    </form>
+</section>

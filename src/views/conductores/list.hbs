@@ -33,9 +33,9 @@
         {{/if}}
         {{#if drivers}}
         <div class="col md-3" style="padding-top: 20px;">
-            <table class="table text-center">
+            <table id="example" class="table table-striped" style="width: 100%;">
                 <thead>
-                    <tr class="table-white">
+                    <tr>
                         <th>Cédula</th>
                         <th>Nombre</th>
                         <th>Celular</th>
@@ -47,7 +47,7 @@
                 </thead>
                 <tbody>
                     {{#each drivers}}
-                    <tr class="table-secondary">
+                    <tr>
                         <th>
                             <p>{{idDriver}}</p>
                         </th>
@@ -76,11 +76,7 @@
                     {{/each}}
                 </tbody>
                 <tfoot>
-                    <tr class="table-white">
-                        <td colspan="12">
-                            Registro de conductores
-                        </td>
-                    </tr>
+                    
                 </tfoot>
             </table>
         </div>

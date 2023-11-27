@@ -8,23 +8,9 @@
     <div class="row mt-5">
         <h1 class="text-light">Buscar usuario</h1>
         <div class="row align-items-center">
-            <div class="col">
-                <form action="/list" method="get" class="form-inline">
-                    <div class="row">
-                        <div class="input-group">
-                            <label for="find" class="input-group-text"
-                                style="background-color: #fff; top: 12px; left: 12px; "><i
-                                    class="fa-solid fa-magnifying-glass" style="color: #6b788e;"></i></label>
-                            <input type="text" id="find" name="find" class="form-control" placeholder="Buscar"
-                                value="{{find}}">
-                            <button type="submit" class="btn btn-info">Buscar</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
             <div class="col d-flex justify-content-end" style="">
-                <a href="/addInspect" style="text-decoration: none;">
-                    <button class="btn btn-info">Registrar vehiculo</button>
+                <a href="/addInspect" class="nextBtn" style="text-decoration: none; background-color: var(--primary-color)">
+                    Registrar vehiculo
                 </a>
             </div>
         </div>
@@ -37,9 +23,9 @@
         {{/if}}
         {{#if inspections}}
         <div class="col md-3" style="padding-top: 20px;">
-            <table class="table text-center">
+            <table id="example" class="table table-striped" style="width: 100%;">
                 <thead>
-                    <tr class="table-white">
+                    <tr>
                         <th>Cédula</th>
                         <th>Nombre</th>
                         <th>Placa</th>
@@ -49,7 +35,7 @@
                 </thead>
                 <tbody>
                     {{#each inspections}}
-                    <tr class="table-secondary">
+                    <tr>
                         <th>
                             <p>{{driverId}}</p>
                         </th>
@@ -71,11 +57,7 @@
                     {{/each}}
                 </tbody>
                 <tfoot>
-                    <tr class="table-white">
-                        <td colspan="12">
-                            Registro de conductores
-                        </td>
-                    </tr>
+                  
                 </tfoot>
             </table>
         </div>

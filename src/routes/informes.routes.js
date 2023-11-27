@@ -48,9 +48,9 @@ router.get('/informes', async (req, res) => {
 });
 
 router.get('/pdf/:idInspection', async (req, res) => {
-    try {
-        const idInspection = req.params.idInspection;
-        const [vehicleReport] = await pool.query(`SELECT * FROM inspectiondata
+
+    const idInspection = req.params.idInspection;
+    const [vehicleReport] = await pool.query(`SELECT * FROM inspectiondata
             INNER JOIN drivers ON drivers.idDriver = inspectiondata.driverId
             INNER JOIN vehicleinformation ON vehicleinformation.idLicensePlate = inspectiondata.licensePlateId
             INNER JOIN licensecategory ON licensecategory.idLicenseCategory = drivers.licenseCategoryId
@@ -58,43 +58,41 @@ router.get('/pdf/:idInspection', async (req, res) => {
             WHERE inspectiondata.idInspection = `+ idInspection + `;`);
 
 
-        const [inspection] = await pool.query(`SELECT subSpecification, convention, s.specificationId FROM inspection i
+    const [inspection] = await pool.query(`SELECT subSpecification, convention, s.specificationId FROM inspection i
             LEFT JOIN subspecifications s ON i.subSpecificationsId = s.idSubspecification
             RIGHT JOIN conventions c ON c.idConvention = i.conventionId
             WHERE inspectionId = `+ idInspection);
 
-        const [specification] = await pool.query(`SELECT * FROM specifications`);
+    const [specification] = await pool.query(`SELECT * FROM specifications`);
 
-        const content = generateContent(vehicleReport[0], inspection, specification);
+    const content = generateContent(vehicleReport[0], inspection, specification);
 
-        let docDefinition = {
-            content: content,
-            styles: styles
-        };
+    let docDefinition = {
+        content: content,
+        styles: styles
+    };
 
-        const printer = new PdfPrinter(fonts);
+    const printer = new PdfPrinter(fonts);
 
-        const downloadDirectory = join(os.homedir(), 'Downloads');
-        console.log(downloadDirectory + "asd");
+    const downloadDirectory = join(os.homedir(), 'Downloads');
+    console.log(downloadDirectory + "asd");
 
-        const currentDate = new Date();
-        const date = currentDate.toISOString().replace(/[-T:\.Z]/g, '');
+    const currentDate = new Date();
+    const date = currentDate.toISOString().replace(/[-T:\.Z]/g, '');
 
-        if (!fs.existsSync(downloadDirectory)) {
-            fs.mkdirSync(downloadDirectory, { recursive: true });
-        }
-        console.log(downloadDirectory + "111");
-
-        let pdfDoc = printer.createPdfKitDocument(docDefinition);
-        const pdfPath = join(downloadDirectory, 'Inspeccion_' + date + '.pdf');
-        console.log(pdfPath);
-        pdfDoc.pipe(fs.createWriteStream(pdfPath));
-        pdfDoc.end();
-
-        res.redirect('/informes');
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+    if (!fs.existsSync(downloadDirectory)) {
+        fs.mkdirSync(downloadDirectory, { recursive: true });
     }
+    console.log(downloadDirectory + "111");
+
+    let pdfDoc = printer.createPdfKitDocument(docDefinition);
+    const pdfPath = join(downloadDirectory, 'Inspeccion_' + date + '.pdf');
+    console.log(pdfPath);
+    pdfDoc.pipe(fs.createWriteStream(pdfPath));
+    pdfDoc.end();
+
+    res.redirect('/informes');
+
 });
 
 router.get('/informe', async (req, res) => {

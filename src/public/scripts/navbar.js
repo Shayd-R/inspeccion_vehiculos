@@ -3,7 +3,7 @@ const openMenuBtn = document.querySelector(".open-menu");
 const closeMenuBtn = document.querySelector(".close-menu");
 
 function toggleMenu() {
-    menu.classList.toggle("menu_opend");
+    menu.classList.toggle("menu-opend");
 }
 
 openMenuBtn.addEventListener("click", toggleMenu);
@@ -15,7 +15,7 @@ function handleMenuClick() {
     document.querySelectorAll(".menu a.selected").forEach(el => el.classList.remove("selected"));
     this.classList.add("selected");
     localStorage.setItem('selectedMenuItem', this.id);
-    menu.classList.remove("menu_opend");
+    menu.classList.remove("menu-opend");
 }
 
 menuLinks.forEach(link => link.addEventListener('click', handleMenuClick));
@@ -34,7 +34,9 @@ const observer = new IntersectionObserver(
     (entries) => {
         entries.forEach((entry) => {
             const id = entry.target.getAttribute("id");
+            
             const menuLink = document.querySelector(`.menu a[id="${id}"]`);
+            
             if (entry.isIntersecting) {
                 document.querySelectorAll(".menu a.selected").forEach(el => el.classList.remove("selected"));
                 menuLink.classList.add("selected");

@@ -31,7 +31,7 @@ export const generateContent = (data, inspection, specification) => {
             alignment: 'center',
             columns: [
                 {
-                    image: 'src/public/img/logo.svg',
+                    image: 'src/public/img/logo/logo.svg',
                     width: 110
                 },
                 { text: "LISTA DE INSPECCIÓN DE VEHÍCULO", style: ['header', 'labelRight'] },

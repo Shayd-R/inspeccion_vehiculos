@@ -1,11 +1,4 @@
-<style>
-    .display-Input {
-        display: none;
-    }
-</style>
-
-
-<div class="addInspect" id="addInspect">
+<section class="inspect" id="inspect">
     <header>Registro de vehiculo</header>
     <form action="/addInspect" method="post">
         <div class="form first">
@@ -23,7 +16,7 @@
                     </div>
                     <div class="input-field">
                         <label>Tipo de vehiculo</label>
-                        <select id="opcion" name="opcion">
+                        <select id="opcion" name="opcion" class="opcion">
                             <option value="Sencillo">Sencillo</option>
                             <option value="Doble troque">Doble troque</option>
                             <option value="Tracto camion">Tracto camión</option>
@@ -112,15 +105,15 @@
                         <i class="fa-solid fa-angles-left"></i>
                         <span class="btnText">Atras</span>
                     </div>
-                    <button class="nextBtn">
-                        <span class="btnText">Siguente</span>
+                    <button type="submit">
+                        <span class="btnText">Registrar</span>
                         <i class="fa-solid fa-angles-right"></i>
                     </button>
                 </div>
             </div>
         </div>
     </form>
-</div>
+</section>
 
 
 
@@ -157,19 +150,19 @@
             showSelect();
         }
     });
-
-    (() => {
-        'use strict'
-        const forms = document.querySelectorAll('.needs-validation')
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-
-                form.classList.add('was-validated');
-            }, false)
-        })
-    })()
+    /*
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+    
+                    form.classList.add('was-validated');
+                }, false)
+            })
+        })()*/
 </script>
