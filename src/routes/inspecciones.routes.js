@@ -4,7 +4,8 @@ import pool from '../database.js'
 const router = Router();
 
 router.get('/addInspect', async (req, res) => {
-    res.render('inspeccionar/addInspect.hbs');
+    const addInspect = true;
+    res.render('inspeccionar/addInspect.hbs', { addInspect: addInspect });
 });
 
 router.post('/addInspect', async (req, res) => {
@@ -29,16 +30,17 @@ router.post('/addInspect', async (req, res) => {
         }
 
         await pool.query('INSERT INTO vehicleinformation SET ?', [newVehicle]);
-        res.redirect('/list');
+        res.redirect('/listInspect');
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-router.get('/list', async (req, res) => {
+router.get('/listInspect', async (req, res) => {
     try {
         const [result] = await pool.query('SELECT vehicleinformation.`driverId`, drivers.`name`, vehicleinformation.`idLicensePlate`, vehicleinformation.`vehicleType` FROM vehicleinformation INNER JOIN drivers ON vehicleinformation.`driverId` = drivers.`idDriver`');
-        res.render('inspeccionar/inspect.hbs', { inspections: result });
+        const listInspect  = true;
+        res.render('inspeccionar/listInspect.hbs', { inspections: result, listInspect : listInspect  });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -49,7 +51,8 @@ router.get('/edit/:idLicensePlate', async (req, res) => {
         const idLicensePlate = req.params.idLicensePlate;
         const [vehicle] = await pool.query("SELECT * FROM vehicleinformation WHERE idLicensePlate = '" + idLicensePlate + "'");
         const vehicleEdit = vehicle[0];
-        res.render('inspeccionar/edit.hbs', { vehicle: vehicleEdit });
+        const edit = true;
+        res.render('inspeccionar/edit.hbs', { vehicle: vehicleEdit, edit: edit });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -76,7 +79,7 @@ router.post('/edit/:idLicensePlate', async (req, res) => {
             idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
         }
         await pool.query('UPDATE vehicleinformation SET ? WHERE idLicensePlate = ?', [editVehicle, idLicensePlate]);
-        res.redirect('/list');
+        res.redirect('/listInspect');
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -87,7 +90,8 @@ router.get('/inspectVehiculo/:idLicensePlate', async (req, res) => {
         const idLicensePlate = req.params.idLicensePlate;
         const [specifications] = await pool.query('SELECT * FROM specifications');
         const [subspecifications] = await pool.query('SELECT *  FROM subspecifications');
-        res.render('inspeccionar/inspectVehiculo.hbs', { specifications, subspecifications, idLicensePlate });
+        const inspectVehicle = true;
+        res.render('inspeccionar/inspectVehiculo.hbs', { specifications, subspecifications, idLicensePlate, inspectVehicle: inspectVehicle });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

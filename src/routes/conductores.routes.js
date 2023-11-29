@@ -6,7 +6,8 @@ const router = Router();
 router.get('/addconductor', async (req, res) => {
     try {
         const [result] = await pool.query('SELECT * FROM licensecategory');
-        res.render('conductores/add.hbs', { category: result });
+        const addconductor = true;
+        res.render('conductores/add.hbs', { category: result, addconductor: addconductor });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -54,24 +55,11 @@ router.post('/editdriver/:idDriver', async (req, res) => {
 
 router.get('/listconductores', async (req, res) => {
     try {
-        const find = req.query.find;
-        if (find) {
-            const query = "SELECT Drivers.`idDriver`, Drivers.`name`, Drivers.`cellPhoneNumber`, Drivers.`licenseNumber`, licenseCategory.`category`, Drivers.`driversLicenseExpiration`  FROM Drivers INNER JOIN licenseCategory ON Drivers.`licenseCategoryId` = licenseCategory.`idLicenseCategory` WHERE Drivers.`idDriver` LIKE '%" + find + "%' OR Drivers.`name` LIKE '%" + find + "%'"
-            const [result] = await pool.query(query, [find]);
-            if (result[0] === undefined) {
-                const noData = 'No hay registros con esa cedula.';
-                res.render('conductores/list.hbs', { drivers: result, find, noData });
-            } else {
-                res.render('conductores/list.hbs', { drivers: result, find });
-            }
 
-        } else if (find === '') {
-            const [result] = await pool.query('SELECT Drivers.`idDriver`, Drivers.`name`, Drivers.`cellPhoneNumber`, Drivers.`licenseNumber`, licenseCategory.`category`, Drivers.`driversLicenseExpiration`  FROM Drivers INNER JOIN licenseCategory ON Drivers.`licenseCategoryId` = licenseCategory.`idLicenseCategory`');
-            res.render('conductores/list.hbs', { drivers: result});
-        } else {
-            const [result] = await pool.query('SELECT Drivers.`idDriver`, Drivers.`name`, Drivers.`cellPhoneNumber`, Drivers.`licenseNumber`, licenseCategory.`category`, Drivers.`driversLicenseExpiration`  FROM Drivers INNER JOIN licenseCategory ON Drivers.`licenseCategoryId` = licenseCategory.`idLicenseCategory`');
-            res.render('conductores/list.hbs', { drivers: result});
-        }
+        const [result] = await pool.query('SELECT Drivers.`idDriver`, Drivers.`name`, Drivers.`cellPhoneNumber`, Drivers.`licenseNumber`, licenseCategory.`category`, Drivers.`driversLicenseExpiration`  FROM Drivers INNER JOIN licenseCategory ON Drivers.`licenseCategoryId` = licenseCategory.`idLicenseCategory`');
+        const listConductors = true;
+        res.render('conductores/list.hbs', { drivers: result, listConductors: listConductors });
+
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

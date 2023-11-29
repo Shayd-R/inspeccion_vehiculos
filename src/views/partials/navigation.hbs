@@ -1,20 +1,36 @@
 <header class="topheader">
-  <nav class="topnav">
+  <div class="cont">
     <a href="/" class="logo" id="logo">
-      <img height="50" width="100" src="/img/logo/logo.ico" alt="suratrans">
+      <img alt="Logo suratrans" src="/img/logo/logo.ico">
     </a>
-    <button class="open-menu" aria-label="Abrir menú">
-      <i class="fa-solid fa-bars fa-2xl"></i>
-    </button>
-    <ul class="menu">
-      <button class="close-menu" aria-label="Cerrar menú">
-        <i class="fa-solid fa-xmark fa-2xl"></i>
-      </button>
-      <li><a href="/" id="inicio">inicio</a></li>
-      <li><a href="/addInspect" id="inspeccion">Inspeccion</a></li>
-      <li><a href="/list" id="listar">Listar</a></li>
-      <li><a href="/addconductor" id="conductores">Conductores</a></li>
-      <li><a href="/listconductores" id="listarConductores">Listar conductores</a></li>
-    </ul>
-  </nav>
+    <input type="checkbox" id="menu-icon">
+    <label for="menu-icon">Menu</label>
+    <nav class="menu">
+      <ul>
+        <li><a href="/">inicio</a></li>
+
+        <li><a href="#">Inspección +</a>
+          <ul>
+            <li>
+              <a href="#">Registrar Vehiculo</a>
+            </li>
+            <li>
+              <a href="#">Tabla de inspecciónes</a>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#">Informes</a></li>
+        <li><a href="#">Conductores +</a>
+          <ul>
+            <li>
+              <a href="#">Registrar conductor</a>
+            </li>
+            <li>
+              <a href="#">Tabla conductores</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </header>

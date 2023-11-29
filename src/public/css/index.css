@@ -10,7 +10,6 @@
     margin: 0 auto;
 }
 
-
 .inicio-btn {
     margin-bottom: 25px;
 }
@@ -34,15 +33,17 @@
 }
 
 .icon-button i {
-    color: var(--icon-color);
+    color: var(--theme-color);
 }
 
+.ondas {
+    display: none;
+}
 
 
 /*----------------------------------------------------------------------------------*/
 
 @media (min-width: 950px) {
-
     .inicio {
         display: flex;
         flex-direction: row;
@@ -73,4 +74,9 @@
     .icon-button:hover {
         filter: brightness(130%);
     }
+
+    .ondas{
+        display: block;
+    }
+    
 }

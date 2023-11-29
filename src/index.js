@@ -21,7 +21,8 @@ app.engine('.hbs', engine({
     partialsDir: join(app.get('views'), 'partials'),
     extname: '.hbs',
     helpers: {
-        eq: function (a, b) { return a === b; }
+        eq: function (a, b) { return a === b; },
+        or: function (a, b, c) {return a || b || c;}
     }
 }))
 app.set('views engine', '.hbs');
@@ -33,7 +34,8 @@ app.use(express.json());
 
 //ROUTES
 app.get('/', (req, res) => {
-    res.render('index.hbs');
+    const index = true;
+    res.render('index.hbs',{ index: index });
 });
 
 app.use(inspeccionesRoutes);

@@ -1,88 +1,44 @@
-<style>
-    p {
-        font-weight: 400;
-    }
-</style>
-<div class="container">
-    <div class="row mt-5">
-        <h1 class="text-light">Buscar conductor</h1>
-        <div class="row align-items-center">
-            <div class="col">
-                <form action="" method="get" class="form-inline">
-                    <div class="row">
-                        <div class="input-group">
-                            <label for="find" class="input-group-text"
-                                style="background-color: #fff; top: 12px; left: 12px; "><i
-                                    class="fa-solid fa-magnifying-glass" style="color: #6b788e;"></i></label>
-                            <input type="text" id="find" name="find" class="form-control"
-                                placeholder="Buscar por cédula" value="{{find}}">
-                            <button type="submit" class="btn btn-light">Buscar</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col d-flex justify-content-end" style="">
-            </div>
-        </div>
-        {{#if noData}}
-        <div class="col md-3" style="padding-top: 20px;">
-            <center style="padding-top: 100px;">
-                <h1>{{noData}}</h1>
-            </center>
-        </div>
-        {{/if}}
-        {{#if drivers}}
-        <div class="col md-3" style="padding-top: 20px;">
-            <table id="example" class="table table-striped" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th>Cédula</th>
-                        <th>Nombre</th>
-                        <th>Celular</th>
-                        <th>N° Licencia</th>
-                        <th>Categoria</th>
-                        <th>Fecha de vencimiento</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each drivers}}
-                    <tr>
-                        <th>
-                            <p>{{idDriver}}</p>
-                        </th>
-                        <th>
-                            <p>{{name}}</p>
-                        </th>
-                        <th>
-                            <p>{{cellPhoneNumber}}</p>
-                        </th>
-                        <th>
-                            <p>{{licenseNumber}}</p>
-                        </th>
-                        <th>
-                            <p>{{category}}</p>
-                        </th>
-                        <th>
-                            <p>{{driversLicenseExpiration}}</p>
-                        </th>
-                        <th>
-                            <div>
-                                <a href="/editDriver/{{idDriver}}" class="btn btn-primary"><i
-                                        class="fa-solid fa-pencil"></i>&nbsp;&nbsp; Editar</a>
-                            </div>
-                        </th>
-                    </tr>
-                    {{/each}}
-                </tbody>
-                <tfoot>
-                    
-                </tfoot>
-            </table>
-        </div>
-
-
-        {{/if}}
-
+<section class="container">
+    <header>Buscar conductor</header>
+    <div class="col d-flex justify-content-end">
+        <a href="/addconductor" class="nextBtn" style="text-decoration: none;">
+            Registrar conductor
+        </a>
     </div>
-</div>
+    {{#if drivers}}
+    <div class="col md-3" style="padding-top: 20px;">
+        <table id="example" class="table table-striped" style="width: 100%; ">
+            <thead>
+                <tr>
+                    <th>Cédula</th>
+                    <th>Nombre</th>
+                    <th>Celular</th>
+                    <th>N° Licencia</th>
+                    <th>Categoria</th>
+                    <th>Fecha de vencimiento</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each drivers}}
+                <tr>
+                    <td>{{idDriver}}</td>
+                    <td>{{name}}</td>
+                    <td>{{cellPhoneNumber}}</td>
+                    <td>{{licenseNumber}}</td>
+                    <td>{{category}}</td>
+                    <td>{{driversLicenseExpiration}}</td>
+                    <td>
+                        <div>
+                            <a href="/editDriver/{{idDriver}}" class="btn btn-warning"><i
+                                    class="fa-solid fa-pencil"></i>&nbsp;&nbsp; Editar</a>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+
+        </table>
+    </div>
+    {{/if}}
+</section>

@@ -3,6 +3,7 @@
     --primary-color: #0762b7;
     --primary-color-opaque: #145796;
     --secondary-color: rgb(224, 198, 52);
+    --secondary-color-claro: rgb(248, 224, 88);
     --text-color-inverse: white;
     --text-color: black;
     --text-color-opaque: rgb(72, 72, 72);
@@ -11,48 +12,25 @@
     --icon-color: #d7d7d7;
 }
 
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
 html {
     scroll-behavior: smooth;
 }
 
-section[id] {
-    scroll-margin-top: 80px;
-}
-
 body {
-    min-height: 80vh;
+    height: 100vh;
     background-color: var(--theme-color);
-    font-family: 'Montserrat', sans-serif;
     color: var(--text-color);
-    padding-top: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding-top: 120px;
 }
 
 a {
-    text-decoration: none;
     color: var(--text-color);
-}
-
-.horizontal-padding {
-    padding-left: 25px;
-    padding-right: 25px;
-}
-
-.vertical-padding {
-    padding-top: 25px;
-    padding-bottom: 25px;
-}
-
-@media (min-width: 980px) {
-    .horizontal-padding {
-        padding-left: 70px;
-        padding-right: 70px;
-    }
-
-    .vertical-padding {
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
+    text-decoration: none;
 }

@@ -2,9 +2,9 @@
     display: none;
 }
 
-.inspect {
+.container {
     position: relative;
-    max-width: 900px;
+    max-width: 1000px;
     width: 100%;
     border-radius: 6px;
     padding: 30px;
@@ -15,15 +15,15 @@
 }
 
 /*----------------*/
-.inspect header {
+.container header {
     position: relative;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
     color: var(--text-color-inverse);
 }
 
-/*----------------*/
-.inspect header::before {
+
+.container header::before {
     content: "";
     position: absolute;
     left: 0;
@@ -35,13 +35,13 @@
 }
 
 /*----------------*/
-.inspect form {
+.container form {
     position: relative;
     border-radius: 6px;
     margin-top: 16px;
     min-height: 490px;
     background-color: var(--primary-color);
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 /*----------------*/
@@ -53,7 +53,7 @@
     margin-top: 10px;
 }
 ----------------*/
-.inspect form .title-addvehicle {
+.container form .title-addvehicle {
     display: block;
     margin-bottom: 8px;
     font-size: 18px;
@@ -63,14 +63,14 @@
 }
 
 /*----------------*/
-.inspect form .form {
+.container form .form {
     position: absolute;
     background-color: var(--primary-color);
     transition: 0.3s ease;
 }
 
 /*----------------*/
-.inspect form .form.second {
+.container form .form.second {
     opacity: 0;
     pointer-events: none;
     transform: translateX(100%);
@@ -91,7 +91,7 @@ form.secActive .form.first {
 }
 
 /*----------------*/
-.inspect form .fields {
+.container form .fields {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -133,8 +133,9 @@ form .fields .input-field input {
 }
 
 /*----------------*/
-.inspect form button,
-.backBtn, .nextBtn {
+.container form button,
+.backBtn,
+.nextBtn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -152,9 +153,9 @@ form .fields .input-field input {
 }
 
 /*----------------*/
-.inspect form button,
-.inspect form .backBtn,
-.inspect form .nextBtn {
+.container form button,
+.container form .backBtn,
+.container form .nextBtn {
     font-size: 14px;
     font-weight: 500;
 }
@@ -184,11 +185,11 @@ form .buttons button,
 }
 
 @media (max-width: 750px) {
-    .inspect form {
+    .container form {
         overflow-y: scroll;
     }
 
-    .inspect form::-webkit-scrollbar {
+    .container form::-webkit-scrollbar {
         display: none;
     }
 
@@ -202,3 +203,10 @@ form .buttons button,
         width: 100%;
     }
 }
+
+
+
+
+/* Add this CSS for responsiveness */
+
+/* For screens smaller than 768px */
