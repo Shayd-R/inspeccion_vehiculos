@@ -8,9 +8,7 @@ import conductoresRoutes from './routes/conductores.routes.js'
 import informesRoutes from './routes/informes.routes.js'
 
 
-
 //INICIALIZATION
-
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -23,12 +21,11 @@ app.engine('.hbs', engine({
     partialsDir: join(app.get('views'), 'partials'),
     extname: '.hbs',
     helpers: {
-        eq: function (a, b) { return a === b; }
+        eq: function (a, b) { return a === b; },
+        or: function (a, b, c) {return a || b || c;}
     }
 }))
 app.set('views engine', '.hbs');
-
-
 
 //MIDDLAWARES
 app.use(morgan('dev'));
@@ -37,7 +34,8 @@ app.use(express.json());
 
 //ROUTES
 app.get('/', (req, res) => {
-    res.render('index.hbs');
+    const index = true;
+    res.render('index.hbs',{ index: index });
 });
 
 app.use(inspeccionesRoutes);

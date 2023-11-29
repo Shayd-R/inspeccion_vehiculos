@@ -1,0 +1,67 @@
+<section class="container" id="container">
+    <header>Editar conductor</header>
+    <form action="/editDriver/{{driver.idDriver}}" method="post">
+        <div class="form first">
+            <div class="details addvehicle">
+                <span class="title-addvehicle">Datos del conductor</span>
+                <div class="fields">
+                    <div class="input-field">
+                        <label>Cédula</label>
+                        <input type="text" name="idDriver" id="idDriver" value="{{driver.idDriver}}" placeholder=""
+                            autofocus required>
+                    </div>
+                    <div class="input-field">
+                        <label>Nombres completos </label>
+                        <input class="form-control text-uppercase" type="text" name="name" id="name"
+                            value="{{driver.name}}" required>
+
+                    </div>
+                    <div class="input-field">
+                        <label>Celular </label>
+                        <input type="text" name="cellPhoneNumber" id="cellPhoneNumber"
+                            value="{{driver.cellPhoneNumber}}" required>
+                    </div>
+                    <div class="input-field">
+                        <label>N° licencia</label>
+                        <input type="number" name="licenseNumber" id="licenseNumber" value="{{driver.licenseNumber}}"
+                            required>
+                    </div>
+                    <div class="input-field">
+                        <label>Categoria </label>
+                        <select id="licenseCategoryId" name="licenseCategoryId" class="opcion">
+                            <option value="{{driver.idLicenseCategory}}" hidden>{{driver.category}}</option>
+                            {{#each category}}
+                            <option value="{{idLicenseCategory}}">{{category}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Fecha de vencimiento</label>
+                        <input type="date" name="driversLicenseExpiration" id="driversLicenseExpiration"
+                            value="{{driver.driversLicenseExpiration}}" required>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div>
+                <button type="submit">Agregar</button>
+            </div>
+        </div>
+    </form>
+</section>
+<script>
+    var selectElement = document.getElementById("licenseCategoryId");
+    var options = selectElement.options;
+    var selectedValue = "{{driver.idLicenseCategory}}";
+
+    for (var i = 1; i < options.length; i++) {
+        var option = options[i];
+        console.log(option);
+        if (option.value === selectedValue) {
+
+            option.style.display = "none";
+        } else {
+            option.style.display = "";
+        }
+    }
+</script>

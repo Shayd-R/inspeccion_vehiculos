@@ -1,0 +1,48 @@
+<section class="container">
+    <header>Buscar usuario</header>
+    <div class="col d-flex justify-content-end">
+        <a href="/addInspect" class="btn btn-primary" style="text-decoration: none;">
+            Registrar vehiculo
+        </a>
+    </div>
+    {{#if inspections}}
+    <div class="col " style="">
+        <table id="example" class="table table-striped" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Cédula</th>
+                    <th>Nombre</th>
+                    <th>Placa</th>
+                    <th>Tipo de carro</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each inspections}}
+                <tr>
+                    <td>
+                        {{driverId}}
+                    </td>
+                    <td>
+                        {{name}}
+                    </td>
+                    <td>
+                        {{idLicensePlate}}
+                    </td>
+                    <td>
+                        {{vehicleType}}
+                    </td>
+
+                    <td style="display: flex; ">
+                        <a href="/edit/{{idLicensePlate}}" class="btn btn-warning"><i
+                                class="fa-solid fa-pencil"></i> Editar</a>
+                        <a href="/inspectVehiculo/{{idLicensePlate}}" class="btn btn-info">Inspeccionar</a>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+           
+        </table>
+    </div>
+    {{/if}}
+</section>

@@ -1,0 +1,224 @@
+.fecha {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.fecha .input-fecha {
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 30px;
+}
+
+.fecha .input-fecha input {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/*----------------*/
+.input-fecha label {
+    margin: 0 auto;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-color-inverse);
+}
+
+.input-fecha input {
+    outline: none;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-color);
+    border-radius: 5px;
+    border: 1px solid var(--icon-color);
+    padding: 0 15px;
+    height: 42px;
+    margin: 8px 0;
+}
+
+.accordion {
+    background-color: var(--theme-color);
+    padding: 15px;
+    border-radius: 8px;
+    color: rgb(0, 0, 0);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.accordion .accordion-content {
+    margin: 10px 0;
+    border-radius: 4px;
+    background: var(--theme-color);
+    border: 1px solid var(--secondary-color-claro);
+    overflow: hidden;
+}
+
+.accordion .accordion-content.open {
+    padding-bottom: 10px;
+}
+
+.accordion .accordion-content .header {
+    display: flex;
+    min-height: 50px;
+    padding: 0 15px;
+    background: var(--secondary-color-claro);
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
+.accordion .accordion-content.open .header {
+    min-height: 40px;
+}
+
+.accordion .accordion-content .header .title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+}
+
+.accordion-content .description {
+    height: 0;
+    color: #333;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 0 15px;
+    transition: all 0.2s linear;
+}
+
+.accordion-content .description .preguntas {
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+.accordion-content .description .preguntas .title {
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+}
+
+.accordion-content .description .row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+
+.accordion-content .header i {
+    font-size: 15px;
+    color: #333;
+}
+
+
+.row {
+    display: flex;
+}
+
+.row .col {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 4px 0;
+    width: calc(100% / 3 - 15px);
+}
+
+.row input[type="radio"] {
+    display: flex;
+    height: 45px;
+    max-width: 200px;
+    width: 100%;
+    display: none;
+}
+
+.row .col label {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #c5c5c5;
+}
+
+.row input[type="radio"]:checked+label {
+    border-width: 1px;
+}
+
+
+.bueno input[type="radio"]:checked+label {
+    background-color: #31aa4b;
+    color: var(--theme-color);
+}
+
+.malo input[type="radio"]:checked+label {
+    background-color: #dd3f4c;
+    color: var(--theme-color);
+}
+
+.no_aplica input[type="radio"]:checked+label {
+    background-color: rgb(219, 123, 27);
+    color: var(--theme-color);
+}
+
+.row-fin {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.row-fin input {
+    max-width: 550px;
+    width: 100%;
+    padding: 0px 15px;
+    outline: none;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-color);
+    border-radius: 5px;
+    border: 1px solid var(--icon-color);
+    height: 42px;
+    margin-top: 25px;
+}
+
+
+
+@media (max-width: 950px) {
+    .accordion-content .description .row {
+        flex-direction: column;
+    }
+
+    .row .col {
+        margin-bottom: 5px;
+        width: 100%;
+
+    }
+
+    .description {
+        padding: 10px;
+        height: 100%;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+        /* overflow-y: scroll; */
+    }
+
+    .description.open {
+        height: 100%;
+    }
+
+    /* .description::-webkit-scrollbar {
+        display: none;
+    } */
+
+    .row-fin {
+        flex-direction: column;
+        margin: 15px 0;
+    }
+
+    .row-fin {
+        overflow-y: scroll;
+    }
+
+    .row-fin::-webkit-scrollbar {
+        display: none;
+    }
+
+
+}

@@ -1,0 +1,160 @@
+.topheader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    background-color: var(--theme-color);
+    box-shadow: 0 4px 5px var(--navbar-shallow-color);
+    padding: 0px 7px;
+    z-index: 3;
+}
+
+
+
+.topheader .menu ul,
+.topheader .menu ul li,
+.topheader .menu ul li ul,
+.topheader .menu ul li ul li {
+    padding: 0;
+}
+
+.topheader .logo img {
+    width: 120px;
+    height: 60px;
+}
+
+.cont {
+    max-width: 1000px;
+
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+.topheader .menu ul {
+    list-style: none;
+}
+
+.topheader .menu ul li {
+    position: relative;
+    float: left;
+}
+
+.topheader .menu ul li a {
+    font-size: 20px;
+    padding: 25px 20px;
+    color: var(--text-color);
+    display: block;
+}
+
+/* 
+.topheader .menu ul li a:hover {
+    background-color: var(--secondary-color);
+    color: var(--theme-color);
+} */
+
+.topheader .menu ul li:focus-within>a,
+.topheader .menu ul li:hover>a {
+    background-color: var(--secondary-color);
+    color: var(--theme-color);
+}   
+
+/* .topheader .menu ul li:focus-within>a,
+.topheader .menu ul li:hover>a::before {
+    
+    content: "";
+    position: absolute; 
+    top: 65%;
+    bottom: -2px;
+    height: 3px;
+    width: 90%;
+    border-radius: 8px;
+    background-color: var(--secondary-color);
+} */
+
+/* ------------------------------------- linea amarilla */
+
+/* .container header::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 3px;
+    width: 27px;
+    border-radius: 8px;
+    background-color: var(--secondary-color);
+} */
+
+.topheader .menu ul li ul {
+    position: absolute;
+    left: 0;
+    width: 200px;
+    background-color: var(--theme-color);
+    display: none;
+}
+
+.topheader .menu ul li ul li {
+    width: 100%;
+    border: 1px solid var(--text-color-opaque);
+}
+
+.topheader .menu ul li:focus-within>ul,
+.topheader .menu ul li:hover>ul {
+    display: initial;
+    border: 1px solid var(--text-color-opaque);
+}
+
+#menu-icon {
+    display: none;
+}
+
+.topheader label {
+    font-size: 20px;
+    color: var(--text-color);
+    cursor: pointer;
+    display: none;
+}
+
+
+@media (max-width: 1000px) {
+    .topheader {
+        padding: 5px;
+    }
+
+    .topheader label {
+        display: initial;
+    }
+
+    .topheader .menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--primary-color);
+        border-top: 1px solid var(--text-color-opaque);
+        display: none;
+    }
+
+    .topheader .menu ul li {
+        width: 100%;
+    }
+
+    .topheader .menu ul li ul {
+        position: relative;
+        width: 100%;
+    }
+
+    .topheader .menu ul li ul li {
+        background: var(--primary-color-opaque);
+    }
+
+    #menu-icon:checked~.menu {
+        display: initial;
+    }
+
+
+}

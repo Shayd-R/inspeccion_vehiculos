@@ -1,26 +1,36 @@
-<nav class="navbar navbar-expand-lg " style=" background-color: rgb(254, 254, 254);">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/">
-        <b>SURATRANS</b>
+<header class="topheader">
+  <div class="cont">
+    <a href="/" class="logo" id="logo">
+      <img alt="Logo suratrans" src="/img/logo/logo.ico">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav" style="margin-left: auto;">
-        <li class="nav-item">
-          <a class="nav-link" href="/">Inicio</a>
+    <input type="checkbox" id="menu-icon">
+    <label for="menu-icon">Menu</label>
+    <nav class="menu">
+      <ul>
+        <li><a href="/">inicio</a></li>
+
+        <li><a href="#">Inspección +</a>
+          <ul>
+            <li>
+              <a href="#">Registrar Vehiculo</a>
+            </li>
+            <li>
+              <a href="#">Tabla de inspecciónes</a>
+            </li>
+          </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/add">Inspeccion</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/list">Listar</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/addconductor">conductores</a>
+        <li><a href="#">Informes</a></li>
+        <li><a href="#">Conductores +</a>
+          <ul>
+            <li>
+              <a href="#">Registrar conductor</a>
+            </li>
+            <li>
+              <a href="#">Tabla conductores</a>
+            </li>
+          </ul>
         </li>
       </ul>
-    </div>
+    </nav>
   </div>
-</nav>
+</header>
