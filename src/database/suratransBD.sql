@@ -52,6 +52,7 @@ CREATE TABLE `drivers` (
 /*Data for the table `drivers` */
 
 insert  into `drivers`(`idDriver`,`name`,`cellPhoneNumber`,`licenseNumber`,`licenseCategoryId`,`driversLicenseExpiration`) values 
+(18126775,'harold bladimir ruano','3127887123','11112235',1,'2023-11-25'),
 (123456789,'WILLINTONG FONSECA ','3208373085','1124858074',1,'2024-01-25'),
 (1006663258,'SHAYD AUGUSTO RUANO RODRIGUEZ','3107531564','1111222',1,'2023-11-07');
 
@@ -172,7 +173,7 @@ CREATE TABLE `subspecifications` (
   KEY `especificacion_id` (`specificationId`),
   CONSTRAINT `subspecifications_ibfk_1` FOREIGN KEY (`specificationId`) REFERENCES `specifications` (`idSpecifications`),
   CONSTRAINT `subspecifications_ibfk_2` FOREIGN KEY (`specificationId`) REFERENCES `specifications` (`idSpecifications`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `subspecifications` */
 
@@ -211,6 +212,9 @@ CREATE TABLE `vehicleinformation` (
 /*Data for the table `vehicleinformation` */
 
 insert  into `vehicleinformation`(`idLicensePlate`,`driverId`,`vehicleType`,`driversLicenseExpiration`,`technomechanicsReviewExpiry`,`soatExpiration`,`expiryLifeLine`,`expiryCivilLiabilityPolicy`,`expiryCivilHydrocarbonsPolicy`,`idTrailerPlate`,`capacityTable`,`hydrostaticExpiration`,`expiryFifthWheel`,`kingPinExpiry`) values 
+('asd123123',1006663258,'Doble troque','2023-11-25','2023-11-25','2023-11-07','2023-11-25','2023-11-25','2023-11-25','asdasd','asdasd','2023-11-25','2023-11-25','2023-11-25'),
+('asdasss',1006663258,'Tracto camion','2023-11-25','2023-11-25','2023-11-25','2023-11-25','2023-11-25','2023-11-25','asdasd12312','asdasdfsdf','2023-11-25','2023-11-25','2023-11-25'),
+('asdasss111',1006663258,'Sencillo','2023-11-25','2023-11-25','2023-11-25','2023-11-25','2023-11-25','2023-11-25','asdasd123122','asdasdfsdf2','2023-11-25','2023-11-25','2023-11-25'),
 ('ccccc',1006663258,'Contingencia','2023-11-11','2023-11-11','2023-11-11','2023-11-11','2023-11-11','2023-11-11','asccccc','sccccc','2023-11-11','2023-11-11','2023-11-11'),
 ('xxxxxx',1006663258,'Tracto camión','2023-11-06','2023-11-06','2023-11-06','2023-11-06','2023-11-06','2023-11-06','asdjlñlkas','sfdfsdf','2023-11-23','2023-11-06','2023-11-06');
 
