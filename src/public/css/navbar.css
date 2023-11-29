@@ -56,18 +56,25 @@
     background-color: var(--secondary-color);
     color: var(--theme-color);
 } */
+
 .topheader .menu ul li:focus-within>a,
+.topheader .menu ul li:hover>a {
+    background-color: var(--secondary-color);
+    color: var(--theme-color);
+}   
+
+/* .topheader .menu ul li:focus-within>a,
 .topheader .menu ul li:hover>a::before {
-    content: "";
-    position: absolute;
     
+    content: "";
+    position: absolute; 
     top: 65%;
     bottom: -2px;
     height: 3px;
     width: 90%;
     border-radius: 8px;
     background-color: var(--secondary-color);
-}
+} */
 
 /* ------------------------------------- linea amarilla */
 
