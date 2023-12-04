@@ -1,32 +1,42 @@
+{{!-- {{#if toastrMessage}}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        toastr.{{toastrType}}('{{toastrMessage}}', '{{toastrTitle}}', { "positionClass": "{{toastrOptions.positionClass}}"});
+    });
+</script>
+{{/if}} --}}
+
+
 <section class="container" id="container">
     <header>Registrar conductor</header>
-    <form action="/addconductor" method="post">
+    <form action="/addDriver" id="forms" method="post">
         <div class="form first">
             <div class="details addvehicle">
                 <span class="title-addvehicle">Datos del conductor</span>
                 <div class="fields">
                     <div class="input-field">
                         <label>Cédula </label>
-                        <input type="text" name="idDriver" id="idDriver" placeholder="Ingresar la cédula" autofocus
-                            required>
+                        <input type="text" name="idDriver" id="idDriver" placeholder="Ingresar la cédula"
+                            value="{{errorDriver.idDriver}}" autofocus required>
                     </div>
                     <div class="input-field">
                         <label>Nombres completos: </label>
-                        <input type="text" name="name" id="name" placeholder="Ingresar nombres completos" required>
+                        <input type="text" name="name" id="name" placeholder="Ingresar nombres completos"
+                            value="{{errorDriver.name}}" required>
                     </div>
                     <div class="input-field">
                         <label>Celular</label>
                         <input type="number" name="cellPhoneNumber" id="cellPhoneNumber"
-                            placeholder="Ingresar número de celular" required>
+                            placeholder="Ingresar número de celular" value="{{errorDriver.cellPhoneNumber}}" required>
                     </div>
                     <div class="input-field">
                         <label>N° licencia </label>
                         <input type="text" name="licenseNumber" id="licenseNumber"
-                            placeholder="Ingresar número de licencia" required>
+                            placeholder="Ingresar número de licencia" value="{{errorDriver.licenseNumber}}" required>
                     </div>
                     <div class="input-field">
                         <label>Categoria</label>
-                        <select id="licenseCategoryId" name="licenseCategoryId" class="opcion">
+                        <select id="licenseCategoryId" name="licenseCategoryId" class="opcion" required>
                             <option value="" hidden>seleccionar categoria</option>
                             {{#each category}}
                             <option value="{{idLicenseCategory}}">{{category}}</option>
@@ -35,14 +45,47 @@
                     </div>
                     <div class="input-field">
                         <label>Fecha de vencimiento</label>
-                        <input type="date" name="driversLicenseExpiration" id="driversLicenseExpiration" required>
+                        <input type="date" name="driversLicenseExpiration" id="driversLicenseExpiration"
+                            value="{{errorDriver.driversLicenseExpiration}}" required>
+                    </div>
+                    <div class="input-field">
+                        <button type="button" id="openModalBtn">
+                            Realizar firma
+                        </button>
+                    </div>
+                    <div class="input-field">
+                        <div class="firma-muestra">
+                            <img id="firmaPrevia" name="signature" src="">
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <button type="submit">Registrar</button>
                     </div>
                 </div>
-            </div>
-            <br>
-            <div>
-                <button type="submit">Registrar</button>
             </div>
         </div>
     </form>
 </section>
+
+
+<div id="dibujarFirmaModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Dibujar Firma</h4>
+            <button id="closeModalBtn" class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="row-modal">
+                <canvas id="signature"></canvas>
+            </div>
+            <div class="row-modal">
+                <div class="col-modal">
+                    <button id="guardarFirma" class="btn btn-primary mt-3" style="width: 100%;">Guardar</button>
+                </div>
+                <div class="col-modal">
+                    <button id="borrarFirma" class="btn btn-secondary mt-3" style="width: 100%;">Borrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

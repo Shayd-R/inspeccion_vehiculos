@@ -1,6 +1,6 @@
 <section class="container" id="container">
     <header>Editar conductor</header>
-    <form action="/editDriver/{{driver.idDriver}}" method="post">
+    <form action="/editDriver/{{driver.idDriver}}/{{driver.firmsId}}" id="forms" method="post">
         <div class="form first">
             <div class="details addvehicle">
                 <span class="title-addvehicle">Datos del conductor</span>
@@ -28,7 +28,7 @@
                     </div>
                     <div class="input-field">
                         <label>Categoria </label>
-                        <select id="licenseCategoryId" name="licenseCategoryId" class="opcion">
+                        <select id="licenseCategoryId" name="licenseCategoryId" class="opcion" required>
                             <option value="{{driver.idLicenseCategory}}" hidden>{{driver.category}}</option>
                             {{#each category}}
                             <option value="{{idLicenseCategory}}">{{category}}</option>
@@ -40,28 +40,46 @@
                         <input type="date" name="driversLicenseExpiration" id="driversLicenseExpiration"
                             value="{{driver.driversLicenseExpiration}}" required>
                     </div>
+                    <div class="input-field">
+                        <button type="button" id="openModalBtn">
+                            Realizar firma
+                        </button>
+                    </div>
+                    <div class="input-field">
+                        <div class="firma-muestra">
+                            <img id="firmaPrevia" name="signature" src="{{driver.signature}}">
+                            <input type="hidden" name="signature_cp" value="{{driver.signature}}">
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <div>
+                            <button type="submit">Editar</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <br>
-            <div>
-                <button type="submit">Agregar</button>
             </div>
         </div>
     </form>
 </section>
-<script>
-    var selectElement = document.getElementById("licenseCategoryId");
-    var options = selectElement.options;
-    var selectedValue = "{{driver.idLicenseCategory}}";
 
-    for (var i = 1; i < options.length; i++) {
-        var option = options[i];
-        console.log(option);
-        if (option.value === selectedValue) {
-
-            option.style.display = "none";
-        } else {
-            option.style.display = "";
-        }
-    }
-</script>
+<div id="dibujarFirmaModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Dibujar Firma</h4>
+            <button id="closeModalBtn" class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="row-modal">
+                <canvas id="signature"></canvas>
+            </div>
+            <div class="row-modal">
+                <div class="col-modal">
+                    <button id="guardarFirma" class="btn btn-primary mt-3" style="width: 100%;">Guardar</button>
+                </div>
+                <div class="col-modal">
+                    <button id="borrarFirma" class="btn btn-secondary mt-3" style="width: 100%;">Borrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,15 +1,15 @@
-const menu = document.querySelector(".cont-ul");
-const openMenuBtn = document.querySelector(".open-menu");
-const closeMenuBtn = document.querySelector(".close-menu");
+// const menu = document.querySelector(".cont-ul");
+// const openMenuBtn = document.querySelector(".open-menu");
+// const closeMenuBtn = document.querySelector(".close-menu");
 
-function toggleMenu() {
-    menu.classList.toggle("menu-opend");
-}
+// function toggleMenu() {
+//     menu.classList.toggle("menu-opend");
+// }
 
-openMenuBtn.addEventListener("click", toggleMenu);
-closeMenuBtn.addEventListener("click", toggleMenu);
+// openMenuBtn.addEventListener("click", toggleMenu);
+// closeMenuBtn.addEventListener("click", toggleMenu);
 
-const menuLinks = document.querySelectorAll('.menu a[id]');
+// const menuLinks = document.querySelectorAll('.menu a[id]');
 
 // function handleMenuClick() {
 //     document.querySelectorAll(".menu a.selected").forEach(el => el.classList.remove("selected"));

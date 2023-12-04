@@ -1,21 +1,22 @@
 <section class="container">
     <header>Buscar conductor</header>
-    <div class="col d-flex justify-content-end">
-        <a href="/addconductor" class="nextBtn" style="text-decoration: none;">
+    <br>
+    <div class="col d-flex justify-content-initial">
+        <a href="/addconductor" class="btn btn-info" style="text-decoration: none;">
             Registrar conductor
         </a>
     </div>
     {{#if drivers}}
     <div class="col md-3" style="padding-top: 20px;">
-        <table id="example" class="table table-striped" style="width: 100%; ">
+        <table id="example" class="table table-bordered table-hover" style="width: 100%;">
             <thead>
                 <tr>
                     <th>Cédula</th>
                     <th>Nombre</th>
                     <th>Celular</th>
-                    <th>N° Licencia</th>
+                    <th>Licencia</th>
                     <th>Categoria</th>
-                    <th>Fecha de vencimiento</th>
+                    <th>Vencimiento</th>
                     <th>Opciones</th>
                 </tr>
             </thead>
@@ -29,9 +30,9 @@
                     <td>{{category}}</td>
                     <td>{{driversLicenseExpiration}}</td>
                     <td>
-                        <div>
-                            <a href="/editDriver/{{idDriver}}" class="btn btn-warning"><i
-                                    class="fa-solid fa-pencil"></i>&nbsp;&nbsp; Editar</a>
+                        <div style="display: flex; justify-content: space-evenly;">
+                            <a href="/editDriver/{{idDriver}}/{{firmsId}}" class="btn btn-info"><i class="fa-solid fa-file-pen"></i></a>
+                            {{!-- <a href="/deleteDriver/{{idDriver}}" class="btn btn-warning"><i class="fa-solid fa-trash"></i></a> --}}
                         </div>
                     </td>
                 </tr>

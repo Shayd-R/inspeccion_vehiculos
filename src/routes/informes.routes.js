@@ -12,9 +12,8 @@ import { fileURLToPath } from 'url';
 import os from 'os';
 
 
-//ruta_directorio_actual
-let __dirname = dirname(fileURLToPath(import.meta.url));
-__dirname = join(__dirname, '..');
+// let __dirname = dirname(fileURLToPath(import.meta.url));
+// __dirname = join(__dirname, '..');
 
 const router = Router();
 
@@ -23,6 +22,8 @@ router.get('/informes', async (req, res) => {
         const [inspectionData] = await pool.query(`SELECT * FROM inspectiondata
             INNER JOIN drivers ON drivers.idDriver = inspectiondata.driverId;`);
         const listInformes = true;
+        req.session.date = null;
+        req.session.radioAnswers = null;
         res.render('informes/listInformes.hbs', { inspectionData, listInformes: listInformes });
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -37,7 +38,7 @@ router.get('/pdf/:idInspection', async (req, res) => {
             INNER JOIN drivers ON drivers.idDriver = inspectiondata.driverId
             INNER JOIN vehicleinformation ON vehicleinformation.idLicensePlate = inspectiondata.licensePlateId
             INNER JOIN licensecategory ON licensecategory.idLicenseCategory = drivers.licenseCategoryId
-            INNER JOIN firms ON firms.idFirms = inspectiondata.firmsId
+            INNER JOIN firms ON firms.idFirms = drivers.firmsId
             WHERE inspectiondata.idInspection = `+ idInspection + `;`);
 
         const [inspection] = await pool.query(`SELECT subSpecification, convention, s.specificationId FROM inspection i
@@ -58,10 +59,6 @@ router.get('/pdf/:idInspection', async (req, res) => {
 
         const currentDate = new Date();
         const date = currentDate.toISOString().replace(/[-T:\.Z]/g, '');
-
-
-        // res.setHeader('Content-disposition', 'inline; filename=Inspeccion_' + date + '.pdf');
-        // res.setHeader('Content-type', 'application/pdf');
 
         res.setHeader('Content-disposition', 'attachment; filename=Inspeccion_' + date + '.pdf');
         res.setHeader('Content-type', 'application/pdf');
@@ -84,7 +81,7 @@ router.get('/informe/:idInspection', async (req, res) => {
             INNER JOIN drivers ON drivers.idDriver = inspectiondata.driverId
             INNER JOIN vehicleinformation ON vehicleinformation.idLicensePlate = inspectiondata.licensePlateId
             INNER JOIN licensecategory ON licensecategory.idLicenseCategory = drivers.licenseCategoryId
-            INNER JOIN firms ON firms.idFirms = inspectiondata.firmsId
+            INNER JOIN firms ON firms.idFirms = drivers.firmsId
             WHERE inspectiondata.idInspection = `+ idInspection + `;`);
 
         const [inspection] = await pool.query(`SELECT subSpecification, convention, s.specificationId FROM inspection i
@@ -94,11 +91,25 @@ router.get('/informe/:idInspection', async (req, res) => {
 
         const [specification] = await pool.query(`SELECT * FROM specifications`);
 
+        const content = generateContent(vehicleReport[0], inspection, specification);
 
-        res.render('informes/informe.hbs');
+        let docDefinition = {
+            content: content,
+            styles: styles
+        };
+
+        const printer = new PdfPrinter(fonts);
+        const currentDate = new Date();
+        const date = currentDate.toISOString().replace(/[-T:\.Z]/g, '');
+        res.setHeader('Content-disposition', 'inline; filename=Inspeccion_' + date + '.pdf');
+        res.setHeader('Content-type', 'application/pdf');
+       
+        let pdfDoc = printer.createPdfKitDocument(docDefinition);
+        pdfDoc.pipe(res);
+        pdfDoc.end();
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error ');
+        res.status(500).send('Error al generar el PDF');
     }
 });
 

@@ -2,9 +2,10 @@
     <header class="text-light">Buscar informe</header>
     {{#if inspectionData}}
     <div class="col md-3" style="padding-top: 20px;">
-        <table id="example" class="table table-striped nowrap" style="width:100%">
+        <table id="example" class="table table-bordered table-hover" style="width: 100%;    ">
             <thead>
                 <tr>
+                    <th>Nº</th>
                     <th>Cédula</th>
                     <th>Nombre</th>
                     <th>Placa</th>
@@ -15,6 +16,9 @@
             <tbody>
                 {{#each inspectionData}}
                 <tr>
+                    <td>
+                        {{idInspection}}
+                    </td>
                     <td>
                         {{driverId}}
                     </td>
@@ -27,9 +31,11 @@
                     <td>
                         {{date}}
                     </td>
-                    <td style="display: flex;">
-                        <a href="/informe/{{idInspection}}" class="btn btn-warning">Mirar informe</a>
-                        <a href="/pdf/{{idInspection}}" class="btn btn-info">Descargar informe</a>
+                    <td>
+                        <div class="" style="display: flex; justify-content: space-evenly;">
+                            <a href="/informe/{{idInspection}}" target="_blank" class="btn btn-warning">Revisar</a>
+                            <a href="/pdf/{{idInspection}}" class="btn btn-info">Descargar</a>
+                        </div>
                     </td>
                 </tr>
                 {{/each}}

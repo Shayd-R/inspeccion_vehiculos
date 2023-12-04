@@ -3,14 +3,22 @@
         enctype="application/x-www-form-urlencoded">
         <div class="fecha">
             <div class="input-fecha">
+                {{#if (eq date undefined)}}
+                <label>Fecha de inspección </label>
+                <input type="date" name="date" id="date" value="">
+                {{else}}
                 <label>Fecha de inspección</label>
-                <input type="date" name="date" id="date">
+                <input type="date" name="date" id="date" value="{{date}}">
+                {{/if}}
+                
             </div>
         </div>
         <div class="accordion">
+
             {{#each specifications}}
             <div class="accordion-content">
                 <div class="header">
+
                     <span class="title">{{idSpecifications}}. {{specification}}</span>
                     <i class="fa-solid fa-plus"></i>
                 </div>
@@ -18,219 +26,67 @@
                     {{#each ../subspecifications}}
                     {{#if (eq specificationId ../idSpecifications)}}
                     <div class="preguntas">
-                        <span class="title">{{subSpecification}}</span>
+
+
+                        <span class="title">{{idSubspecification}}. {{subSpecification}}</span>
                         <div class="row" name="{{idSubspecification}}">
+
+
+
                             <div class="col bueno">
                                 <input type="radio" name="{{idSubspecification}}" id="{{idSubspecification}}bueno"
-                                    autocomplete="off" value="1">
+                                    autocomplete="off" value="1" {{#each ../../radioAnswers}} {{#if (eq pregunta
+                                    ../idSubspecification )}} {{#if (eq respuesta '1' )}}checked {{/if}}{{/if}}
+                                    {{/each}}>
                                 <label for="{{idSubspecification}}bueno">Bueno</label>
                             </div>
                             <div class="col malo">
                                 <input type="radio" name="{{idSubspecification}}" id="{{idSubspecification}}malo"
-                                    autocomplete="off" value="2">
+                                    autocomplete="off" value="2" {{#each ../../radioAnswers}} {{#if (eq pregunta
+                                    ../idSubspecification )}} {{#if (eq respuesta '2' )}}checked {{/if}}{{/if}}
+                                    {{/each}}>
                                 <label for="{{idSubspecification}}malo">Malo</label>
                             </div>
                             <div class="col no_aplica">
                                 <input type="radio" name="{{idSubspecification}}" id="{{idSubspecification}}no_aplica"
-                                    autocomplete="off" value="3">
+                                    autocomplete="off" value="3" {{#each ../../radioAnswers}} {{#if (eq pregunta
+                                    ../idSubspecification )}} {{#if (eq respuesta '3' )}}checked {{/if}}{{/if}}
+                                    {{/each}}>
                                 <label for="{{idSubspecification}}no_aplica">No Aplica</label>
                             </div>
                         </div>
                     </div>
                     {{/if}}
                     {{/each}}
-
-
                 </div>
             </div>
             {{/each}}
-            <div class="accordion-content">
+            <div class="final">
                 <div class="header">
                     <span class="title">FINALIZACIÓN</span>
-                    <i class="fa-solid fa-plus"></i>
                 </div>
                 <div class="description">
                     <div class="preguntas">
                         <span class="title">Nombre completo y firma del inspecctor</span>
-                        <div class="row-fin">
-
+                        <div class="row-fin ">
                             <input type="text" name="inspector" id="inspector" placeholder="Nombre completo">
-
-                            <button >
-                                Reemplazar firma
-                            </button>
-
                         </div>
-                        {{!-- <div class="row">
-                            <div class="col-12">
-                                <img id="firmaPrevia" name="signature" src="" alt="" style="max-width: 20%;">
-                            </div>
-                        </div> --}}
+                        <div class="row-fin">
+                            <button type="submit">Inspeccion</button>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </form>
-    {{!-- {{#each specifications}}
-    <div class="accordion accordion-flush" id="accordionFlushExample">
-        <div class="accordion-item" style="margin-top: 10px;">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#_acor{{idSpecifications}}" aria-expanded="false"
-                    aria-controls="#_acor{{idSpecifications}}" style="font-family: 'Open Sans', sans-serif;">
-                    {{idSpecifications}}. {{specification}}
-
-                </button>
-            </h2>
-            <div id="_acor{{idSpecifications}}" class="accordion-collapse collapse"
-                data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">
-                    {{#each ../subspecifications}}
-                    {{#if (eq specificationId ../idSpecifications)}}
-                    <div class="preguntas">
-                        <h5>{{subSpecification}}</h5>
-                        <br>
-                        <div class="row" name="{{idSubspecification}}">
-                            <div class="col-4">
-                                <input type="radio" class="btn-check respuesta" name="{{idSubspecification}}"
-                                    id="{{idSubspecification}}bueno" autocomplete="off" value="1">
-                                <label class="btn btn-outline-success" style="width: 100%;"
-                                    for="{{idSubspecification}}bueno">Bueno</label>
-                            </div>
-                            <div class="col-4">
-                                <input type="radio" class="btn-check respuesta" name="{{idSubspecification}}"
-                                    id="{{idSubspecification}}malo" autocomplete="off" value="2">
-                                <label class="btn btn-outline-danger" style="width: 100%;"
-                                    for="{{idSubspecification}}malo">Malo</label>
-                            </div>
-                            <div class="col-4">
-                                <input type="radio" class="btn-check respuesta" name="{{idSubspecification}}"
-                                    id="{{idSubspecification}}no_aplica" autocomplete="off" value="3">
-                                <label class="btn btn-outline-secondary" style="width: 100%;"
-                                    for="{{idSubspecification}}no_aplica">No
-                                    Aplica</label>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    {{/if}}
-                    {{/each}}
-                </div>
-            </div>
-        </div>
-    </div>
-    {{/each}} --}}
-
-    {{!-- <div class="accordion accordion-flush" id="accordionFlushExample">
-        <div class="accordion-item" style="margin-top: 10px;">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#_acor" aria-expanded="false" aria-controls="#_acor"
-                    style="font-family: 'Open Sans', sans-serif;">
-                    FINALIZACIÓN
-                </button>
-            </h2>
-            <div id="_acor" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                <div class="accordion-body">
-                    <div class="preguntas">
-                        <h5>Nombre completo y firma del inspecctor</h5>
-                        <br>
-                        <div class="row" name="">
-                            <div class="col-9">
-                                <div class="input-group" style="border-color: black !important;">
-                                    <input type="text" name="inspector" id="inspector" class="form-control"
-                                        placeholder="Nombre completo">
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div style="border-color: black !important;">
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#modalFirma"
-                                        style="width: 100%;">
-                                        Reemplazar firma
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <img id="firmaPrevia" name="signature" src="" alt="" style="max-width: 20%;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
-
-
-
-    {{!-- <div class="nextBtn">
-        <button type="submit">Registrar</button>
-    </div> --}}
-
-
-
-
-
-
-    {{!-- <div class="modal fade" id="modalFirma" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Añadir Firma</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="inputFirma" class="input-group-text">Seleccionar una imagen de firma</label>
-                        <input type="file" class="form-control-file" id="inputFirma">
-                    </div>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#dibujarFirmaModal">Dibujar Firma</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="dibujarFirmaModal" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Dibujar Firma</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <div class="row">
-                        <div class="border-primary">
-                            <canvas id="signature" style="touch-action: none; border: 1px solid; border-radius: 10px;"
-                                width="380" height="180"></canvas>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <button id="guardarFirma" class="btn btn-primary mt-3" style="width: 100%;">Guardar</button>
-                        </div>
-                        <div class="col-6">
-                            <button id="borrarFirma" class="btn btn-secondary mt-3" style="width: 100%;">Borrar</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div> --}}
 </section>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
 
 <script>
-    $(document).ready(function () {
+    /*$(document).ready(function () {
         $('#encuestaForm').submit(function (e) {
             var unansweredQuestions = [];
             const alreadyChecked = new Set();
@@ -282,9 +138,9 @@
 
 
         try {
-            // JavaScript para la funcionalidad de dibujo y previsualización en el modal "Dibujar Firm"
             var canvas = document.getElementById('signature');
             var signaturePad = new SignaturePad(canvas);
+
 
             document.getElementById('guardarFirma').addEventListener('click', function () {
                 var signatureData = signaturePad.toDataURL(); // Obtiene la firm como una imagen en formato base64
@@ -313,7 +169,7 @@
         } catch (error) {
             console.error("Se produjo un error:", error);
         }
-    });
+    });*/
 
 
 

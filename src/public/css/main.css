@@ -1,14 +1,22 @@
 :root {
-    --theme-color: white;
+    --theme-color: #fff;
+    --theme-color-opaque: #ececec;
+
+
     --primary-color: #0762b7;
     --primary-color-opaque: #145796;
+    
     --secondary-color: rgb(224, 198, 52);
     --secondary-color-claro: rgb(248, 224, 88);
-    --text-color-inverse: white;
+
+
+    --text-color-inverse: #fff;
     --text-color: black;
     --text-color-opaque: rgb(72, 72, 72);
+
     --navbar-shallow-color: #dedede;
     --menu-mobile-background-color: #3A4460;
+
     --icon-color: #d7d7d7;
 }
 
@@ -24,13 +32,19 @@ html {
 }
 
 body {
-    height: 100vh;
+
     background-color: var(--theme-color);
     color: var(--text-color);
     padding-top: 120px;
+   
 }
 
 a {
     color: var(--text-color);
     text-decoration: none;
+}
+
+/* Ajusta la posición superior para la clase personalizada */
+.my-custom-class {
+    top: 85px !important; /* Puedes ajustar este valor según sea necesario */
 }
