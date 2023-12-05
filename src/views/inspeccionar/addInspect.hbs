@@ -12,11 +12,14 @@
                     </div>
                     <div class="input-field">
                         <label>Cédula de conductor</label>
-                        <input type="text" name="driverId" id="driverId" placeholder="Ingresar cédula" required>
+                        <input type="text" name="driverId" id="driverId" placeholder="Ingresar cédula"
+                            value="{{recuperationData.driverId}}" required>
                     </div>
                     <div class="input-field">
                         <label>Tipo de vehiculo</label>
-                        <select id="opcion" name="opcion" class="opcion" >
+                        <select id="opcion" name="opcion" class="opcion">
+
+
                             {{#if (eq recuperationData.vehicleType undefined)}}
                             <option value="Sencillo" selected>Sencillo</option>
                             <option value="Doble troque">Doble troque</option>
@@ -24,31 +27,38 @@
                             <option value="Contingencia">Contingencia</option>
                             <option value="otro">Otro</option>
                             {{else}}
-                            <option value="{{recuperationData.vehicleType}}" selected>{{recuperationData.vehicleType}}
-                            {{#if (eq recuperationData.vehicleType 'Sencillo')}}
-                            
-                            {{else}}
+                            <option value="{{recuperationData.vehicleType}}" hidden>{{recuperationData.vehicleType}}</option>
+                            <option value="Sencillo" >Sencillo</option>
+                            <option value="Doble troque">Doble troque</option>
+                            <option value="Tracto camion">Tracto camión</option>
+                            <option value="Contingencia">Contingencia</option>
+                            <option value="otro">Otro</option>
+                            {{!--<option value="{{recuperationData.vehicleType}}" selected>
+                                {{recuperationData.vehicleType}}
+                                {{#if (eq recuperationData.vehicleType 'Sencillo')}}
+
+                                {{else}}
                             <option value="Sencillo">Sencillo</option>
                             {{/if}}
                             {{#if (eq recuperationData.vehicleType 'Doble troque')}}
-                            
+
                             {{else}}
                             <option value="Doble troque">Doble troque</option>
                             {{/if}}
                             {{#if (eq recuperationData.vehicleType 'Tracto camion')}}
-                            
+
                             {{else}}
                             <option value="Tracto camion">Tracto camión</option>
                             {{/if}}
                             {{#if (eq recuperationData.vehicleType 'Contingencia')}}
-                            
+
                             {{else}}
                             <option value="Contingencia">Contingencia</option>
                             {{/if}}
 
-                            <option value="otro">Otro</option>
-                            
-                            </option>
+                            <option value="otro">Otro</option> 
+
+                            </option>--}}
                             {{/if}}
                         </select>
                         <input type="text" id="vehicleType" name="vehicleType" onblur="hideInput()"
@@ -189,6 +199,19 @@
             showSelect();
         }
     });
+
+    var selectElement = document.getElementById("opcion");
+    var options = selectElement.options;
+    var selectedValue = "{{recuperationData.vehicleType}}";
+
+    for (var i = 1; i < options.length; i++) {
+        var option = options[i];
+        if (option.value === selectedValue) {
+            option.style.display = "none";
+        } else {
+            option.style.display = "";
+        }
+    }
     /*
         (() => {
             'use strict'

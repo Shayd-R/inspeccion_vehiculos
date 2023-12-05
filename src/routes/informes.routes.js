@@ -73,7 +73,6 @@ router.get('/pdf/:idInspection', async (req, res) => {
 
 });
 
-
 router.get('/informe/:idInspection', async (req, res) => {
     try {
         const idInspection = req.params.idInspection;
@@ -103,7 +102,7 @@ router.get('/informe/:idInspection', async (req, res) => {
         const date = currentDate.toISOString().replace(/[-T:\.Z]/g, '');
         res.setHeader('Content-disposition', 'inline; filename=Inspeccion_' + date + '.pdf');
         res.setHeader('Content-type', 'application/pdf');
-       
+
         let pdfDoc = printer.createPdfKitDocument(docDefinition);
         pdfDoc.pipe(res);
         pdfDoc.end();
@@ -112,5 +111,19 @@ router.get('/informe/:idInspection', async (req, res) => {
         res.status(500).send('Error al generar el PDF');
     }
 });
+
+router.get('/deleteReport/:idInspection', async (req, res) => {
+    try {
+        const idInspection = req.params.idInspection;
+        await pool.query('DELETE FROM inspection WHERE inspectionId = ?', idInspection);
+        await pool.query('DELETE FROM inspectiondata WHERE idInspection = ?', idInspection);
+        req.toastr.success('Se ha eliminado el reporte ' + idInspection, 'Eliminación', { "positionClass": "toast-top-right my-custom-class" });
+        res.redirect('/informes');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al eliminar reporte');
+    }
+});
+
 
 export default router;
