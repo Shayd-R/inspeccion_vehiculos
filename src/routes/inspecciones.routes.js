@@ -33,16 +33,16 @@ router.post('/addInspect', async (req, res) => {
             req.toastr.warning('No hay conductores con esta cédula ' + driverId, 'Conductor no registrado', { "positionClass": "toast-top-right my-custom-class" });
             res.redirect('/addInspect');
         } else {
-            const opcionSeleccionada = req.body.opcion;
-            let vehicleType = '';
+            // const opcionSeleccionada = req.body.opcion;
+            // let vehicleType = '';
 
-            if (opcionSeleccionada === 'otro') {
-                vehicleType = req.body.vehicleType;
-            } else {
-                vehicleType = opcionSeleccionada;
-            }
+            // if (opcionSeleccionada === 'otro') {
+            //     vehicleType = req.body.vehicleType;
+            // } else {
+            //     vehicleType = opcionSeleccionada;
+            // }
 
-            newVehicle.vehicleType = vehicleType;
+            // newVehicle.vehicleType = vehicleType;
             await pool.query('INSERT INTO vehicleinformation SET ?', [newVehicle]);
 
             req.toastr.success('Se ha registrado el vehiculo con la placa ' + idLicensePlate, 'Registrar exitoso', { "positionClass": "toast-top-right my-custom-class" });
@@ -79,9 +79,15 @@ router.get('/edit/:idLicensePlate', async (req, res) => {
 router.post('/edit/:idLicensePlate', async (req, res) => {
     try {
         const idLicensePlate = req.params.idLicensePlate;
-        const { driverId, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
+        const { driverId, opcion, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
             idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
         } = req.body;
+        let vehicleType = '';
+        if (opcion === 'otro') {
+            vehicleType = req.body.vehicleType;
+        } else {
+            vehicleType = opcion;
+        }
         const editVehicle = {
             driverId, vehicleType, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
             idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
@@ -95,15 +101,15 @@ router.post('/edit/:idLicensePlate', async (req, res) => {
             req.toastr.warning('No hay conductores con esta cédula ' + driverId, 'Conductor no registrado', { "positionClass": "toast-top-right my-custom-class" });
             res.redirect(`/editInspect/${idLicensePlate}`);
         } else {
-            const opcionSeleccionada = req.body.opcion;
-            let vehicleType = '';
+            // const opcionSeleccionada = req.body.opcion;
+            // let vehicleType = '';
 
-            if (opcionSeleccionada === 'otro') {
-                vehicleType = req.body.vehicleType;
-            } else {
-                vehicleType = opcionSeleccionada;
-            }
-            editVehicle.vehicleType = vehicleType;
+            // if (opcionSeleccionada === 'otro') {
+            //     vehicleType = req.body.vehicleType;
+            // } else {
+            //     vehicleType = opcionSeleccionada;
+            // }
+            // editVehicle.vehicleType = vehicleType;
             await pool.query('UPDATE vehicleinformation SET ? WHERE idLicensePlate = ?', [editVehicle, idLicensePlate]);
             req.toastr.success('Se actualizo correctamente', 'Actualizacion', { "positionClass": "toast-top-right my-custom-class" });
             res.redirect('/listInspect');
