@@ -15,8 +15,8 @@ router.get('/addconductor', async (req, res) => {
 
 router.post('/addDriver', async (req, res) => {
     try {
-        const { idDriver, name, cellPhoneNumber, licenseNumber, licenseCategoryId, driversLicenseExpiration } = req.body;
-        const newDriver = { idDriver, name, cellPhoneNumber, licenseNumber, licenseCategoryId, driversLicenseExpiration }
+        const { idDriver, name, cellPhoneNumber, licenseNumber, licensecategoryId, driversLicenseExpiration } = req.body;
+        const newDriver = { idDriver, name, cellPhoneNumber, licenseNumber, licensecategoryId, driversLicenseExpiration }
         const signature = req.body.signature;
         const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", idDriver);
         const driverVerification = driverVerificationData[0];
@@ -38,15 +38,12 @@ router.post('/addDriver', async (req, res) => {
                 res.redirect('/listconductores');
             }
 
-        }else{
+        } else {
             req.session.recuperationData = newDriver;
             // req.toastr.error('No ingreso la firma', 'Error', { "positionClass": "toast-top-right my-custom-class" });
             req.toastr.info('Esta cedula ya esta registrada', 'Error de registro', { "positionClass": "toast-top-right my-custom-class" });
             res.redirect('/addconductor');
         }
-
-
-
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -55,7 +52,7 @@ router.post('/addDriver', async (req, res) => {
 router.get('/editDriver/:idDriver', async (req, res) => {
     try {
         const idDriver = req.params.idDriver;
-        const [driverE] = await pool.query("SELECT idDriver, name, cellPhoneNumber, licenseNumber, idLicenseCategory, category, driversLicenseExpiration, firmsId ,signature FROM drivers INNER JOIN licensecategory ON drivers.`licenseCategoryId` = licensecategory.`idLicenseCategory` INNER JOIN firms ON drivers.`firmsId`=firms.`idFirms`WHERE idDriver = " + idDriver);
+        const [driverE] = await pool.query("SELECT idDriver, name, cellPhoneNumber, licenseNumber, idlicensecategory, category, driversLicenseExpiration, firmsId ,signature FROM drivers INNER JOIN licensecategory ON drivers.`licensecategoryId` = licensecategory.`idlicensecategory` INNER JOIN firms ON drivers.`firmsId`=firms.`idFirms`WHERE idDriver = " + idDriver);
         const driverEdit = driverE[0];
         const [result] = await pool.query('SELECT * FROM licensecategory');
         const edit = true;
@@ -67,6 +64,7 @@ router.get('/editDriver/:idDriver', async (req, res) => {
 
 router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
     try {
+        const driverId = req.params.idDriver;
         const idFirms = req.params.firmsId;
         const signature = req.body.signature;
         const signature1 = req.body.signature_cp;
@@ -76,8 +74,7 @@ router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
             req.toastr.error('No ingreso la firma', 'Error', { "positionClass": "toast-top-right my-custom-class" });
         } else {
             const updateFirmsQuery = "UPDATE firms SET signature = ? WHERE idFirms = ?";
-            const updateDriversQuery = "UPDATE drivers SET idDriver = ?, name = ?, cellPhoneNumber = ?, licenseNumber = ?, licenseCategoryId = ?, driversLicenseExpiration = ? WHERE idDriver = ?";
-            const driverId = req.params.idDriver;
+            const updatedriversQuery = "UPDATE drivers SET idDriver = ?, name = ?, cellPhoneNumber = ?, licenseNumber = ?, licenseCategoryId = ?, driversLicenseExpiration = ? WHERE idDriver = ?";
             const { idDriver, name, cellPhoneNumber, licenseNumber, licenseCategoryId, driversLicenseExpiration } = req.body;
 
             try {
@@ -89,7 +86,7 @@ router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
                 await pool.query('SET FOREIGN_KEY_CHECKS = 0;');
                 await pool.query("UPDATE vehicleinformation SET driverId = ? WHERE driverId = ?", [idDriver, driverId]);
                 await pool.query("UPDATE inspectiondata SET driverId = ? WHERE driverId = ?", [idDriver, driverId]);
-                await pool.query(updateDriversQuery, [idDriver , name, cellPhoneNumber, licenseNumber, licenseCategoryId, driversLicenseExpiration, driverId]);
+                await pool.query(updatedriversQuery, [idDriver, name, cellPhoneNumber, licenseNumber, licenseCategoryId, driversLicenseExpiration, driverId]);
                 await pool.query('SET FOREIGN_KEY_CHECKS = 1;');
 
                 req.toastr.info('El conductor ha sido editado', 'Modificación', { "positionClass": "toast-top-right my-custom-class" });
@@ -107,11 +104,11 @@ router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
 //     //Hacer la eliminación
 //     try {
 //         const updateFirmsQuery = "UPDATE firms SET signature = ? WHERE idFirms = ?";
-//             const updateDriversQuery = "UPDATE drivers SET name = ?, cellPhoneNumber = ?, licenseNumber = ?, licenseCategoryId = ?, driversLicenseExpiration = ? WHERE idDriver = ?";
+//             const updatedriversQuery = "UPDATE drivers SET name = ?, cellPhoneNumber = ?, licenseNumber = ?, licensecategoryId = ?, driversLicenseExpiration = ? WHERE idDriver = ?";
 
 //         const idDriver = req.params.idDriver;
-//         const [driverE] = await pool.query("SELECT idDriver, name, cellPhoneNumber, licenseNumber, idLicenseCategory, category, driversLicenseExpiration, firmsId ,signature FROM drivers INNER JOIN licensecategory ON drivers.`licenseCategoryId` = licensecategory.`idLicenseCategory` INNER JOIN firms ON drivers.`firmsId`=firms.`idFirms`WHERE idDriver = " + idDriver);
-        
+//         const [driverE] = await pool.query("SELECT idDriver, name, cellPhoneNumber, licenseNumber, idlicensecategory, category, driversLicenseExpiration, firmsId ,signature FROM drivers INNER JOIN licensecategory ON drivers.`licensecategoryId` = licensecategory.`idlicensecategory` INNER JOIN firms ON drivers.`firmsId`=firms.`idFirms`WHERE idDriver = " + idDriver);
+
 //         res.redirect('/listconductores');
 //     } catch (err) {
 //         res.status(500).json({ message: err.message });
@@ -120,7 +117,7 @@ router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
 
 router.get('/listconductores', async (req, res) => {
     try {
-        const [result] = await pool.query('SELECT drivers.`idDriver`, drivers.`name`, drivers.`cellPhoneNumber`, drivers.`licenseNumber`, licensecategory.`category`, drivers.`driversLicenseExpiration` FROM drivers INNER JOIN licensecategory ON drivers.`licensecategoryId` = licensecategory.`idLicenseCategory`');
+        const [result] = await pool.query('SELECT drivers.`idDriver`, drivers.`name`, drivers.`cellPhoneNumber`, drivers.`licenseNumber`, licensecategory.`category`, drivers.`driversLicenseExpiration` FROM drivers INNER JOIN licensecategory ON drivers.`licenseCategoryId` = licensecategory.`idLicenseCategory`');
         const listConductors = true;
         req.session.recuperationData = null;
         res.render('conductores/list.hbs', { drivers: result, listConductors: listConductors });

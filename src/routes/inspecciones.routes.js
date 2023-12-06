@@ -26,27 +26,24 @@ router.post('/addInspect', async (req, res) => {
         }
         const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", driverId);
         const driverVerification = driverVerificationData[0];
-
-        if (!driverVerification) {
-            req.session.recuperationData = newVehicle;
-            req.toastr.info('Debe registrar el conductor para seguir', 'Registrar condunctor', { "positionClass": "toast-top-right my-custom-class" });
-            req.toastr.warning('No hay conductores con esta cédula ' + driverId, 'Conductor no registrado', { "positionClass": "toast-top-right my-custom-class" });
-            res.redirect('/addInspect');
+      
+        if (!vehicleVerification) {
+            const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", driverId);
+            const driverVerification = driverVerificationData[0];
+            if (!driverVerification) {
+                req.session.recuperationData = newVehicle;
+                req.toastr.info('Debe registrar el conductor para seguir', 'Registrar condunctor', { "positionClass": "toast-top-right my-custom-class" });
+                req.toastr.warning('No hay conductores con esta cédula ' + driverId, 'Conductor no registrado', { "positionClass": "toast-top-right my-custom-class" });
+                res.redirect('/addInspect');
+            } else {
+                await pool.query('INSERT INTO vehicleinformation SET ?', [newVehicle]);
+                req.toastr.success('Se ha registrado el vehiculo con la placa ' + idLicensePlate, 'Registrar exitoso', { "positionClass": "toast-top-right my-custom-class" });
+                res.redirect('/listInspect');
+            }
         } else {
-            // const opcionSeleccionada = req.body.opcion;
-            // let vehicleType = '';
-
-            // if (opcionSeleccionada === 'otro') {
-            //     vehicleType = req.body.vehicleType;
-            // } else {
-            //     vehicleType = opcionSeleccionada;
-            // }
-
-            // newVehicle.vehicleType = vehicleType;
-            await pool.query('INSERT INTO vehicleinformation SET ?', [newVehicle]);
-
-            req.toastr.success('Se ha registrado el vehiculo con la placa ' + idLicensePlate, 'Registrar exitoso', { "positionClass": "toast-top-right my-custom-class" });
-            res.redirect('/listInspect');
+            req.session.recuperationData = newVehicle;
+            req.toastr.warning('Ya hay un vehiculo registrado con esta placa ' + idLicensePlate, 'Error de duplicación', { "positionClass": "toast-top-right my-custom-class" });
+            res.redirect('/addInspect');
         }
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -101,15 +98,7 @@ router.post('/edit/:idLicensePlate', async (req, res) => {
             req.toastr.warning('No hay conductores con esta cédula ' + driverId, 'Conductor no registrado', { "positionClass": "toast-top-right my-custom-class" });
             res.redirect(`/editInspect/${idLicensePlate}`);
         } else {
-            // const opcionSeleccionada = req.body.opcion;
-            // let vehicleType = '';
-
-            // if (opcionSeleccionada === 'otro') {
-            //     vehicleType = req.body.vehicleType;
-            // } else {
-            //     vehicleType = opcionSeleccionada;
-            // }
-            // editVehicle.vehicleType = vehicleType;
+            //verificar que el driver se pueda cambiar
             await pool.query('UPDATE vehicleinformation SET ? WHERE idLicensePlate = ?', [editVehicle, idLicensePlate]);
             req.toastr.success('Se actualizo correctamente', 'Actualizacion', { "positionClass": "toast-top-right my-custom-class" });
             res.redirect('/listInspect');
@@ -197,7 +186,7 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
                     const respuesta = req.body[pregunta];
                     await pool.query("UPDATE inspection SET conventionId= " + `${respuesta}` + " WHERE inspectionId = " + inspectionId + " AND subSpecificationsId= " + `${pregunta}`)
                 }
-                req.toastr.success('Actualizo la inspección: '+ inspectionId, 'Actualización exitosa', { "positionClass": "toast-top-right my-custom-class" });
+                req.toastr.success('Actualizo la inspección: ' + inspectionId, 'Actualización exitosa', { "positionClass": "toast-top-right my-custom-class" });
                 res.redirect('/informes');
             }
 
@@ -207,15 +196,32 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
         res.status(500).send('Error interno del servidor');
     }
 });
-/*
-router.get('/delete/:id', async (req, res) => {
+
+router.post('/deleteVehicle', async (req, res) => {
     try {
-        const { id } = req.params;
-        await pool.query('DELETE FROM final WHERE id = ?', [id]);
-        res.redirect('/list');
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+        const idLicensePlate = req.body.idLicensePlate;
+        const [idInspectionData] = await pool.query('SELECT * FROM inspectiondata WHERE licensePlateId = ?', idLicensePlate)
+        const driverId = idInspectionData[0].driverId;
+        console.log(idLicensePlate[0]);
+        console.log(idLicensePlate);   
+
+        await pool.query('SET FOREIGN_KEY_CHECKS = 0;');
+        for (const row of idInspectionData) {
+            const idInspection = row.idInspection;
+            await pool.query('DELETE FROM inspection WHERE inspectionId = ?', idInspection);
+        }
+        await pool.query('DELETE FROM inspectiondata WHERE driverId = ?', driverId);
+        await pool.query('DELETE FROM vehicleinformation WHERE idLicensePlate = ?', idLicensePlate);
+        await pool.query('SET FOREIGN_KEY_CHECKS = 1;');
+        req.toastr.success('Se ha eliminado el vehiculo con la placa ' + idLicensePlate[0], 'Eliminación', { "positionClass": "toast-top-right my-custom-class" });
+        res.redirect('/listInspect');
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al eliminar vehiculo');
     }
 });
-*/
+
+
+
 export default router;
