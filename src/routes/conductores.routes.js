@@ -66,8 +66,16 @@ router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
             req.toastr.error('No ingreso la firma', 'Error', { "positionClass": "toast-top-right my-custom-class" });
         } else {
             const updateFirmsQuery = "UPDATE firms SET signature = ? WHERE idFirms = ?";
-            const updatedriversQuery = "UPDATE drivers SET idDriver = ?, name = ?, cellPhoneNumber = ?, licenseNumber = ?, licenseCategoryId = ?, driversLicenseExpiration = ? WHERE idDriver = ?";
             const { idDriver, name, cellPhoneNumber, licenseNumber, licenseCategoryId, driversLicenseExpiration } = req.body;
+            var updatedriversQuery = '';
+            var editDriver = {};
+            if (!licenseCategoryId) {
+                editDriver = { idDriver, name, cellPhoneNumber, licenseNumber, driversLicenseExpiration };
+                updatedriversQuery = "UPDATE drivers SET ? WHERE idDriver = "+driverId;
+            } else {
+                editDriver = { idDriver, name, cellPhoneNumber, licenseNumber, licenseCategoryId, driversLicenseExpiration };
+                updatedriversQuery = "UPDATE drivers SET ? WHERE idDriver = "+driverId;
+            }
             try {
                 if (signature) {
                     await pool.query(updateFirmsQuery, [signature, idFirms]);
@@ -77,12 +85,14 @@ router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
                 await pool.query('SET FOREIGN_KEY_CHECKS = 0;');
                 await pool.query("UPDATE vehicleinformation SET driverId = ? WHERE driverId = ?", [idDriver, driverId]);
                 await pool.query("UPDATE inspectiondata SET driverId = ? WHERE driverId = ?", [idDriver, driverId]);
-                await pool.query(updatedriversQuery, [idDriver, name, cellPhoneNumber, licenseNumber, licenseCategoryId, driversLicenseExpiration, driverId]);
+                await pool.query(updatedriversQuery, editDriver);
                 await pool.query('SET FOREIGN_KEY_CHECKS = 1;');
 
                 req.toastr.info('El conductor ha sido editado', 'Modificación', { "positionClass": "toast-top-right my-custom-class" });
                 res.redirect('/listconductores');
             } catch (error) {
+                console.log('hola');
+                console.error(error);
                 throw error;
             }
         }
