@@ -13,14 +13,14 @@ import session from 'express-session'
 import cookieParser from 'cookie-parser'
 import toastr from 'express-toastr'
 import {  body, validationResult, check } from 'express-validator'
-
-
+import dotenv from "dotenv";
+dotenv.config();
 //INICIALIZATION
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 //SETTINGS
-app.set('port', process.env.PORT || 4000);
+app.set('port', process.env.PORT);
 app.set('views', join(__dirname, 'views'));
 app.engine('.hbs', engine({
     defaultLayout: 'main',
