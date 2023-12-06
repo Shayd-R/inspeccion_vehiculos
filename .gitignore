@@ -2,3 +2,4 @@ logs/
 htmls/
 style.css
 .vscode
+.env
