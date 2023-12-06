@@ -26,7 +26,7 @@ router.post('/addInspect', async (req, res) => {
         }
         const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", driverId);
         const driverVerification = driverVerificationData[0];
-
+      
         if (!vehicleVerification) {
             const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", driverId);
             const driverVerification = driverVerificationData[0];
