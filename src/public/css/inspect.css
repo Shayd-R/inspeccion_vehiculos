@@ -96,7 +96,7 @@ form.secActive .form.first {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin-top: 35px;
+    /* margin-top: 35px; */
 }
 
 /*----------------*/
@@ -146,7 +146,7 @@ form .fields .input-field input {
     outline: none;
     color: var(--text-color-inverse);
     border-radius: 5px;
-    margin: 20px 0;
+    margin: 10px 0;
     background-color: var(--text-color);
     transition: all 0.2s linear;
     cursor: pointer;
@@ -316,7 +316,7 @@ form .buttons button,
 
 @media (max-width: 1000px) {
     .container form {
-        min-height: 560px;
+        min-height: 540px;
         /* overflow-y: scroll; */
     }
 
@@ -340,7 +340,7 @@ form .buttons button,
     .modal-body .row-modal canvas {
         width: 300px;
         height: 160px;
-        margin-top: 20px;
+        margin-top: 15px;
         touch-action: none;
         border: 1px solid black;
     }
