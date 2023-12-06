@@ -36,17 +36,8 @@
 
                     <td>
                         <div style="display: flex; justify-content: space-evenly;">
-                            <a href="/edit/{{idLicensePlate}}" class="btn btn-warning"><i
-                                    class="fa-solid fa-file-pen"></i></a>
-                            <a href="/inspectVehiculo/{{idLicensePlate}}" class="btn btn-info"><i
-                                    class="fa-solid fa-magnifying-glass-plus"></i></a>
-                            {{!-- <a href="/deleteVehicle/{{idLicensePlate}}" class="btn btn-danger"><i
-                                    class="fa-solid fa-trash"></i></a> --}}
-                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                data-id="{{idLicensePlate}}"><i class="fa-solid fa-trash"></i></a>
-
-                            {{!-- <a class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"><i
-                                    class="fa-solid fa-trash"></i></a> --}}
+                            <a href="/edit/{{idLicensePlate}}" class="btn btn-warning"><i class="fa-solid fa-file-pen"></i></a>
+                            <a href="/inspectVehiculo/{{idLicensePlate}}" class="btn btn-info"><i class="fa-solid fa-magnifying-glass-plus"></i></a>
                         </div>
                     </td>
                 </tr>
@@ -57,47 +48,3 @@
     </div>
     {{/if}}
 </section>
-
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="/deleteVehicle" id="modalVehicle" method="post">
-                <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar este vehículo?</p>
-                    <p>Es posible que este vehículo tenga inspecciones diarias registradas. Si procedes con la eliminación, también se eliminarán todas las inspecciones asociadas. </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var deleteButtons = document.querySelectorAll('.btn-danger');
-        var modalVehicleForm = document.getElementById('modalVehicle');
-
-        deleteButtons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                var idLicensePlate = this.getAttribute('data-id');
-                console.log(idLicensePlate);
-
-                // Crear un nuevo elemento input hidden
-                var inputHidden = document.createElement('input');
-                inputHidden.type = 'hidden';
-                inputHidden.name = 'idLicensePlate';
-                inputHidden.value = idLicensePlate;
-
-                // Agregar el input hidden al formulario
-                modalVehicleForm.appendChild(inputHidden);
-            });
-        });
-    });
-</script>
