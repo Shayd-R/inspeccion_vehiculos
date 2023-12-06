@@ -39,7 +39,7 @@
     position: relative;
     border-radius: 6px;
     margin-top: 16px;
-    min-height: 490px;
+    min-height: 900px;
     background-color: var(--primary-color);
     overflow: hidden;
 }
@@ -305,12 +305,19 @@ form .buttons button,
     border-radius: 4px;
 }
 
+@media (min-width: 1000px) {
+    .container form {
+        min-height: 470px;
+        /* overflow-y: scroll; */
+    }
 
+}
 
 
 @media (max-width: 1000px) {
     .container form {
-        overflow-y: scroll;
+        min-height: 560px;
+        /* overflow-y: scroll; */
     }
 
     .container form::-webkit-scrollbar {
@@ -341,6 +348,9 @@ form .buttons button,
 }
 
 @media (max-width: 710px) {
+    .container form {
+        min-height: 900px;
+    }
     form .fields .input-field {
         width: 100%;
     }
