@@ -20,15 +20,11 @@ router.post('/addDriver', async (req, res) => {
         const signature = req.body.signature;
         const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", idDriver);
         const driverVerification = driverVerificationData[0];
-
         if (!driverVerification) {
             if (!signature) {
                 req.session.recuperationData = newDriver;
-                // const [result] = await pool.query('SELECT * FROM licensecategory');
-                // const addconductor = true;
                 req.toastr.info('Debe subir una firma', 'Digitalización de firma', { "positionClass": "toast-top-right my-custom-class" });
                 res.redirect('/addconductor');
-                // res.render('conductores/add.hbs', { errorDriver, addconductor, category: result, toastrType: 'info', toastrMessage: 'Debe subir una firma', toastrTitle: 'Digitalización de firma', toastrOptions: { "positionClass": "toast-top-right my-custom-class" } });
             } else {
                 await pool.query("INSERT INTO firms (signature) VALUES ('" + signature + "')");
                 const [idFirms] = await pool.query("SELECT idFirms FROM firms WHERE signature='" + signature + "'");
@@ -37,10 +33,8 @@ router.post('/addDriver', async (req, res) => {
                 req.toastr.success('El conductor ha sido registrado', 'Creación', { "positionClass": "toast-top-right my-custom-class" });
                 res.redirect('/listconductores');
             }
-
         } else {
             req.session.recuperationData = newDriver;
-            // req.toastr.error('No ingreso la firma', 'Error', { "positionClass": "toast-top-right my-custom-class" });
             req.toastr.info('Esta cedula ya esta registrada', 'Error de registro', { "positionClass": "toast-top-right my-custom-class" });
             res.redirect('/addconductor');
         }
@@ -68,15 +62,12 @@ router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
         const idFirms = req.params.firmsId;
         const signature = req.body.signature;
         const signature1 = req.body.signature_cp;
-
-
         if (signature === "" && signature1 === "" || signature === undefined && signature1 === undefined) {
             req.toastr.error('No ingreso la firma', 'Error', { "positionClass": "toast-top-right my-custom-class" });
         } else {
             const updateFirmsQuery = "UPDATE firms SET signature = ? WHERE idFirms = ?";
             const updatedriversQuery = "UPDATE drivers SET idDriver = ?, name = ?, cellPhoneNumber = ?, licenseNumber = ?, licenseCategoryId = ?, driversLicenseExpiration = ? WHERE idDriver = ?";
             const { idDriver, name, cellPhoneNumber, licenseNumber, licenseCategoryId, driversLicenseExpiration } = req.body;
-
             try {
                 if (signature) {
                     await pool.query(updateFirmsQuery, [signature, idFirms]);
@@ -100,20 +91,20 @@ router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
     }
 });
 
-// router.get('/deleteDriver/:idDriver', async (req, res) => {
-//     //Hacer la eliminación
-//     try {
-//         const updateFirmsQuery = "UPDATE firms SET signature = ? WHERE idFirms = ?";
-//             const updatedriversQuery = "UPDATE drivers SET name = ?, cellPhoneNumber = ?, licenseNumber = ?, licensecategoryId = ?, driversLicenseExpiration = ? WHERE idDriver = ?";
+/*router.get('/deleteDriver/:idDriver', async (req, res) => {
+    //Hacer la eliminación
+    try {
+        const updateFirmsQuery = "UPDATE firms SET signature = ? WHERE idFirms = ?";
+            const updatedriversQuery = "UPDATE drivers SET name = ?, cellPhoneNumber = ?, licenseNumber = ?, licensecategoryId = ?, driversLicenseExpiration = ? WHERE idDriver = ?";
 
-//         const idDriver = req.params.idDriver;
-//         const [driverE] = await pool.query("SELECT idDriver, name, cellPhoneNumber, licenseNumber, idlicensecategory, category, driversLicenseExpiration, firmsId ,signature FROM drivers INNER JOIN licensecategory ON drivers.`licensecategoryId` = licensecategory.`idlicensecategory` INNER JOIN firms ON drivers.`firmsId`=firms.`idFirms`WHERE idDriver = " + idDriver);
+        const idDriver = req.params.idDriver;
+        const [driverE] = await pool.query("SELECT idDriver, name, cellPhoneNumber, licenseNumber, idlicensecategory, category, driversLicenseExpiration, firmsId ,signature FROM drivers INNER JOIN licensecategory ON drivers.`licensecategoryId` = licensecategory.`idlicensecategory` INNER JOIN firms ON drivers.`firmsId`=firms.`idFirms`WHERE idDriver = " + idDriver);
 
-//         res.redirect('/listconductores');
-//     } catch (err) {
-//         res.status(500).json({ message: err.message });
-//     }
-// });
+        res.redirect('/listconductores');
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});*/
 
 router.get('/listconductores', async (req, res) => {
     try {
@@ -121,7 +112,6 @@ router.get('/listconductores', async (req, res) => {
         const listConductors = true;
         req.session.recuperationData = null;
         res.render('conductores/list.hbs', { drivers: result, listConductors: listConductors });
-
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

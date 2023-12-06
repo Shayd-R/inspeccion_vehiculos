@@ -24,9 +24,10 @@ router.post('/addInspect', async (req, res) => {
             idLicensePlate, vehicleType, driverId, driversLicenseExpiration, technomechanicsReviewExpiry, soatExpiration, expiryLifeLine, expiryCivilLiabilityPolicy, expiryCivilHydrocarbonsPolicy,
             idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
         }
-        const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", driverId);
-        const driverVerification = driverVerificationData[0];
-      
+
+        const [vehicleVerificationData] = await pool.query("SELECT * FROM vehicleInformation WHERE idLicensePlate = ?", idLicensePlate);
+        const vehicleVerification = vehicleVerificationData[0];
+
         if (!vehicleVerification) {
             const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", driverId);
             const driverVerification = driverVerificationData[0];
@@ -91,7 +92,6 @@ router.post('/edit/:idLicensePlate', async (req, res) => {
         }
         const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", driverId);
         const driverVerification = driverVerificationData[0];
-
         if (!driverVerification) {
             req.session.recuperationData = editVehicle;
             req.toastr.info('Debe registrar el conductor para seguir', 'Registrar condunctor', { "positionClass": "toast-top-right my-custom-class" });
@@ -126,12 +126,10 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
         const numberOfQuestions = total[0].total;
         const idLicensePlate = req.params.idLicensePlate;
         const date = req.body.date;
-        // const radioQuestions = [];
         const radioRes = [];
         for (let i = 1; i <= numberOfQuestions; i++) {
             const pregunta = parseInt(`${i}`, 10);
             const respuesta = req.body[`${pregunta}`];
-            // radioQuestions.push(respuesta);
             radioRes.push({ pregunta, respuesta });
         }
         const validations = Array(numberOfQuestions).fill().map((_, index) =>
@@ -139,7 +137,6 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
         );
         await Promise.all(validations.map(validation => validation.run(req)));
         const errors = validationResult(req);
-
         if (!errors.isEmpty()) {
             errors.array().forEach(error => {
                 req.toastr.error(error.msg, 'Error de validación', {
@@ -151,16 +148,12 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
             return res.redirect(`/inspectVehiculo/${idLicensePlate}`);
         } else {
             const licensePlateId = idLicensePlate;
-
             const [driver] = await pool.query('SELECT driverId FROM vehicleinformation WHERE idLicensePlate = ?', [idLicensePlate]);
             const driverId = driver[0].driverId;
             const [date_bd] = await pool.query("SELECT * FROM inspectiondata WHERE driverId = ? AND licensePlateId = ? AND date = ?", [driverId, idLicensePlate, date]);
-
-
             if (date_bd[0] === undefined) {
                 const inspectiondata = { driverId, licensePlateId, date };
                 await pool.query('INSERT INTO inspectiondata SET ?', [inspectiondata]);
-
                 var sql = "SELECT idInspection FROM inspectiondata WHERE driverId = ? AND licensePlateId = ? AND date = ?";
                 const [idInspection] = await pool.query(sql, [inspectiondata.driverId, inspectiondata.licensePlateId, inspectiondata.date]);
                 const inspectionId = idInspection[0].idInspection;
@@ -170,12 +163,10 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
                     const respuesta = req.body[`${pregunta}`];
                     answers.push([inspectionId, pregunta, respuesta]);
                 }
-
                 sql = 'INSERT INTO inspection (inspectionId, subSpecificationsId, conventionId) VALUES ?';
                 await pool.query(sql, [answers]);
                 req.toastr.success('Realizo la inspeccion diaria', 'Inspeccion exitosa', { "positionClass": "toast-top-right my-custom-class" });
                 res.redirect('/informes');
-
             } else if (date_bd[0].date === date) {
                 const sql = "SELECT idInspection FROM inspectiondata WHERE driverId = ? AND licensePlateId = ? AND date = ?";
                 const [idIns] = await pool.query(sql, [driverId, licensePlateId, date]);
@@ -189,10 +180,8 @@ router.post('/inspectVehiculo/:idLicensePlate', async (req, res) => {
                 req.toastr.success('Actualizo la inspección: ' + inspectionId, 'Actualización exitosa', { "positionClass": "toast-top-right my-custom-class" });
                 res.redirect('/informes');
             }
-
         }
     } catch (error) {
-        console.error(error);
         res.status(500).send('Error interno del servidor');
     }
 });
@@ -201,10 +190,7 @@ router.post('/deleteVehicle', async (req, res) => {
     try {
         const idLicensePlate = req.body.idLicensePlate;
         const [idInspectionData] = await pool.query('SELECT * FROM inspectiondata WHERE licensePlateId = ?', idLicensePlate)
-        const driverId = idInspectionData[0].driverId;
-        console.log(idLicensePlate[0]);
-        console.log(idLicensePlate);   
-
+        const driverId = idInspectionData[0].driverId; 
         await pool.query('SET FOREIGN_KEY_CHECKS = 0;');
         for (const row of idInspectionData) {
             const idInspection = row.idInspection;
@@ -215,13 +201,9 @@ router.post('/deleteVehicle', async (req, res) => {
         await pool.query('SET FOREIGN_KEY_CHECKS = 1;');
         req.toastr.success('Se ha eliminado el vehiculo con la placa ' + idLicensePlate[0], 'Eliminación', { "positionClass": "toast-top-right my-custom-class" });
         res.redirect('/listInspect');
-
     } catch (error) {
-        console.error(error);
         res.status(500).send('Error al eliminar vehiculo');
     }
 });
-
-
 
 export default router;
