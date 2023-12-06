@@ -88,7 +88,7 @@ router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
                 }
                 await pool.query('SET FOREIGN_KEY_CHECKS = 0;');
                 await pool.query("UPDATE vehicleinformation SET driverId = ? WHERE driverId = ?", [idDriver, driverId]);
-                await pool.query("UPDATE inspectiondata SET driverId = = ? WHERE driverId = ?", [idDriver, driverId]);
+                await pool.query("UPDATE inspectiondata SET driverId = ? WHERE driverId = ?", [idDriver, driverId]);
                 await pool.query(updateDriversQuery, [idDriver , name, cellPhoneNumber, licenseNumber, licenseCategoryId, driversLicenseExpiration, driverId]);
                 await pool.query('SET FOREIGN_KEY_CHECKS = 1;');
 
@@ -120,7 +120,7 @@ router.post('/editdriver/:idDriver/:firmsId', async (req, res) => {
 
 router.get('/listconductores', async (req, res) => {
     try {
-        const [result] = await pool.query('SELECT Drivers.`idDriver`, Drivers.`name`, Drivers.`cellPhoneNumber`, Drivers.`licenseNumber`, licenseCategory.`category`, Drivers.`driversLicenseExpiration` FROM Drivers INNER JOIN licenseCategory ON Drivers.`licenseCategoryId` = licenseCategory.`idLicenseCategory`');
+        const [result] = await pool.query('SELECT drivers.`idDriver`, drivers.`name`, drivers.`cellPhoneNumber`, drivers.`licenseNumber`, licensecategory.`category`, drivers.`driversLicenseExpiration` FROM drivers INNER JOIN licensecategory ON drivers.`licensecategoryId` = licensecategory.`idLicenseCategory`');
         const listConductors = true;
         req.session.recuperationData = null;
         res.render('conductores/list.hbs', { drivers: result, listConductors: listConductors });
