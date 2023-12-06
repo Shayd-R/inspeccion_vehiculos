@@ -1,8 +1,4 @@
-import { createPool } from "mysql2/promise";
-import dotenv from "dotenv";
-
-// Cargar las variables de entorno desde el archivo .env
-dotenv.config();
+import {createPool} from "mysql2/promise";
 
 const pool = createPool({
     host: process.env.DB_HOST,
