@@ -191,6 +191,7 @@ router.post('/deleteVehicle', async (req, res) => {
         const idLicensePlate = req.body.idLicensePlate;
         const [idInspectionData] = await pool.query('SELECT * FROM inspectiondata WHERE licensePlateId = ?', idLicensePlate)
         const driverId = idInspectionData[0].driverId; 
+        console.log(driverId);
         await pool.query('SET FOREIGN_KEY_CHECKS = 0;');
         for (const row of idInspectionData) {
             const idInspection = row.idInspection;
@@ -202,6 +203,7 @@ router.post('/deleteVehicle', async (req, res) => {
         req.toastr.success('Se ha eliminado el vehiculo con la placa ' + idLicensePlate[0], 'Eliminación', { "positionClass": "toast-top-right my-custom-class" });
         res.redirect('/listInspect');
     } catch (error) {
+        console.log(error);
         res.status(500).send('Error al eliminar vehiculo');
     }
 });
