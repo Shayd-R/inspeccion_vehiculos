@@ -1,4 +1,5 @@
 {
     "editor.fontFamily": "'Roboto Mono'",
-    "editor.fontSize": 14
+    "editor.fontSize": 14,
+    "liveServer.settings.port": 5501
 }
