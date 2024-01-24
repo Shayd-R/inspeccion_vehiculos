@@ -18,8 +18,56 @@ const router = Router();
 
 router.get('/informes', async (req, res) => {
     try {
-        const [inspectionData] = await pool.query(`SELECT * FROM inspectiondata
-            INNER JOIN drivers ON drivers.idDriver = inspectiondata.driverId;`);
+        const [inspectionData] = await pool.query(`
+        WITH RankedInspections AS (
+            SELECT 
+                i.Inspection_Id, 
+                u.User_FirstName, 
+                u.User_FirstLastName, 
+                u.User_SecondLastName, 
+                v.Vehicle_Plate, 
+                tv.TypeVehicle_Name, 
+                b.Belongs_Text, 
+                cv.CompanyVehicle_Name,
+                id.InspectionDate_Id,
+                id.InspectionDate_Date,
+                ROW_NUMBER() OVER (PARTITION BY YEAR(id.InspectionDate_Date), MONTH(id.InspectionDate_Date), v.Vehicle_Plate ORDER BY id.InspectionDate_Date DESC) AS RowNum
+            FROM 
+                evasys_inspection i
+            INNER JOIN 
+                evasys_users u ON u.User_Id = i.Inspection_IdUser
+            INNER JOIN 
+                evasys_vehicle v ON v.Vehicle_Id = i.Inspection_IdVehicle
+            INNER JOIN 
+                evasys_typevehicle tv ON tv.TypeVehicle_Id = v.Vehicle_IdType
+            INNER JOIN 
+                evasys_belongs b ON b.Belongs_Id = v.Vehicle_IdBelongs
+            INNER JOIN 
+                evasys_companyvehicle cv ON cv.CompanyVehicle_Id = v.Vehicle_IdCompanyVehicle
+            INNER JOIN 
+                evasys_inspectiondate id ON id.InspectionDate_IdInspection = i.Inspection_Id
+        )
+        SELECT 
+            Inspection_Id, 
+            User_FirstName, 
+            User_FirstLastName, 
+            User_SecondLastName, 
+            Vehicle_Plate, 
+            TypeVehicle_Name, 
+            Belongs_Text, 
+            CompanyVehicle_Name,
+            InspectionDate_Id,
+            DATE_FORMAT(InspectionDate_Date, '%Y-%m-%d') AS InspectionDate_Date,
+            DATE_FORMAT(InspectionDate_Date, '%Y-%m') AS InspectionDate_DateFormat
+        FROM 
+            RankedInspections
+        WHERE 
+            RowNum = 1
+        ORDER BY 
+            YEAR(InspectionDate_Date) DESC, 
+            MONTH(InspectionDate_Date) DESC,
+            Vehicle_Plate;
+        `);
         const listInformes = true;
         req.session.date = null;
         req.session.radioAnswers = null;
@@ -29,24 +77,43 @@ router.get('/informes', async (req, res) => {
     }
 });
 
-router.get('/pdf/:idInspection', async (req, res) => {
+router.get('/pdf/:Inspection_Id/:InspectionDate_Date', async (req, res) => {
     try {
-        const idInspection = req.params.idInspection;
-        const [vehicleReport] = await pool.query(`SELECT * FROM inspectiondata
-            INNER JOIN drivers ON drivers.idDriver = inspectiondata.driverId
-            INNER JOIN vehicleinformation ON vehicleinformation.idLicensePlate = inspectiondata.licensePlateId
-            INNER JOIN licensecategory ON licensecategory.idLicenseCategory = drivers.licenseCategoryId
-            INNER JOIN firms ON firms.idFirms = drivers.firmsId
-            WHERE inspectiondata.idInspection = `+ idInspection + `;`);
-        const [inspection] = await pool.query(`SELECT subSpecification, convention, s.specificationId FROM inspection i
-            LEFT JOIN subspecifications s ON i.subSpecificationsId = s.idSubspecification
-            RIGHT JOIN conventions c ON c.idConvention = i.conventionId
-            WHERE inspectionId = `+ idInspection);
-        const [specification] = await pool.query(`SELECT * FROM specifications`);
+        const Inspection_Id = req.params.Inspection_Id;
+        const InspectionDate_Date = req.params.InspectionDate_Date;
+
+        const [vehicleReport] = await pool.query(`
+        SELECT Inspection_Id, User_UserName,User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName,  
+        Driver_Phone, Driver_CategoryLicense, Driver_NumLicense, Driver_ExpirationDate, Vehicle_Id, Vehicle_Plate, Vehicle_IdType, Vehicle_Model, 
+        TypeVehicle_Name, ColorVehicle_Name, Belongs_Text, CompanyVehicle_Name, ImagesProfile_Data 
+        FROM evasys_inspection
+        INNER JOIN evasys_users ON evasys_users.User_Id = evasys_inspection.Inspection_IdUser
+        INNER JOIN evasys_driver ON evasys_driver.Driver_Id = evasys_users.User_Id
+        INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evasys_inspection.Inspection_IdVehicle
+        INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
+        INNER JOIN evasys_colorvehicle ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
+        INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
+        INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
+        INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
+        LEFT JOIN evasys_imagesprofile ON evasys_imagesprofile.ImagesProfile_UserName = evasys_users.User_UserName
+        WHERE Inspection_Id = `+ Inspection_Id);
+
+        const [inspection] = await pool.query(`
+        SELECT InspectionDate_Date, InspectionSubSpecification_Id, InspectionSubSpecification_Name, InspectionConvention_Name, InspectionSubSpecification_IdSpecification  FROM evasys_inspectiondate
+        INNER JOIN evasys_inspectiondata ON evasys_inspectiondata.InspectionData_IdDate = evasys_inspectiondate.InspectionDate_id
+        INNER JOIN evasys_inspectionsubspecifications ON evasys_inspectionsubspecifications.InspectionSubSpecification_Id = evasys_inspectiondata.InspectionData_IdSubSpecification
+        INNER JOIN evasys_inspectionconvetions ON evasys_inspectionconvetions.InspectionConvention_Id = evasys_inspectiondata.InspectionData_IdConvention
+        WHERE InspectionDate_IdInspection = ${Inspection_Id} AND InspectionDate_Date LIKE '%${InspectionDate_Date}%'`);
+
+        const [specification] = await pool.query(`SELECT * FROM evasys_inspectionsubspecifications`);
+        //terminar pdf
         const content = generateContent(vehicleReport[0], inspection, specification);
         let docDefinition = {
             content: content,
-            styles: styles
+            styles: styles,
+            pageMargins: [10, 10, 10, 10],
+            pageSize: 'EXECUTIVE',
+            scale: 0.85,
         };
         const printer = new PdfPrinter(fonts);
         const currentDate = new Date();
@@ -62,28 +129,49 @@ router.get('/pdf/:idInspection', async (req, res) => {
 });
 
 
-router.get('/informe/:idInspection', async (req, res) => {
+router.get('/informe/:Inspection_Id/:InspectionDate_DateFormat', async (req, res) => {
     try {
-        const idInspection = req.params.idInspection;
-        const [vehicleReport] = await pool.query(`SELECT * FROM inspectiondata
-            INNER JOIN drivers ON drivers.idDriver = inspectiondata.driverId
-            INNER JOIN vehicleinformation ON vehicleinformation.idLicensePlate = inspectiondata.licensePlateId
-            INNER JOIN licensecategory ON licensecategory.idLicenseCategory = drivers.licenseCategoryId
-            INNER JOIN firms ON firms.idFirms = drivers.firmsId
-            WHERE inspectiondata.idInspection = `+ idInspection + `;`);
-        const [inspection] = await pool.query(`SELECT subSpecification, convention, s.specificationId FROM inspection i
-            LEFT JOIN subspecifications s ON i.subSpecificationsId = s.idSubspecification
-            RIGHT JOIN conventions c ON c.idConvention = i.conventionId
-            WHERE inspectionId = `+ idInspection);
-        const [specification] = await pool.query(`SELECT * FROM specifications`);
+        const Inspection_Id = req.params.Inspection_Id;
+        const InspectionDate_Date = req.params.InspectionDate_DateFormat;
+
+        const [vehicleReport] = await pool.query(`
+        SELECT Inspection_Id, User_UserName,User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName,  
+        Driver_Phone, Driver_CategoryLicense, Driver_NumLicense, Driver_ExpirationDate, Vehicle_Id, Vehicle_Plate, Vehicle_IdType, Vehicle_Model, 
+        TypeVehicle_Name, ColorVehicle_Name, Belongs_Text, CompanyVehicle_Name, ImagesProfile_Data 
+        FROM evasys_inspection
+        INNER JOIN evasys_users ON evasys_users.User_Id = evasys_inspection.Inspection_IdUser
+        INNER JOIN evasys_driver ON evasys_driver.Driver_Id = evasys_users.User_Id
+        INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evasys_inspection.Inspection_IdVehicle
+        INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
+        INNER JOIN evasys_colorvehicle ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
+        INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
+        INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
+        INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
+        LEFT JOIN evasys_imagesprofile ON evasys_imagesprofile.ImagesProfile_UserName = evasys_users.User_UserName
+        WHERE Inspection_Id = `+ Inspection_Id);
+
+        const [inspection] = await pool.query(`
+        SELECT InspectionDate_Date, InspectionSubSpecification_Id, InspectionSubSpecification_Name, InspectionConvention_Name, InspectionSubSpecification_IdSpecification  FROM evasys_inspectiondate
+        INNER JOIN evasys_inspectiondata ON evasys_inspectiondata.InspectionData_IdDate = evasys_inspectiondate.InspectionDate_id
+        INNER JOIN evasys_inspectionsubspecifications ON evasys_inspectionsubspecifications.InspectionSubSpecification_Id = evasys_inspectiondata.InspectionData_IdSubSpecification
+        INNER JOIN evasys_inspectionconvetions ON evasys_inspectionconvetions.InspectionConvention_Id = evasys_inspectiondata.InspectionData_IdConvention
+        WHERE InspectionDate_IdInspection = ${Inspection_Id} AND InspectionDate_Date LIKE '%${InspectionDate_Date}%'`);
+
+        const [specification] = await pool.query(`SELECT * FROM evasys_inspectionsubspecifications`);
+        //terminar pdf
         const content = generateContent(vehicleReport[0], inspection, specification);
         let docDefinition = {
             content: content,
-            styles: styles
+            styles: styles,
+            pageMargins: [10, 10, 10, 10],
+            pageSize: 'EXECUTIVE',
+            scale: 0.85,
         };
         const printer = new PdfPrinter(fonts);
+
         const currentDate = new Date();
         const date = currentDate.toISOString().replace(/[-T:\.Z]/g, '');
+
         res.setHeader('Content-disposition', 'inline; filename=Inspeccion_' + date + '.pdf');
         res.setHeader('Content-type', 'application/pdf');
 
