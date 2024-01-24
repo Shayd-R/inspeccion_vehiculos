@@ -5,40 +5,48 @@
         <table id="example" class="table table-bordered table-hover" style="width: 100%;    ">
             <thead>
                 <tr>
-                    <th>Nº</th>
-                    <th>Cédula</th>
-                    <th>Nombre</th>
-                    <th>Placa</th>
-                    <th>Fecha inspección</th>
-                    <th>Opciones</th>
+                    <th>N°</th>
+                    <th>CONDUCTOR</th>
+                    <th>PLACA</th>
+                    <th>TIPO DE VEHICULO</th>
+                    <th>COMPAÑIA</th>
+                    <th>PERTENECE</th>
+                    <th>FECHA</th>
+                    <th>OPCIONES</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each inspectionData}}
                 <tr>
                     <td>
-                        {{idInspection}}
+                        {{Inspection_Id}}
                     </td>
                     <td>
-                        {{driverId}}
+                        {{User_FirstName}} {{User_FirstLastName}} {{User_SecondLastName}}
                     </td>
                     <td>
-                        {{name}}
+                        {{Vehicle_Plate}}
+                    </td>
+                     <td>
+                        {{TypeVehicle_Name}}
                     </td>
                     <td>
-                        {{licensePlateId}}
+                        {{CompanyVehicle_Name}}
                     </td>
                     <td>
-                        {{date}}
+                        {{Belongs_Text}}
+                    </td>
+                    <td>
+                        {{InspectionDate_DateFormat}}
                     </td>
                     <td>
                         <div class="" style="display: flex; justify-content: space-evenly;">
-                            <a href="/informe/{{idInspection}}" target="_blank" class="btn btn-warning"><i
+                            <a href="/informe/{{Inspection_Id}}/{{InspectionDate_DateFormat}}" target="_blank" class="btn btn-warning"><i
                                     class="fa-solid fa-eye"></i></a>
-                            <a href="/pdf/{{idInspection}}" class="btn btn-info"><i
+                            <a href="/pdf/{{Inspection_Id}}/{{InspectionDate_DateFormat}}" class="btn btn-info"><i
                                     class="fa-solid fa-download"></i></a>
-                            <a href="/deleteReport/{{idInspection}}" class="btn btn-danger"><i
-                                    class="fa-solid fa-trash"></i></a>
+                            {{!-- <a href="/deleteReport/{{Inspection_Id}}" class="btn btn-danger"><i
+                                    class="fa-solid fa-trash"></i></a> --}}
                         </div>
                     </td>
                 </tr>

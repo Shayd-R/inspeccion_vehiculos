@@ -1,34 +1,60 @@
 export default {
     header: {
-        fontSize: 15,
+        fontSize: 12,
+        bold: true,
+        alignment: 'center', 
+        color: '#000000',
+    },
+
+    labelheader: {
+        fontSize: 9,
+        bold: true,
+        alignment: 'center', 
+        color: '#000000',
+    },
+
+    title: {
+        fontSize: 13,
+        bold: true,
+        alignment: 'center', 
+        color: '#000000',
+    },
+
+    subtitle:{
+        fontSize: 11,
         bold: true,
         alignment: 'center', 
         color: '#000000',
     },
 
     label: {
-        fontSize: 12,
-        normal: true,
+        fontSize: 6,
+        bold: true,
         color: '#000000'
     },
 
-    labelWhite:{
-        fontSize: 12,
-        normal: true,
-        color: '#ffffff',
+    labelcursiva :{
+        fontSize: 10,
+        cursiva: true,
+        color: '#000000'
     },
 
-    labelRight:{
+    labelMiddle: {
+        margin: [0, 5],
+    },
+    
+    right:{
         alignment: 'right',
     },
 
-    labelCenter: {
+    left:{
+        alignment: 'left',
+    },
+
+    center: {
         alignment: 'center',
     },
 
-    labelHeader:{
-        fontSize: 13,
-        bold: true,
-        color: '#000000',
-    }
+  
+
 };

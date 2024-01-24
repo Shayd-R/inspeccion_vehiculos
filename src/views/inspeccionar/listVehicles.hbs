@@ -1,0 +1,322 @@
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: rgb(232, 234, 246);
+        margin: 5% auto;
+        padding: 20px;
+        width: 80%;
+    }
+
+    .close {
+        color: #2b2b2b;
+        position: absolute;
+
+        right: 20px;
+
+        font-size: 42px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+
+    }
+</style>
+
+
+<section class="container">
+    <header>Vinculación de vehiculos</header>
+    <br>
+    <form>
+        <div style="background: var(--primary-color-opaque); border-radius: 5px;">
+            <center>
+                <h3>Información del vehiculo</h3>
+            </center>
+            <div class="row" style="margin: 5px; padding-top: 3px;">
+                <div class="col-md-4 mb-3">
+                    <label for="Vehicle_Plate" class="form-label">Placa:</label>
+                    <input type="text" id="Vehicle_Plate" name="Vehicle_Plate" class="form-control">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="Vehicle_Model" class="form-label">Modelo:</label>
+                    <input type="text" id="Vehicle_Model" name="Vehicle_Model" class="form-control" disabled>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="TypeVehicle_Name" class="form-label">Tipo de Vehículo:</label>
+                    <input type="text" id="TypeVehicle_Name" name="TypeVehicle_Name" class="form-control" disabled>
+                </div>
+            </div>
+
+            <div class="row" style="margin: 5px; padding-top: 3px;">
+                <div class="col-md-4 mb-3">
+                    <label for="Belongs_Text" class="form-label">Pertenece:</label>
+                    <input type="text" id="Belongs_Text" name="Belongs_Text" class="form-control" disabled>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="CompanyVehicle_Name" class="form-label">Compañía:</label>
+                    <input type="text" id="CompanyVehicle_Name" name="CompanyVehicle_Name" class="form-control"
+                        disabled>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="StatusVehicle" class="form-label">Estado:</label>
+                    <input type="text" id="StatusVehicle" name="StatusVehicle" class="form-control" disabled>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: center;">
+                <button type="button" id="openModalVehicle" class="btn btn-light" style="margin-bottom: 10px;">Buscar
+                    vehiculo</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <div style="background: var(--primary-color-opaque); border-radius: 5px;">
+            <center style="padding-top: 10px">
+                <h3>Información del conductor</h3>
+            </center>
+            <div class="row" style="margin: 5px; padding-top: 3px;">
+                <div class="col-md-4 mb-3">
+                    <label for="User_UserName" class="form-label">N° Licencia:</label>
+                    <input type="text" id="User_UserName" name="User_UserName" class="form-control">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="Driver" class="form-label">Conductor:</label>
+                    <input type="text" id="Driver" name="Driver" class="form-control" disabled>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="StatusDriver" class="form-label">Estado:</label>
+                    <input type="text" id="StatusDriver" name="StatusDriver" class="form-control" disabled>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <button type="button" id="openModalDriver" class="btn btn-light" style="margin-bottom: 10px;">Buscar
+                    conductor</button>
+            </div>
+        </div>
+        <br>
+        <div style="display: flex;">
+            <button type="submit" id="#" class="btn btn-success" style="margin-left: auto;">Vincular</button>
+        </div>
+    </form>
+</section>
+
+<div id="modalVehicle" class="modal">
+    <div class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+            <h4>Tabla de vehículos activos</h4>
+            <span class="close">&times;</span>
+        </div>
+        <hr style="margin-bottom: 10px;">
+        {{#if vehicles}}
+        <div class="col md-3" style="padding-top: 5px;">
+            <table id="vehicles" class="table table-hover" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>PLACA</th>
+                        <th>MODELO</th>
+                        <th>TIPO DE VEHICULO</th>
+                        <th>PERTENECE</th>
+                        <th>COMPAÑIA</th>
+                        <th>ESTADO</th>
+                        <th>OPCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each vehicles}}
+                    <tr>
+                        <td>
+                            {{Vehicle_Id}}
+                        </td>
+                        <td>
+                            {{Vehicle_Plate}}
+                        </td>
+                        <td>
+                            {{Vehicle_Model}}
+                        </td>
+                        <td>
+                            {{TypeVehicle_Name}}
+                        </td>
+                        <td>
+                            {{Belongs_Text}}
+                        </td>
+                        <td>
+                            {{CompanyVehicle_Name}}
+                        </td>
+                        <td>
+                            {{StatusEvaSys_Name}}
+                        </td>
+                        <td>
+                            <a href="/listVehicles/{{Vehicle_Id}}/linkUser" class="btn"
+                                style="background: rgb(255, 219, 58); border: 1px solid black">Elegir <i
+                                    class="fa-solid fa-truck-moving"></i></a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+
+<div id="modalDriver" class="modal">
+    <div class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+            <h4>Tabla de conductores activos</h4>
+            <span class="close">&times;</span>
+        </div>
+        <hr style="margin-bottom: 10px;">
+        {{#if users}}
+        <div class="col md-3" style="padding-top: 5px;">
+            <table id="drivers" class="table table-hover" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>CONDUCTOR</th>
+                        <th>N LICENCIA</th>
+                        <th>ESTADO</th>
+                        <th>OPCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each users}}
+                    <tr>
+                        <td>
+                            {{User_Id}}
+                        </td>
+                        <td>
+                            {{User_FirstName}} {{User_FirstLastName}} {{User_SecondLastName}}
+                        </td>
+                        <td>
+                            {{User_UserName}}
+                        </td>
+                        <td>
+                            {{StatusEvaSys_Name}}
+                        </td>
+                        <td>
+                            <a href="/listVehicles/{{../Vehicle_Id}}/linkUser/{{User_Id}}" class="btn"
+                                style="background: rgb(33, 255, 207); border: 1px solid black"><i
+                                    class="fa-solid fa-person-circle-plus"></i> Vincular</a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+<script>
+    var openModalVehicle = document.getElementById("openModalVehicle");
+    var openModalDriver = document.getElementById("openModalDriver");
+
+    var modalVehicle = document.getElementById("modalVehicle");
+    var modalDriver = document.getElementById("modalDriver");
+
+    var spanVehicle = modalVehicle.getElementsByClassName("close")[0];
+    var spanDriver = modalDriver.getElementsByClassName("close")[0];
+
+    openModalVehicle.onclick = function () {
+        modalVehicle.style.display = "block";
+    }
+
+    openModalDriver.onclick = function () {
+        modalDriver.style.display = "block";
+    }
+
+    spanVehicle.onclick = function () {
+        modalVehicle.style.display = "none";
+    }
+
+    spanDriver.onclick = function () {
+        modalDriver.style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modalVehicle) {
+            modalVehicle.style.display = "none";
+        }
+
+        if (event.target == modalDriver) {
+            modalDriver.style.display = "none";
+        }
+    }
+
+    //----------------------------------------------------------------
+    /*
+        $(document).ready(function () {
+            // Agregar un evento de cambio al campo de ID para cargar automáticamente los datos
+            $('#Vehicle_Plate').on('input', function () {
+                loadVehicle();
+            });
+    
+            $('#User_UserName').on('input', function () {
+                loadDriver();
+            });
+        });
+    
+        function loadVehicle() {
+            var vehicleId = $('#userId').val();
+    
+            if (userId) {
+                // Realizar una solicitud AJAX al servidor para obtener los datos del usuario
+                $.ajax({
+                    type: 'GET',
+                    url: '/usuario/' + userId,
+                    success: function (data) {
+                        // Llenar el formulario con los datos del usuario
+                        llenarFormulario(data);
+                    },
+                    error: function (error) {
+                        console.error('Error al cargar usuario:', error);
+                    }
+                });
+            } else {
+                // Limpiar el formulario si no se ingresó un ID
+                limpiarFormulario();
+            }
+        }
+    
+        function llenarFormulario(data) {
+            $('#userName').val(data.nombre);
+            $('#userAge').val(data.edad);
+            $('#userDob').val(data.fecha_nacimiento);
+        }
+    
+        funmodalDriver.modalmodalDriver.modalmodalDriver.modalmodalDriver.modalction limpiarFormulario() {
+            $('#userName').val('');
+            $('#userAge').val('');
+            $('#userDob').val('');
+        }*/
+
+
+
+
+</script>
