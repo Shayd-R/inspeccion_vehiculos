@@ -19,13 +19,13 @@ router.get('/listInspect', async (req, res) => {
         `);
         const list = true;
         req.session.recuperationData = null;
-        res.render('inspeccionar/listInspect.hbs', { inspections: result, list: list});
+        res.render('inspeccionar/listInspect.hbs', { inspections: result, list: list });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-router.get('/listVehicles', async (req, res) => {
+router.get('/link', async (req, res) => {
     try {
         const [resultVehicles] = await pool.query(`
         SELECT Vehicle_Id, Vehicle_Plate, Vehicle_Model, TypeVehicle_Name, ColorVehicle_Name, Belongs_Text, CompanyVehicle_Name, StatusEvaSys_Name 
@@ -46,34 +46,79 @@ router.get('/listVehicles', async (req, res) => {
 
         const list = true;
         req.session.recuperationData = null;
-        res.render('inspeccionar/listVehicles.hbs', { vehicles: resultVehicles, users: resultUsers, list: list });
+        res.render('inspeccionar/link.hbs', { vehicles: resultVehicles, users: resultUsers, list: list });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-router.get('/listVehicles/:Vehicle_Id/linkUser/', async (req, res) => {
+router.get('/findVehicle/:Vehicle_Plate', async (req, res) => {
     try {
-        const [result] = await pool.query(`
-        SELECT User_Id, User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName, User_UserName, StatusEvaSys_Name FROM evasys_users 
+        const Vehicle_Plate = req.params.Vehicle_Plate;
+        // console.log(Vehicle_Plate);
+        const query = `
+        SELECT Vehicle_Id, Vehicle_Plate, Vehicle_Model, TypeVehicle_Name, ColorVehicle_Name, Belongs_Text, CompanyVehicle_Name, StatusEvaSys_Name 
+        FROM evasys_vehicle 
+        INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
+        INNER JOIN evasys_colorvehicle ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
+        INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
+        INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
+        INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
+        WHERE Vehicle_IdStatus = 1 AND NOT EXISTS (SELECT 1 FROM evasys_inspection WHERE Inspection_IdVehicle = Vehicle_Id AND Inspection_IdStatus = 1) AND Vehicle_Plate = ?`;
+
+        const [results] = await pool.query(query, [Vehicle_Plate]);
+
+        if (results.length > 0) {
+            res.json(results[0]);
+        } else {
+            res.status(404).send('Vehiculo no encontrado');
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+router.get('/findUser/:User_UserName', async (req, res) => {
+    try {
+        const User_UserName = req.params.User_UserName;
+        const query = `SELECT User_Id, User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName, User_UserName, StatusEvaSys_Name FROM evasys_users 
         INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_users.User_StatusId 
-        WHERE User_IdRole = 3 AND User_StatusId = 1  AND NOT EXISTS (SELECT 1 FROM evasys_inspection WHERE Inspection_IdUser = User_Id AND Inspection_IdStatus = 1)
-        `);
-        const Vehicle_Id = req.params.Vehicle_Id;
-        const list = true;
-        req.session.recuperationData = null;
-        res.render('inspeccionar/listUsers.hbs', { users: result, list: list, Vehicle_Id: Vehicle_Id });
+        WHERE User_IdRole = 3 AND User_StatusId = 1 AND NOT EXISTS (SELECT 1 FROM evasys_inspection WHERE Inspection_IdUser = User_Id AND Inspection_IdStatus = 1) AND User_UserName = ?`;
+
+        const [results] = await pool.query(query, [User_UserName]);
+
+        if (results.length > 0) {
+            res.json(results[0]);
+        } else {
+            res.status(404).send('Usuario no encontrado');
+        }
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-router.get('/listVehicles/:Vehicle_Id/linkUser/:User_Id', async (req, res) => {
+// router.get('/listVehicles/:Vehicle_Id/linkUser/', async (req, res) => {
+//     try {
+//         const [result] = await pool.query(`
+//         SELECT User_Id, User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName, User_UserName, StatusEvaSys_Name FROM evasys_users 
+//         INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_users.User_StatusId 
+//         WHERE User_IdRole = 3 AND User_StatusId = 1  AND NOT EXISTS (SELECT 1 FROM evasys_inspection WHERE Inspection_IdUser = User_Id AND Inspection_IdStatus = 1)
+//         `);
+//         const Vehicle_Id = req.params.Vehicle_Id;
+//         const list = true;
+//         req.session.recuperationData = null;
+//         res.render('inspeccionar/listUsers.hbs', { users: result, list: list, Vehicle_Id: Vehicle_Id });
+//     } catch (err) {
+//         res.status(500).json({ message: err.message });
+//     }
+// });
+
+router.post('/linkVehicles', async (req, res) => {
     try {
-        const Inspection_IdVehicle = req.params.Vehicle_Id;
-        const Inspection_IdUser = req.params.User_Id;
+        const Inspection_IdVehicle = req.body.Vehicle_Id;
+        const Inspection_IdUser = req.body.User_Id;
         const insertInspection = { Inspection_IdUser, Inspection_IdVehicle };
-        await pool.query('INSERT INTO evasys_inspection SET ?', [insertInspection])
+        await pool.query('INSERT INTO evasys_inspection SET ?', [insertInspection]);
         req.toastr.success('Has hecho una vinculación', 'Vinculación exitosa', { "positionClass": "toast-top-right my-custom-class" });
         res.redirect('/listInspect');
     } catch (err) {
@@ -125,7 +170,7 @@ router.post('/inspectVehiculo/:Inspection_Id', async (req, res) => {
 
             //falta la validacion de que si la fecha
             const [date_bd] = await pool.query('SELECT * FROM evasys_inspectiondate WHERE InspectionDate_IdInspection = ? AND  InspectionDate_Date = ?', [InspectionDate_IdInspection, InspectionDate_Date]);
-            console.log(date_bd);
+            // console.log(date_bd);
 
             if (!date_bd[0]) {
                 const inspectiondata = { InspectionDate_IdInspection, InspectionDate_Date };
@@ -162,6 +207,8 @@ router.post('/inspectVehiculo/:Inspection_Id', async (req, res) => {
     }
 });
 
+
+//formulario de criterios
 router.post('/addCriteria', (req, res) => {
     const { descripcion, accionCierre, responsable } = req.body;
     //hacer las tablas con las columns en ingles, editar la consulta y variables culas
@@ -288,8 +335,8 @@ router.post('/deleteVehicle', async (req, res) => {
         const idLicensePlate = req.body.idLicensePlate;
         const [idInspectionData] = await pool.query('SELECT * FROM inspectiondata WHERE licensePlateId = ?', idLicensePlate)
         const driverId = idInspectionData[0].driverId;
-        console.log(idLicensePlate[0]);
-        console.log(idLicensePlate);
+        // console.log(idLicensePlate[0]);
+        // console.log(idLicensePlate);
 
         await pool.query('SET FOREIGN_KEY_CHECKS = 0;');
         for (const row of idInspectionData) {

@@ -44,7 +44,8 @@
 <section class="container">
     <header>Vinculación de vehiculos</header>
     <br>
-    <form>
+
+    <form action="/linkVehicles" method="post" id="linkForm">
         <div style="background: var(--primary-color-opaque); border-radius: 5px;">
             <center>
                 <h3>Información del vehiculo</h3>
@@ -118,8 +119,13 @@
             </div>
         </div>
         <br>
+
+        <input type="hidden" id="User_Id" name="User_Id">
+        <input type="hidden" id="Vehicle_Id" name="Vehicle_Id">
         <div style="display: flex;">
-            <button type="submit" id="#" class="btn btn-success" style="margin-left: auto;">Vincular</button>
+            {{!-- <a href="/linkVehicles/{{Vehicle_Id}}/linkUser/{{User_Id}}" class="btn btn-success"
+                style="margin-left: auto;">Vincular</a> --}}
+            <button type="submit" class="btn btn-success" style="margin-left: auto;">Vincular</button>
         </div>
     </form>
 </section>
@@ -171,7 +177,7 @@
                             {{StatusEvaSys_Name}}
                         </td>
                         <td>
-                            <a href="/listVehicles/{{Vehicle_Id}}/linkUser" class="btn"
+                            <a href="#" class="btn"
                                 style="background: rgb(255, 219, 58); border: 1px solid black">Elegir <i
                                     class="fa-solid fa-truck-moving"></i></a>
                         </td>
@@ -220,9 +226,8 @@
                             {{StatusEvaSys_Name}}
                         </td>
                         <td>
-                            <a href="/listVehicles/{{../Vehicle_Id}}/linkUser/{{User_Id}}" class="btn"
-                                style="background: rgb(33, 255, 207); border: 1px solid black"><i
-                                    class="fa-solid fa-person-circle-plus"></i> Vincular</a>
+                            <a href="#" class="btn" style="background: rgb(33, 255, 207); border: 1px solid black">
+                                Elegir <i class="fa-solid fa-person-circle-plus"></i></a>
                         </td>
                     </tr>
                     {{/each}}
@@ -270,53 +275,120 @@
     }
 
     //----------------------------------------------------------------
-    /*
-        $(document).ready(function () {
-            // Agregar un evento de cambio al campo de ID para cargar automáticamente los datos
-            $('#Vehicle_Plate').on('input', function () {
-                loadVehicle();
-            });
-    
-            $('#User_UserName').on('input', function () {
-                loadDriver();
-            });
+
+    $(document).ready(function () {
+
+        $('#Vehicle_Plate').on('input', function () {
+            loadVehicle();
         });
-    
-        function loadVehicle() {
-            var vehicleId = $('#userId').val();
-    
-            if (userId) {
-                // Realizar una solicitud AJAX al servidor para obtener los datos del usuario
-                $.ajax({
-                    type: 'GET',
-                    url: '/usuario/' + userId,
-                    success: function (data) {
-                        // Llenar el formulario con los datos del usuario
-                        llenarFormulario(data);
-                    },
-                    error: function (error) {
-                        console.error('Error al cargar usuario:', error);
-                    }
-                });
-            } else {
-                // Limpiar el formulario si no se ingresó un ID
-                limpiarFormulario();
-            }
+
+        $('#User_UserName').on('input', function () {
+            loadDriver();
+        });
+    });
+
+    //-----------------------------VEHICLE-----------------------------------
+    function loadVehicle() {
+        var Vehicle_Plate = $('#Vehicle_Plate').val();
+        if (Vehicle_Plate) {
+            $.ajax({
+                type: 'GET',
+                url: '/findVehicle/' + Vehicle_Plate,
+                success: function (data) {
+                    llenarFormularioVehicle(data);
+                },
+                error: function (error) {
+                    limpiarFormularioVehicle();
+                    toastr.error('Vehiculo no disponible', 'Busqueda', { "positionClass": "toast-top-right my-custom-class" });
+                }
+            });
+        } else {
+            limpiarFormularioVehicle();
         }
-    
-        function llenarFormulario(data) {
-            $('#userName').val(data.nombre);
-            $('#userAge').val(data.edad);
-            $('#userDob').val(data.fecha_nacimiento);
+    }
+
+    function llenarFormularioVehicle(data) {
+        $('#Vehicle_Id').val(data.Vehicle_Id);
+        $('#Vehicle_Plate').val(data.Vehicle_Plate);
+        $('#Vehicle_Model').val(data.Vehicle_Model);
+        $('#TypeVehicle_Name').val(data.TypeVehicle_Name);
+        $('#Belongs_Text').val(data.Belongs_Text);
+        $('#CompanyVehicle_Name').val(data.CompanyVehicle_Name);
+        $('#StatusVehicle').val(data.StatusEvaSys_Name);
+    }
+
+    function limpiarFormularioVehicle() {
+        $('#Vehicle_Id').val('');
+        $('#Vehicle_Model').val('');
+        $('#TypeVehicle_Name').val('');
+        $('#Belongs_Text').val('');
+        $('#CompanyVehicle_Name').val('');
+        $('#StatusVehicle').val('');
+    }
+
+    $(document).on('click', '#vehicles tbody tr', function () {
+        const vehicle_PlateText = $(this).find('td:eq(1)').text(); // Columna 2: User_UserName
+        const vehicle_PlateWithoutSpaces = vehicle_PlateText.replace(/\s/g, ''); // Eliminar espacios
+        $('#Vehicle_Plate').val(vehicle_PlateWithoutSpaces);
+
+        // Llama a loadDriver directamente después de asignar el valor
+        loadVehicle();
+
+        // Cerrar el modal después de seleccionar un usuario
+        $('#modalVehicle').css('display', 'none');
+    });
+
+    //-----------------------------DRIVER-----------------------------------
+
+    function loadDriver() {
+        var User_UserName = $('#User_UserName').val();
+        if (User_UserName) {
+            $.ajax({
+                type: 'GET',
+                url: '/findUser/' + User_UserName,
+                success: function (data) {
+                    llenarFormularioDriver(data);
+                },
+                error: function (error) {
+                    limpiarFormularioDriver();
+                    toastr.error('Conductor no disponible', 'Busqueda', { "positionClass": "toast-top-right my-custom-class" });
+                }
+            });
+        } else {
+            limpiarFormularioDriver();
         }
-    
-        funmodalDriver.modalmodalDriver.modalmodalDriver.modalmodalDriver.modalction limpiarFormulario() {
-            $('#userName').val('');
-            $('#userAge').val('');
-            $('#userDob').val('');
-        }*/
+    }
+
+    function llenarFormularioDriver(data) {
+        $('#User_Id').val(data.User_Id);
+        $('#User_UserName').val(data.User_UserName);
+        $('#Driver').val(data.User_FirstName + ' ' + data.User_SecondName + ' ' + data.User_FirstLastName + ' ' + data.User_SecondLastName);
+        $('#StatusDriver').val(data.StatusEvaSys_Name);
+    }
+
+    function limpiarFormularioDriver() {
+        $('#User_Id').val('');
+        $('#Driver').val('');
+        $('#StatusDriver').val('');
+    }
+
+    $(document).on('click', '#drivers tbody tr', function () {
+        const userLicenseText = $(this).find('td:eq(2)').text(); // Columna 2: User_UserName
+        const userLicenseWithoutSpaces = userLicenseText.replace(/\s/g, ''); // Eliminar espacios
+        $('#User_UserName').val(userLicenseWithoutSpaces);
+
+        // Llama a loadDriver directamente después de asignar el valor
+        loadDriver();
+
+        // Cerrar el modal después de seleccionar un usuario
+        $('#modalDriver').css('display', 'none');
+    });
 
 
+    //----------------------------------------------------------------
 
+    $('form').submit(function () {
+        return confirm('¿Estás seguro de que deseas vincular el vehículo y el conductor?');
+    });
 
 </script>

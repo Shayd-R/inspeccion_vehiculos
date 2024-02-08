@@ -1,0 +1,137 @@
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid black;
+    }
+
+    th,
+    td {
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #7eade4;
+    }
+
+    #month-year {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<section class="container">
+    <header>Calendario</header>
+
+    <br>
+    <div>
+
+        <h2 id="month-year"></h2>
+        <button onclick="cambiarMes(-1)">Mes Anterior</button>
+        <button onclick="cambiarMes(1)">Mes Siguiente</button>
+    </div>
+
+    <table id="calendar">
+        <tr>
+            <th>Lun</th>
+            <th>Mar</th>
+            <th>Mié</th>
+            <th>Jue</th>
+            <th>Vie</th>
+            <th>Sáb</th>
+            <th>Dom</th>
+        </tr>
+    </table>
+
+
+
+</section>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+
+    let currentDate = new Date();
+    const Inspection_Id = {{ Inspection_Id}}; // Obtén la variable desde el servidor
+
+    mostrarCalendario(currentDate, Inspection_Id);
+
+    function mostrarCalendario(date, inspectionId) {
+        const calendar = document.getElementById('calendar');
+        const monthYear = document.getElementById('month-year');
+
+        while (calendar.rows.length > 1) {
+            calendar.deleteRow(1);
+        }
+
+        const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+        const month = date.getMonth();
+        const year = date.getFullYear();
+
+        monthYear.innerHTML = monthNames[month] + ' ' + year;
+
+        const firstDay = new Date(year, month, 1);
+        const startingDay = (firstDay.getDay() + 6) % 7; // Corregido para considerar que el primer día es Lunes
+
+        let dateCounter = 1;
+        let row = calendar.insertRow();
+
+        for (let i = 0; i < startingDay; i++) {
+            row.insertCell();
+        }
+
+        const lastDay = new Date(year, month + 1, 0).getDate();
+
+
+        obtenerFechasInforme(year, month + 1, Inspection_Id).then((informeDates) => {
+            for (let day = 1; day <= lastDay; day++) {
+                const cell = row.insertCell();
+                cell.textContent = dateCounter;
+                dateCounter++;
+                const days = informeDates.map(item => item.day);
+                if (days.includes(day)) {
+                    cell.style.backgroundColor = 'green'; // Cambiar a tu color preferido
+                }
+
+                if (cell.cellIndex === 6) {
+                    row = calendar.insertRow();
+                }
+            }
+        }).catch((error) => {
+            console.error('Error al obtener fechas de informe:', error);
+        });
+
+
+    }
+
+    function cambiarMes(amount) {
+        currentDate.setMonth(currentDate.getMonth() + amount);
+        mostrarCalendario(currentDate);
+    }
+
+    function obtenerFechasInforme(year, month, Inspection_Id) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: 'GET',
+                url: `/getDatesReport/${year}/${month}/${Inspection_Id}`,
+                success: function (data) {
+                    //console.log('Fechas de informe obtenidas:', data);
+                    resolve(data); // Resuelve la promesa con los datos obtenidos
+                },
+                error: function (error) {
+                    console.error('Error al obtener fechas de informe:', error);
+                    reject(error); // Rechaza la promesa con el error
+                }
+            });
+        });
+    }
+
+
+
+</script>

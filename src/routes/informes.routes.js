@@ -128,7 +128,6 @@ router.get('/pdf/:Inspection_Id/:InspectionDate_Date', async (req, res) => {
     }
 });
 
-
 router.get('/informe/:Inspection_Id/:InspectionDate_DateFormat', async (req, res) => {
     try {
         const Inspection_Id = req.params.Inspection_Id;
@@ -182,6 +181,39 @@ router.get('/informe/:Inspection_Id/:InspectionDate_DateFormat', async (req, res
         res.status(500).send('Error al generar el PDF');
     }
 });
+
+router.get('/completedInspections/:Inspection_Id', async (req, res) => {
+    try {
+        const Inspection_Id = req.params.Inspection_Id;
+        const listInformes = true;
+        res.render('inspeccionar/completedInspections.hbs', { listInformes: listInformes, Inspection_Id });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+router.get('/getDatesReport/:Inspection_Id/:year/:month', async (req, res) => {
+    try {
+        const Inspection_Id = req.params.Inspection_Id;
+        const year = req.params.year;
+        const month = req.params.month;
+
+        const query = `
+            SELECT DAY(InspectionDate_Date) AS day 
+            FROM evasys_inspectiondate 
+            INNER JOIN evasys_inspection ON evasys_inspection.Inspection_Id = evasys_inspectiondate.InspectionDate_IdInspection
+            WHERE MONTH(InspectionDate_Date) = ? AND Inspection_Id = ? AND YEAR(InspectionDate_Date) = ? `;
+
+        const [fechasInforme] = await pool.query(query, [year, month, Inspection_Id]);
+       
+        res.json(fechasInforme);
+    } catch (error) {
+        console.error('Error al obtener fechas de informe:', error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
 
 router.get('/deleteReport/:idInspection', async (req, res) => {
     try {

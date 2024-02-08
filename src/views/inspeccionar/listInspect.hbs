@@ -2,7 +2,7 @@
     <header>Tabla de inspección diaria pre operacional de vehículos</header>
     <br>
     <div class="col d-flex justify-content-initial">
-        <a href="/listVehicles" class="btn btn-info" style="text-decoration: none;">
+        <a href="/link" class="btn btn-info" style="text-decoration: none;">
             Vicular vehiculo
         </a>
     </div>
@@ -59,7 +59,7 @@
 
                         {{#if (eq StatusEvaSys_Name "Activo")}}
                         <div style="display: flex; justify-content: space-evenly;">
-                            <a href="/inspectVehiculo/{{Inspection_Id}}" class="btn btn-info">
+                            <a href="/completedInspections/{{Inspection_Id}}" class="btn btn-info">
                                 <i class="fa-solid fa-magnifying-glass-plus"></i>
                                 Inspeccionar</a>
                         </div>
@@ -75,28 +75,7 @@
         </table>
     </div>
     {{/if}}
-</section> 
-{{!-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="/deleteVehicle" id="modalVehicle" method="post">
-                <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar este vehículo?</p>
-                    <p>Es posible que este vehículo tenga inspecciones diarias registradas. Si procedes con la
-                        eliminación, también se eliminarán todas las inspecciones asociadas. </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> --}}
+</section>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -106,12 +85,10 @@
             button.addEventListener('click', function () {
                 var idLicensePlate = this.getAttribute('data-id');
                 console.log(idLicensePlate);
-                // Crear un nuevo elemento input hidden
                 var inputHidden = document.createElement('input');
                 inputHidden.type = 'hidden';
                 inputHidden.name = 'idLicensePlate';
                 inputHidden.value = idLicensePlate;
-                // Agregar el input hidden al formulario
                 modalVehicleForm.appendChild(inputHidden);
             });
         });
