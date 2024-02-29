@@ -1,8 +1,3 @@
-<style>
-    .campos-adicionales {
-        display: none;
-    }
-</style>
 <section class="container">
     <form action="/inspectVehiculo/{{Inspection_Id}}" id="encuestaForm" method="post"
         enctype="application/x-www-form-urlencoded">
@@ -68,44 +63,12 @@
                 </div>
                 <div class="description">
                     <div class="preguntas">
-                        {{!-- <div class="row-fin">
-                            <button type="button" id="criterios" onclick="mostrarCampos()">Criterios </button>
-                        </div>
-
-                        <div class="campos-adicionales">
-                            <h2>Campos Adicionales:</h2>
-                            <br>
-                            <div class="row">
-                                <div class="col only">
-                                    <label for="descripcion">Descripción:</label>
-                                    <input type="text" id="descripcion" name="descripcion" required>
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="accion-cierre">Acción de Cierre:</label>
-                                    <input type="text" id="accion-cierre" name="accion-cierre" required>
-                                </div>
-                                <div class="col ">
-                                    <label for="responsable">Responsable (nombre-cargo):</label>
-                                    <input type="text" id="responsable" name="responsable" required>
-                                </div>
-                                <div class="col">
-                                    <label for="fecha">Fecha:</label>
-                                    <input type="date" id="fecha" name="fecha" required>
-                                </div> 
-                            </div>
-                        </div>
                         <div class="row-fin">
-                            <button type="button" id="agregar">Agregar</button>
-                            <button type="button" id="cancelar" onclick="ocultarCampos()">Cancelar</button>
+                            <button type="button" id="openModalCriterios" class="btn btn-light"
+                                style="margin-bottom: 10px;">Formulario de criterios</button>
+                            <button type="submit">Inspeccionar</button>
                         </div>
-                        <br> --}}
-
-                        <div class="row-fin">
-                            <button type="submit">Inspeccion</button>
-                        </div>
+                        <br>
                     </div>
                 </div>
             </div>
@@ -114,62 +77,274 @@
     </form>
 </section>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<div id="modalCriterios" class="modal">
+    <div class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+            <h3>Campos Adicionales</h3>
+            <span class="close">&times;</span>
+        </div>
+        <hr style="margin-bottom: 10px;">
+        <br>
+        <div class="campos-adicionales">
+            <div class="col-only">
+                <label for="descripcion">Descripción:</label>
+                <input type="text" id="descripcion" name="descripcion" required>
+            </div>
+
+            <div class="col-only">
+                <label for="accion-cierre">Acción de Cierre:</label>
+                <input type="text" id="accion-cierre" name="accion-cierre" required>
+            </div>
+            <div class="col-only ">
+                <label for="responsable">Responsable (nombre-cargo):</label>
+                <input type="text" id="responsable" name="responsable" required>
+            </div>
+
+            <div class="col-only">
+                <label for="dateCriteria">Fecha:</label>
+                <input type="date" id="dateCriteria" name="dateCriteria" required>
+            </div>
+        </div>
+        <div class="row-fin">
+            <a type="button" id="editar" data-id="' + row.breachedCriteria_Id + '" style="display:  none; with: 100%"
+                class="btn btn-primary">Editar</a>
+            <a type="button" id="agregar" class="btn btn-success">Agregar</a>
+            <a type="button" id="cancelar" class="btn btn-dark">Cancelar</a>
+        </div>
+        <hr style="margin-bottom: 10px;">
+        <div>
+            <table id="tablaDatos" class="table table-bordered table-hover" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Accion de cierre</th>
+                        <th>Responsable</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+
+
+            </table>
+        </div>
+    </div>
+</div>
 
 
 <script>
-    var botonAgregar = document.getElementById('agregar');
-    var botonCancelar = document.getElementById('cancelar');
-    var botonCriterios = document.getElementById('criterios');
-    botonAgregar.style.display = 'none';
-    botonCancelar.style.display = 'none';
+    var openModalCriterios = document.getElementById("openModalCriterios");
+    var modalCriterios = document.getElementById("modalCriterios");
+    var spanCriterios = modalCriterios.getElementsByClassName("close")[0];
 
-    function mostrarCampos() {
-        var camposAdicionales = document.querySelector('.campos-adicionales');
-        camposAdicionales.style.display = 'block';
-        botonAgregar.style.display = 'inline-block';
-        botonCancelar.style.display = 'inline-block';
-        botonCriterios.style.display = 'none';
+    openModalCriterios.onclick = function () {
+        updateTable();
+        modalCriterios.style.display = "block";
     }
 
-    function ocultarCampos() {
-        var camposAdicionales = document.querySelector('.campos-adicionales');
-        camposAdicionales.style.display = 'none';
-        botonAgregar.style.display = 'none';
-        botonCancelar.style.display = 'none';
-        botonCriterios.style.display = 'block';
+    spanCriterios.onclick = function () {
+        modalCriterios.style.display = "none";
     }
 
+    window.onclick = function (event) {
+        if (event.target == modalCriterios) {
+            modalCriterios.style.display = "none";
+            updateTable();
+        }
+    }
 
     $(document).ready(function () {
         $('#agregar').click(function () {
-            const descripcion = $('#descripcion').val();
-            const accionCierre = $('#accion-cierre').val();
-            const responsable = $('#responsable').val();
+            // Obtaining values from the form
+            const breachedCriteria_Description = $('#descripcion').val();
+            const breachedCriteria_ClosingAction = $('#accion-cierre').val();
+            const breachedCriteria_UserName = $('#responsable').val();
+            const breachedCriteria_Date = $('#dateCriteria').val();
+            const breachedCriteria_IdInspection = '{{ Inspection_Id }}';
+
+            toastr.clear();
 
             $.ajax({
                 type: 'POST',
-                url: '/agregarDatos',
-                data: { descripcion, accionCierre, responsable },
-                success: function (response) {
-                    // You can handle the response as needed
-                    console.log('Data added successfully:', response);
-
-                    // Assuming you have a function to update the table with the new data
-                    updateTable();
+                url: '/addCriteria',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    breachedCriteria_Description,
+                    breachedCriteria_ClosingAction,
+                    breachedCriteria_UserName,
+                    breachedCriteria_Date,
+                    breachedCriteria_IdInspection,
+                }),
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success('Haz agregado un registro', 'Registro exitoso', { "positionClass": "toast-top-right my-custom-class" });
+                        updateTable();
+                    } else {
+                        toastr.error(data.message || 'Error en la base de datos', 'Error', { "positionClass": "toast-top-right my-custom-class" });
+                    }
                 },
                 error: function (error) {
-                    console.error('Error adding data:', error);
-                },
+                    toastr.error('Hay campos vacios', 'Error', { "positionClass": "toast-top-right my-custom-class" });
+                }
             });
         });
-
-        function updateTable() {
-            // Implement a function to fetch and update the table with data from the server
-            // You can use another AJAX request to get the updated data and manipulate the DOM
-        }
     });
+
+    function updateTable() {
+        $.ajax({
+            url: `/listCriteria/{{Inspection_Id}}`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // Destruir la instancia DataTable existente (si existe)
+                if ($.fn.DataTable.isDataTable('#tablaDatos')) {
+                    $('#tablaDatos').DataTable().destroy();
+                }
+
+                // Limpiar el cuerpo de la tabla
+                $('#tablaDatos tbody').empty();
+
+
+                $.each(data, function (index, row) {
+                    var opcionesHtml = '<td>' +
+                        '<button class="btn btn-primary btn-editar" data-id="' + row.breachedCriteria_Id + '">Editar</button> ' +
+                        '<button class="btn btn-danger btn-eliminar" data-id="' + row.breachedCriteria_Id + '">Eliminar</button>' +
+                        '</td>';
+
+                    // Agregar fila al cuerpo de la tabla
+                    $('#tablaDatos').append('<tr><td>' +
+                        row.breachedCriteria_Description + '</td><td>' +
+                        row.breachedCriteria_ClosingAction + '</td><td>' +
+                        row.breachedCriteria_UserName + '</td>' +
+                        opcionesHtml + '</tr>'
+                    );
+                });
+
+                $('#tablaDatos').DataTable({
+                    language: {
+                        url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+                    },
+                    responsive: true
+                });
+
+
+                // Agrega eventos para los botones de editar y eliminar
+                $('#tablaDatos').on('click', '.btn-editar', function () {
+                    var id = $(this).data('id');
+                    console.log('Editar', id);
+
+                    $('#editar').data('edit-id', id);
+                    $('#agregar').hide();
+                    $('#editar').show();
+
+                    // Fetch data for editing
+                    fetch(`/getDataCriteria/${id}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Populate modal fields with retrieved data
+                            $('#descripcion').val(data[0].breachedCriteria_Description);
+                            $('#accion-cierre').val(data[0].breachedCriteria_ClosingAction);
+                            $('#responsable').val(data[0].breachedCriteria_UserName);
+                            const fechaFormateada = new Date(data[0].breachedCriteria_Date).toISOString().split('T')[0];
+                            $('#dateCriteria').val(fechaFormateada);
+                        })
+                        .catch(error => console.error('Error fetching data:', error));
+                });
+
+                $('#tablaDatos').on('click', '.btn-eliminar', function () {
+                    var id = $(this).data('id');
+
+                    if (confirm('¿Estás seguro de que deseas eliminar este registro?')) {
+                        $.ajax({
+                            type: 'POST',
+                            url: `/deleteCriteria/${id}`, // Ajusta la ruta según tu configuración
+                            success: function (data) {
+                                if (data.success) {
+                                    toastr.success('Has eliminado el registro', 'Eliminación exitosa', { "positionClass": "toast-top-right my-custom-class" });
+
+                                    updateTable();
+                                } else {
+                                    toastr.error(data.message || 'Error en la base de datos', 'Error', { "positionClass": "toast-top-right my-custom-class" });
+                                }
+                            },
+                            error: function (error) {
+                                toastr.error('Error al intentar eliminar el registro', 'Error', { "positionClass": "toast-top-right my-custom-class" });
+                            }
+                        });
+                    }
+                });
+            },
+            error: function (error) {
+                console.error('Error al obtener datos:', error);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#cancelar').on('click', function () {
+            if ($('#agregar').is(':visible')) {
+                $('#descripcion').val('');
+                $('#accion-cierre').val('');
+                $('#responsable').val('');
+                $('#dateCriteria').val('');
+            } else if ($('#editar').is(':visible')) {
+                $('#editar').hide();
+                $('#agregar').show();
+                $('#descripcion').val('');
+                $('#accion-cierre').val('');
+                $('#responsable').val('');
+                $('#dateCriteria').val('');
+            }
+        });
+        
+        $('#editar').click(function () {
+            const editId = $('#editar').data('edit-id');
+            console.log(editId);
+
+            const breachedCriteria_Description = $('#descripcion').val();
+            const breachedCriteria_ClosingAction = $('#accion-cierre').val();
+            const breachedCriteria_UserName = $('#responsable').val();
+            const breachedCriteria_Date = $('#dateCriteria').val();
+
+            toastr.clear();
+
+            $.ajax({
+                type: 'POST',
+                url: `/editCriteria/${editId}`,
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    breachedCriteria_Description,
+                    breachedCriteria_ClosingAction,
+                    breachedCriteria_UserName,
+                    breachedCriteria_Date,
+                }),
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success('Has editado el registro', 'Edición exitosa', { "positionClass": "toast-top-right my-custom-class" });
+
+                        $('#descripcion').val('');
+                        $('#accion-cierre').val('');
+                        $('#responsable').val('');
+                        $('#dateCriteria').val('');
+
+                        $('#editar').hide();
+                        $('#agregar').show();
+
+                        updateTable();
+                    } else {
+                        toastr.error(data.message || 'Error en la base de datos', 'Error', { "positionClass": "toast-top-right my-custom-class" });
+                    }
+                },
+                error: function (error) {
+                    toastr.error('Hay campos vacíos o error en la edición', 'Error', { "positionClass": "toast-top-right my-custom-class" });
+                }
+            });
+        });
+    });
+
 
 </script>

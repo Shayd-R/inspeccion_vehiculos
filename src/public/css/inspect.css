@@ -44,15 +44,6 @@
     overflow: hidden;
 }
 
-/*----------------*/
-/*.contariner form .details {
-    margin-top: 30px;
-}
-----------------*/
-/*.contariner form .details.addtank {
-    margin-top: 10px;
-}
-----------------*/
 .container form .title-addvehicle {
     display: block;
     margin-bottom: 8px;
@@ -96,7 +87,6 @@ form.secActive .form.first {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    /* margin-top: 35px; */
 }
 
 /*----------------*/
@@ -184,9 +174,6 @@ form .buttons button,
     margin-right: 15px;
 }
 
-/* Modal Firma */
-
-
 .modal {
     display: none;
     position: fixed;
@@ -195,8 +182,6 @@ form .buttons button,
     top: 0;
     width: 100%;
     height: 100%;
-    /* padding-top: 0; */
-    /* border-radius: 20px; */
     overflow: auto;
     background-color: rgba(255, 255, 255, 0.5);
 }
@@ -218,11 +203,9 @@ form .buttons button,
     background: none;
 }
 
-
 .modal-content {
     background-color: #fefefe;
     margin: 10% auto;
-    /* padding: 20px; */
     border: 1px solid #888;
     border-radius: 8px;
     width: 50%;
@@ -248,13 +231,10 @@ form .buttons button,
     width: 300px;
     height: 160px;
     touch-action: none;
-    /* width: 100%; */
     border: 1px solid black;
 }
 
 .modal-body .row-modal .col-modal {
-    /* width: 100%; */
-    /* padding-top: 25px; */
     margin: auto 30px;
 }
 
@@ -308,16 +288,13 @@ form .buttons button,
 @media (min-width: 1000px) {
     .container form {
         min-height: 470px;
-        /* overflow-y: scroll; */
     }
 
 }
 
-
 @media (max-width: 1000px) {
     .container form {
         min-height: 540px;
-        /* overflow-y: scroll; */
     }
 
     .container form::-webkit-scrollbar {
@@ -327,10 +304,6 @@ form .buttons button,
     form .fields .input-field {
         width: calc(100% / 2 - 15px);
     }
-
-    /* .modal {
-        padding-top: 80px;
-    } */
 
     .modal-content {
         width: 60%;
@@ -372,10 +345,3 @@ form .buttons button,
         border: 1px solid black;
     }
 }
-
-
-
-
-/* Add this CSS for responsiveness */
-
-/* For screens smaller than 768px */

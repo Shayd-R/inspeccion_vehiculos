@@ -123,6 +123,14 @@
     width: calc(100% / 3 - 15px);
 }
 
+.col-only {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 4px 0;
+    width: 100%;
+}
+
 .row input[type="radio"] {
     display: flex;
     height: 45px;
@@ -267,7 +275,6 @@
     top: 0;
     width: 100%;
     height: 100%;
-    /* border-radius: 20px; */
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
 }
@@ -288,16 +295,13 @@
     background: none;
 }
 
-/* Contenido del modal */
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 8% auto;
     padding: 20px;
     border: 1px solid #888;
     border-radius: 8px;
     width: 50%;
-    height: 50%;
-
 }
 
 .modal-body {
@@ -316,7 +320,6 @@
 .modal-body .row-modal canvas {
     margin-top: 20px;
     touch-action: none;
-    /* width: 100%; */
     border: 1px solid black;
 }
 
@@ -400,15 +403,25 @@
 
 
 
+@media (max-width: 1200px) {
+    .modal-content {
+        margin: 10% auto;
+    }
 
 
-
-
-
+}
 
 
 
 @media (max-width: 950px) {
+    .row-fin button {
+        max-width: none;
+    }
+    
+    .row-fin {
+        flex-direction: column;
+    }
+
     .accordion-content .description .row {
         flex-direction: column;
     }
@@ -424,7 +437,6 @@
         height: 100%;
         overflow: hidden;
         transition: max-height 0.2s ease-out;
-        /* overflow-y: scroll; */
     }
 
     .description.open {
@@ -440,6 +452,10 @@
         width: 100%;
     }
 
+    .modal-content {
+        margin: 10% auto;
+    }
+
 }
 
 @media (max-width: 600px) {
@@ -449,7 +465,16 @@
         margin: 15px 0;
     }
 
+    .modal-content {
+        margin: 15% auto;
+    }
+
+    .row-fin button {
+        max-width: none;
+    }
+
     .row-fin {
+        flex-direction: column;
         overflow-y: scroll;
     }
 

@@ -31,10 +31,9 @@
     <header>Calendario</header>
 
     <br>
-    <div>
-
-        <h2 id="month-year"></h2>
+    <div style="display: flex; justify-content: space-evenly;">
         <button onclick="cambiarMes(-1)">Mes Anterior</button>
+        <h2 id="month-year"></h2>
         <button onclick="cambiarMes(1)">Mes Siguiente</button>
     </div>
 
@@ -58,7 +57,7 @@
 <script>
 
     let currentDate = new Date();
-    const Inspection_Id = {{ Inspection_Id}}; // Obtén la variable desde el servidor
+    const Inspection_Id = {{ Inspection_Id}}; 
 
     mostrarCalendario(currentDate, Inspection_Id);
 
@@ -121,12 +120,11 @@
                 type: 'GET',
                 url: `/getDatesReport/${year}/${month}/${Inspection_Id}`,
                 success: function (data) {
-                    //console.log('Fechas de informe obtenidas:', data);
-                    resolve(data); // Resuelve la promesa con los datos obtenidos
+                    resolve(data); 
                 },
                 error: function (error) {
                     console.error('Error al obtener fechas de informe:', error);
-                    reject(error); // Rechaza la promesa con el error
+                    reject(error); 
                 }
             });
         });

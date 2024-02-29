@@ -33,25 +33,3 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const openModalBtn = document.getElementById("openModalBtn");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    const modal = document.getElementById("dibujarFirmaModal");
-
-    // Mostrar el modal al hacer clic en el botón
-    openModalBtn.addEventListener("click", function () {
-        modal.style.display = "block";
-    });
-
-    // Ocultar el modal al hacer clic en el botón de cierre
-    closeModalBtn.addEventListener("click", function () {
-        modal.style.display = "none";
-    });
-
-    // Ocultar el modal al hacer clic fuera del contenido del modal
-    window.addEventListener("click", function (event) {
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
-    });
-});

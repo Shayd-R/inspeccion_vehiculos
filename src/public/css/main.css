@@ -46,5 +46,5 @@ a {
 
 /* Ajusta la posición superior para la clase personalizada */
 .my-custom-class {
-    top: 85px !important; /* Puedes ajustar este valor según sea necesario */
+    top: 90px !important; /* Puedes ajustar este valor según sea necesario */
 }

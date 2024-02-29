@@ -6,9 +6,13 @@
     <input type="checkbox" id="menu-icon">
     <label for="menu-icon">Menu</label>
     <nav class="menu">
+      {{#if error}}
+      {{else}}
       <ul>
+        {{#if rolDriver}}
+        <li><a href="/inspectVehiculo/{{inspectDriver}}"><span>Inspección</span></a></li>
+        {{else}}
         <li><a href="/"><span>Inicio</span></a></li>
-
         <li><a href="#"><span>Inspección +</span></a>
           <ul>
             <li>
@@ -19,18 +23,13 @@
             </li>
           </ul>
         </li>
+        {{/if}}
+
+
         <li><a href="/informes"><span>Informes</span></a></li>
-        {{!-- <li><a href="#"><span>Conductores +</span></a>
-          <ul>
-            <li>
-              <a href="/addconductor"><span>Registrar conductor</span></a>
-            </li>
-            <li>
-              <a href="/listconductores"><span>Tabla conductores</span></a>
-            </li>
-          </ul>
-        </li> --}}
+        <li><a href="/exit"><span>Salir</span></a></li>
       </ul>
+      {{/if}}
     </nav>
   </div>
 </header>
