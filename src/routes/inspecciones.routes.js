@@ -146,6 +146,7 @@ router.get('/inspectVehiculo/:Inspection_Id', async (req, res) => {
             const inspectVehicle = true;
             const rolDriver = true;
             const list = true;
+            req.session.Inspection_Id = req.params.Inspection_Id;
             res.render('inspeccionar/inspectVehiculo.hbs', { list: list, specifications, subspecifications, Inspection_Id, inspectVehicle: inspectVehicle, radioAnswers: req.session.radioAnswers || [], date: req.session.date || [], rolDriver: rolDriver, inspectDriver: req.session.inspectionDriver });
         } catch (err) {
             res.status(500).json({ message: err.message });
