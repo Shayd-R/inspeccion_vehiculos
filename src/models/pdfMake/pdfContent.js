@@ -1,4 +1,4 @@
-export const generateContent = (data, inspection, specification) => {
+export const generateContent = (data, inspection, specification, breachedcriteria) => {
 
     var formatoFechaMasActual;
     var mesAnio;
@@ -227,10 +227,49 @@ export const generateContent = (data, inspection, specification) => {
         default:
     }
 
+    const tableCriteria = [];
+
+    const headersRow = [
+        { text: 'Nº Incumplimiento', colSpan: 5, style: ['labelheader', 'center'] },
+        ...Array(4).fill({}),
+        { text: 'Descripción', colSpan: 10, style: ['labelheader', 'center'] },
+        ...Array(9).fill({}),
+        { text: 'Acción de Cierre', colSpan: 10, style: ['labelheader', 'center'] },
+        ...Array(9).fill({}),
+        { text: 'Responsable', colSpan: 5, style: ['labelheader', 'center'] },
+        ...Array(4).fill({}),
+        { text: 'Fecha', colSpan: 5, style: ['labelheader', 'center'] },
+        ...Array(4).fill({}),
+        { text: 'Firma', colSpan: 5, style: ['labelheader', 'center'] },
+        ...Array(4).fill({}),
+    ];
+
+    tableCriteria.push(headersRow);
+
+    const dataRows = breachedcriteria.map((data, index) => [
+        { text: index + 1, colSpan: 5, style: ['labelheader', 'center'] },
+        ...Array(4).fill({}),
+        { text: data.breachedCriteria_Description, colSpan: 10, style: ['labelheader', 'center'] },
+        ...Array(9).fill({}),
+        { text: data.breachedCriteria_ClosingAction, colSpan: 10, style: ['labelheader', 'center'] },
+        ...Array(9).fill({}),
+        { text: data.breachedCriteria_UserName, colSpan: 5, style: ['labelheader', 'center'] },
+        ...Array(4).fill({}),
+        { text: data.breachedCriteria_Date ? new Date(data.breachedCriteria_Date).toLocaleDateString() : '', colSpan: 5, style: ['labelheader', 'center'] },
+        ...Array(4).fill({}),
+        { text: data.breachedCriteria_UserName, colSpan: 5, style: ['labelheader', 'center'] },
+        ...Array(4).fill({}),
+    ]);
+
+    tableCriteria.push(...dataRows);
+
+
+
+
     const content = [
         {
             table: {
-                widths: Array.from({ length: 40 }, () => '2.5%'),
+                widths: Array.from({ length: 40 }, () => 'auto'),
                 body: [
                     [
                         { colSpan: 8, rowSpan: 3, image: 'src/public/img/logo/logo-number.png', width: 90, style: ['labelMiddle'] },
@@ -384,7 +423,56 @@ export const generateContent = (data, inspection, specification) => {
                         { text: ' ', fillColor: '#FFFF00', colSpan: 40, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 39 }, () => ({})),
                     ],
-                    ...tableBody
+                    ...tableBody,
+                    [
+                        { text: ' ', fillColor: '#FFFF00', colSpan: 40, style: ['labelheader', 'center'] },
+                        ...Array.from({ length: 39 }, () => ({})),
+                    ],
+                    [
+                        { colSpan: 10, text: ' \nFIRMA CONDUCTOR \n\n', style: ['title', 'center', 'labelMiddle'] },
+                        ...Array.from({ length: 9 }, () => ({})),
+                        { colSpan: 30, text: '', style: ['title', 'center', 'labelMiddle'] },
+                        ...Array.from({ length: 29 }, () => ({})),
+                    ],
+                    [
+                        { colSpan: 10, text: ' \nFIRMA AUTORIZACION \n\n', style: ['title', 'center', 'labelMiddle'] },
+                        ...Array.from({ length: 9 }, () => ({})),
+                        { colSpan: 30, text: '', style: ['title', 'center', 'labelMiddle'] },
+                        ...Array.from({ length: 29 }, () => ({})),
+                    ],
+                    [
+                        { text: ' ', fillColor: '#FFFF00', colSpan: 40, style: ['labelheader', 'center'] },
+                        ...Array.from({ length: 39 }, () => ({})),
+                    ],
+                    [
+                        { text: 'Los criterios con incumplimiento se deben cerrar mediante un plan de acción para continuar en la operación', fillColor: '#EEECE1', colSpan: 40, style: ['labelheader', 'center'] },
+                        ...Array.from({ length: 39 }, () => ({})),
+                    ],
+                    ...tableCriteria,
+                    [
+                        { text: 'Registro del Kilometraje actual a fin de mes:', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: 'Fecha de entrega de planilla:', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: 'Firma del conductor: \n\n'+data.User_FirstName + ' ' + data.User_FirstLastName + '\n\n', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: 'Firma de quien aprueba:', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                    ],
+                    [
+                        { text: ' ', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: ' ', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: 'conductor', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: 'Coordinador de Operaciones', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                    ],
+                    [
+                        { text: '*Nota: La Inspección diaria pre operacional de vehículo: CL.FO-01, debe ser reportadata por el conductor al Coordinador de Operaciones, durante máximo los primeros cinco (5) días hábiles del seguimiente mes, como requisito para ser programado a operación.', fillColor: '#EEECE1', colSpan: 40, style: ['labelheader', 'center'] },
+                        ...Array.from({ length: 39 }, () => ({})),
+                    ]
 
                 ],
             },
@@ -404,19 +492,7 @@ export const generateContent = (data, inspection, specification) => {
             }
 
         },
-        "\n",
-        { text: 'FINALIZACIÓN', style: ['suntitle', 'left'] },
-        { text: '\nNombre completo y firma del conductor', style: ['label', 'left'] },
-        "\n",
-        {
-            alignment: 'left',
-            columns: [
 
-
-                // { image: data.ImagesProfile_Data, width: 110, style: ['label','labelLeft'] },
-                { text: data.User_FirstName + ' ' + data.User_FirstLastName + "\n" + formatoFechaMasActual, style: ['label', 'labelLeft'] }
-            ],
-        },
     ];
 
     return content;

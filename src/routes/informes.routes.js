@@ -151,62 +151,75 @@ router.get('/pdf/:Inspection_Id/:InspectionDate_Date', async (req, res) => {
 });
 
 router.get('/informe/:Inspection_Id/:InspectionDate_DateFormat', async (req, res) => {
-    if (req.session && req.session.user) {
-        try {
-            const Inspection_Id = req.params.Inspection_Id;
-            const InspectionDate_Date = req.params.InspectionDate_DateFormat;
+    //if (req.session && req.session.user) {
+    try {
+        const Inspection_Id = req.params.Inspection_Id;
+        const InspectionDate_Date = req.params.InspectionDate_DateFormat;
 
-            const [vehicleReport] = await pool.query(`
-        SELECT Inspection_Id, User_UserName,User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName,  
-        Driver_Phone, Driver_CategoryLicense, Driver_NumLicense, Driver_ExpirationDate, Vehicle_Id, Vehicle_Plate, Vehicle_IdType, Vehicle_Model, 
-        TypeVehicle_Name, ColorVehicle_Name, Belongs_Text, CompanyVehicle_Name, ImagesProfile_Data 
-        FROM evasys_inspection
-        INNER JOIN evasys_users ON evasys_users.User_Id = evasys_inspection.Inspection_IdUser
-        INNER JOIN evasys_driver ON evasys_driver.Driver_Id = evasys_users.User_Id
-        INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evasys_inspection.Inspection_IdVehicle
-        INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
-        INNER JOIN evasys_colorvehicle ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
-        INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
-        INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
-        INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
-        LEFT JOIN evasys_imagesprofile ON evasys_imagesprofile.ImagesProfile_UserName = evasys_users.User_UserName
-        WHERE Inspection_Id = `+ Inspection_Id);
+        const [vehicleReport] = await pool.query(`
+            SELECT Inspection_Id, User_UserName,User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName,  
+            Driver_Phone, Driver_CategoryLicense, Driver_NumLicense, Driver_ExpirationDate, Vehicle_Id, Vehicle_Plate, Vehicle_IdType, Vehicle_Model, 
+            TypeVehicle_Name, ColorVehicle_Name, Belongs_Text, CompanyVehicle_Name, ImagesProfile_Data 
+            FROM evasys_inspection
+            INNER JOIN evasys_users ON evasys_users.User_Id = evasys_inspection.Inspection_IdUser
+            INNER JOIN evasys_driver ON evasys_driver.Driver_Id = evasys_users.User_Id
+            INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evasys_inspection.Inspection_IdVehicle
+            INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
+            INNER JOIN evasys_colorvehicle ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
+            INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
+            INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
+            INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
+            LEFT JOIN evasys_imagesprofile ON evasys_imagesprofile.ImagesProfile_UserName = evasys_users.User_UserName
+            WHERE Inspection_Id = `+ Inspection_Id);
 
-            const [inspection] = await pool.query(`
-        SELECT InspectionDate_Date, InspectionSubSpecification_Id, InspectionSubSpecification_Name, InspectionConvention_Name, InspectionSubSpecification_IdSpecification  FROM evasys_inspectiondate
-        INNER JOIN evasys_inspectiondata ON evasys_inspectiondata.InspectionData_IdDate = evasys_inspectiondate.InspectionDate_id
-        INNER JOIN evasys_inspectionsubspecifications ON evasys_inspectionsubspecifications.InspectionSubSpecification_Id = evasys_inspectiondata.InspectionData_IdSubSpecification
-        INNER JOIN evasys_inspectionconvetions ON evasys_inspectionconvetions.InspectionConvention_Id = evasys_inspectiondata.InspectionData_IdConvention
-        WHERE InspectionDate_IdInspection = ${Inspection_Id} AND InspectionDate_Date LIKE '%${InspectionDate_Date}%'`);
+        const [inspection] = await pool.query(`
+            SELECT InspectionDate_Date, InspectionSubSpecification_Id, InspectionSubSpecification_Name, InspectionConvention_Name, InspectionSubSpecification_IdSpecification  FROM evasys_inspectiondate
+            INNER JOIN evasys_inspectiondata ON evasys_inspectiondata.InspectionData_IdDate = evasys_inspectiondate.InspectionDate_id
+            INNER JOIN evasys_inspectionsubspecifications ON evasys_inspectionsubspecifications.InspectionSubSpecification_Id = evasys_inspectiondata.InspectionData_IdSubSpecification
+            INNER JOIN evasys_inspectionconvetions ON evasys_inspectionconvetions.InspectionConvention_Id = evasys_inspectiondata.InspectionData_IdConvention
+            WHERE InspectionDate_IdInspection = ${Inspection_Id} AND InspectionDate_Date LIKE '%${InspectionDate_Date}%'`);
 
-            const [specification] = await pool.query(`SELECT * FROM evasys_inspectionsubspecifications`);
-            //terminar pdf
-            const content = generateContent(vehicleReport[0], inspection, specification);
-            let docDefinition = {
-                content: content,
-                styles: styles,
-                pageMargins: [10, 10, 10, 10],
-                pageSize: 'EXECUTIVE',
-                scale: 0.85,
-            };
-            const printer = new PdfPrinter(fonts);
+        const [breachedcriteria] = await pool.query(`
+            SELECT DISTINCT breachedCriteria_Id, breachedCriteria_Description,breachedCriteria_ClosingAction, breachedCriteria_UserName,
+            DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') AS MesAnioInspeccion,
+            breachedCriteria_Date
+            FROM evasys_inspectiondate eid
+            LEFT JOIN evasys_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
+                AND DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') = DATE_FORMAT(ebc.breachedCriteria_Date, '%Y-%m')
+            WHERE DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') LIKE ? AND eid.InspectionDate_IdInspection = ?
+                AND ebc.breachedCriteria_Date IS NOT NULL
+            ORDER BY MesAnioInspeccion, ebc.breachedCriteria_Date;
+            `, [InspectionDate_Date, Inspection_Id]);
 
-            const currentDate = new Date();
-            const date = currentDate.toISOString().replace(/[-T:\.Z]/g, '');
 
-            res.setHeader('Content-disposition', 'inline; filename=Inspeccion_' + date + '.pdf');
-            res.setHeader('Content-type', 'application/pdf');
+        const [specification] = await pool.query(`SELECT * FROM evasys_inspectionsubspecifications`);
+        //terminar pdf
+        const content = generateContent(vehicleReport[0], inspection, specification, breachedcriteria);
+        let docDefinition = {
+            content: content,
+            styles: styles,
+            pageMargins: [10, 10, 10, 10],
+            pageSize: 'EXECUTIVE',
+            scale: 0.85,
+        };
+        const printer = new PdfPrinter(fonts);
 
-            let pdfDoc = printer.createPdfKitDocument(docDefinition);
-            pdfDoc.pipe(res);
-            pdfDoc.end();
-        } catch (error) {
-            res.status(500).send('Error al generar el PDF');
-        }
-    } else {
-        const error = true;
-        res.render('error/error.hbs', { error: error });
+        const currentDate = new Date();
+        const date = currentDate.toISOString().replace(/[-T:\.Z]/g, '');
+
+        res.setHeader('Content-disposition', 'inline; filename=Inspeccion_' + date + '.pdf');
+        res.setHeader('Content-type', 'application/pdf');
+
+        let pdfDoc = printer.createPdfKitDocument(docDefinition);
+        pdfDoc.pipe(res);
+        pdfDoc.end();
+    } catch (error) {
+        res.status(500).send('Error al generar el PDF');
     }
+    //} else {
+    //  const error = true;
+    //res.render('error/error.hbs', { error: error });
+    //}
 });
 
 router.get('/completedInspections/:Inspection_Id', async (req, res) => {

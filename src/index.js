@@ -82,11 +82,15 @@ app.get('/', async (req, res) => {
             } else if (user[0].User_IdRole == 3) {
                 const [user_valid] = await pool.query('SELECT * FROM evasys_users WHERE User_UserName = ?', user[0].User_UserName);
                 const [inspection] = await pool.query('SELECT * FROM evasys_inspection WHERE Inspection_IdUser = ? AND Inspection_IdStatus = 1', user_valid[0].User_Id);
-                req.session.inspectionDriver = inspection[0].Inspection_Id;
-                res.redirect(`/inspectVehiculo/${inspection[0].Inspection_Id}`);
+                if (!inspection || inspection.length === 0) {
+                    const noinspection = true;
+                    const error = true;
+                    res.render('error/error.hbs', { error: error, noinspection: noinspection });
+                } else {
+                    req.session.inspectionDriver = inspection[0].Inspection_Id;
+                    res.redirect(`/inspectVehiculo/${inspection[0].Inspection_Id}`);
+                }
             }
-
-
         }
     } else {
         const [user] = await pool.query('SELECT * FROM evasys_users WHERE User_UserName = ? AND User_Password =  ?', [req.session.user, req.session.tocken]);
@@ -96,7 +100,14 @@ app.get('/', async (req, res) => {
         } else if (user[0].User_IdRole == 3) {
             const [user_valid] = await pool.query('SELECT * FROM evasys_users WHERE User_UserName = ?', user[0].User_UserName);
             const [inspection] = await pool.query('SELECT * FROM evasys_inspection WHERE Inspection_IdUser = ? AND Inspection_IdStatus = 1', user_valid[0].User_Id);
-            res.redirect(`/inspectVehiculo/${inspection[0].Inspection_Id}`);
+            if (!inspection || inspection.length === 0) {
+                const noinspection = true;
+                const error = true;
+                res.render('error/error.hbs', { error: error, noinspection: noinspection });
+            } else {
+                req.session.inspectionDriver = inspection[0].Inspection_Id;
+                res.redirect(`/inspectVehiculo/${inspection[0].Inspection_Id}`);
+            }
         }
     }
 
