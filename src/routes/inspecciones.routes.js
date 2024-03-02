@@ -501,7 +501,7 @@ router.get('/exit', async (req, res) => {
             res.status(500).send('Error interno del servidor');
         } else {
             // Redirige después de destruir la sesión
-            res.redirect('http://localhost/Formulary/');
+            res.redirect('https://suratrans.jnixsoft.com/');
         }
     });
 });
