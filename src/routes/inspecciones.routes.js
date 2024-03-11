@@ -5,30 +5,8 @@ import { escape } from "mysql2";
 
 const router = Router();
 
-router.get('/listInspect', async (req, res) => {
-    if (req.session && req.session.user) {
-        try {
-            const [result] = await pool.query(`
-        SELECT Inspection_Id, User_FirstName, User_FirstLastName, User_SecondLastName, Vehicle_Plate, TypeVehicle_Name, Belongs_Text, CompanyVehicle_Name, StatusEvaSys_Name 
-        FROM evasys_inspection
-        INNER JOIN evasys_users ON evasys_users.User_Id = evasys_inspection.Inspection_IdUser
-        INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evasys_inspection.Inspection_IdVehicle
-        INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
-        INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
-        INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
-        INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_inspection.Inspection_IdStatus
-        `);
-            const list = true;
-            req.session.recuperationData = null;
-            res.render('inspeccionar/listInspect.hbs', { inspections: result, list: list });
-        } catch (err) {
-            res.status(500).json({ message: err.message });
-        }
-    } else {
-        const error = true;
-        res.render('error/error.hbs', { error: error });
-    }
-});
+
+
 
 router.get('/link', async (req, res) => {
     if (req.session && req.session.user) {
@@ -344,15 +322,16 @@ router.post('/editCriteria/:id', async (req, res) => {
     }
 });
 
-router.post('/deleteCriteria/:id', async (req, res) => {
+router.get('/deleteCriteria/:id', async (req, res) => {
     if (req.session && req.session.user) {
         try {
             const id = req.params.id;
 
             const sql = 'DELETE FROM evasys_breachedcriteria WHERE breachedCriteria_Id = ?';
-            await pool.query(sql, id);
-
-            res.json({ success: true, message: 'Datos eliminados exitosamente' });
+            console.log('Antes de la consulta de eliminación');
+            await pool.query(sql, [id]);
+            console.log('Después de la consulta de eliminación');
+            res.json({ success: true });
         } catch (error) {
             console.error('Error en la eliminación de datos:', error);
             res.status(500).json({ success: false, message: 'Error interno del servidor' });

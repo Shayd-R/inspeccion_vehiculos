@@ -31,11 +31,11 @@
     <header>Calendario</header>
 
     <br>
-    <div style="display: flex; justify-content: space-evenly;">
-        <button onclick="cambiarMes(-1)">Mes Anterior</button>
-        <h2 id="month-year"></h2>
-        <button onclick="cambiarMes(1)">Mes Siguiente</button>
-    </div>
+  <div style="display: flex; justify-content: space-evenly; align-items: center; margin-top: 20px;">
+    <button style="padding: 10px; font-size: 16px; cursor: pointer; background-color: #3498db; color: #fff; border: none; border-radius: 5px;" onclick="cambiarMes(-1)">Mes Anterior</button>
+    <h2 id="month-year"></h2>
+    <button style="padding: 10px; font-size: 16px; cursor: pointer; background-color: #3498db; color: #fff; border: none; border-radius: 5px;" onclick="cambiarMes(1)">Mes Siguiente</button>
+  </div>
 
     <table id="calendar">
         <tr>

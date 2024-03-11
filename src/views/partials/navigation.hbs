@@ -11,6 +11,9 @@
       <ul>
         {{#if rolDriver}}
         <li><a href="/inspectVehiculo/{{inspectDriver}}"><span>Inspección</span></a></li>
+        <li><a href="/informes"><span>Informes</span></a></li>
+        <li><a href="/Manuales/Manual_usuario_(conductores).pdf" download="Manual.pdf"><span>Manual de usuario</span></a></li>
+
         {{else}}
         <li><a href="/"><span>Inicio</span></a></li>
         <li><a href="#"><span>Inspección +</span></a>
@@ -23,10 +26,9 @@
             </li>
           </ul>
         </li>
-        {{/if}}
-
-
         <li><a href="/informes"><span>Informes</span></a></li>
+        <li><a href="/Manuales/Manual_usuario_(Administradores).pdf" download="Manual.pdf"><span>Manual de usuario</span></a></li>
+        {{/if}}
         <li><a href="/exit"><span>Salir</span></a></li>
       </ul>
       {{/if}}

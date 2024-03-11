@@ -182,9 +182,13 @@
                 success: function (data) {
                     if (data.success) {
                         toastr.success('Haz agregado un registro', 'Registro exitoso', { "positionClass": "toast-top-right my-custom-class" });
+                        $('#descripcion').val('');
+                        $('#accion-cierre').val('');
+                        $('#responsable').val('');
+                        $('#dateCriteria').val('');
                         updateTable();
                     } else {
-                        toastr.error(data.message || 'Error en la base de datos', 'Error', { "positionClass": "toast-top-right my-custom-class" });
+                        toastr.error(data.message || 'Ingresar datos', 'Error', { "positionClass": "toast-top-right my-custom-class" });
                     }
                 },
                 error: function (error) {
@@ -235,7 +239,7 @@
                 // Agrega eventos para los botones de editar y eliminar
                 $('#tablaDatos').on('click', '.btn-editar', function () {
                     var id = $(this).data('id');
-                    console.log('Editar', id);
+                    //console.log('Editar', id);
 
                     $('#editar').data('edit-id', id);
                     $('#agregar').hide();
@@ -255,28 +259,36 @@
                         .catch(error => console.error('Error fetching data:', error));
                 });
 
-                $('#tablaDatos').on('click', '.btn-eliminar', function () {
+                $('#tablaDatos').off('click', '.btn-eliminar').on('click', '.btn-eliminar', function () {
+                    console.log('Botón de eliminar clicado');
                     var id = $(this).data('id');
+                    console.log('ID a eliminar:', id);
 
-                    if (confirm('¿Estás seguro de que deseas eliminar este registro?')) {
-                        $.ajax({
-                            type: 'POST',
-                            url: `/deleteCriteria/${id}`, // Ajusta la ruta según tu configuración
-                            success: function (data) {
-                                if (data.success) {
-                                    toastr.success('Has eliminado el registro', 'Eliminación exitosa', { "positionClass": "toast-top-right my-custom-class" });
+                    // Variable para rastrear si ya se mostró un mensaje de toastr
+                    var toastrShown = false;
 
-                                    updateTable();
-                                } else {
-                                    toastr.error(data.message || 'Error en la base de datos', 'Error', { "positionClass": "toast-top-right my-custom-class" });
-                                }
-                            },
-                            error: function (error) {
+                    $.ajax({
+                        type: 'GET',
+                        url: `/deleteCriteria/${id}`, // Ajusta la ruta según tu configuración
+                        success: function (data) {
+                            if (data.success && !toastrShown) {
+                                // Mostrar el mensaje solo si la eliminación fue exitosa y no se ha mostrado antes
+                                toastrShown = true;
+                                toastr.success('Has eliminado el registro', 'Eliminación exitosa', { "positionClass": "toast-top-right my-custom-class" });
+                                updateTable();
+                            }
+                        },
+                        error: function (error) {
+                            if (!toastrShown) {
+                                // Mostrar el mensaje de error solo si no se ha mostrado antes
+                                toastrShown = true;
                                 toastr.error('Error al intentar eliminar el registro', 'Error', { "positionClass": "toast-top-right my-custom-class" });
                             }
-                        });
-                    }
+                        }
+                    });
                 });
+
+
             },
             error: function (error) {
                 console.error('Error al obtener datos:', error);
@@ -300,7 +312,7 @@
                 $('#dateCriteria').val('');
             }
         });
-        
+
         $('#editar').click(function () {
             const editId = $('#editar').data('edit-id');
             console.log(editId);
