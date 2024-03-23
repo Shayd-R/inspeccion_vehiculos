@@ -32,13 +32,13 @@ router.get('/listInspect', async (req, res) => {
         try {
             const [result] = await pool.query(`
         SELECT Inspection_Id, User_FirstName, User_FirstLastName, User_SecondLastName, Vehicle_Plate, TypeVehicle_Name, Belongs_Text, CompanyVehicle_Name, StatusEvaSys_Name 
-        FROM evasys_inspection
-        INNER JOIN evasys_users ON evasys_users.User_Id = evasys_inspection.Inspection_IdUser
-        INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evasys_inspection.Inspection_IdVehicle
+        FROM evains_inspection
+        INNER JOIN evasys_users ON evasys_users.User_Id = evains_inspection.Inspection_IdUser
+        INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evains_inspection.Inspection_IdVehicle
         INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
         INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
         INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
-        INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_inspection.Inspection_IdStatus
+        INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evains_inspection.Inspection_IdStatus
         `);
             const list = true;
             req.session.recuperationData = null;
@@ -72,7 +72,7 @@ router.get('/informes', async (req, res) => {
                     id.InspectionDate_Date,
                     ROW_NUMBER() OVER (PARTITION BY YEAR(id.InspectionDate_Date), MONTH(id.InspectionDate_Date), v.Vehicle_Plate ORDER BY id.InspectionDate_Date DESC) AS RowNum
                 FROM 
-                    evasys_inspection i
+                    evains_inspection i
                 INNER JOIN 
                     evasys_users u ON u.User_Id = i.Inspection_IdUser
                 INNER JOIN 
@@ -84,7 +84,7 @@ router.get('/informes', async (req, res) => {
                 INNER JOIN 
                     evasys_companyvehicle cv ON cv.CompanyVehicle_Id = v.Vehicle_IdCompanyVehicle
                 INNER JOIN 
-                    evasys_inspectiondate id ON id.InspectionDate_IdInspection = i.Inspection_Id
+                    evains_inspectiondate id ON id.InspectionDate_IdInspection = i.Inspection_Id
             )
             SELECT 
                 Inspection_Id, 
@@ -143,7 +143,7 @@ router.get('/informes', async (req, res) => {
                     id.InspectionDate_Date,
                     ROW_NUMBER() OVER (PARTITION BY YEAR(id.InspectionDate_Date), MONTH(id.InspectionDate_Date), v.Vehicle_Plate ORDER BY id.InspectionDate_Date DESC) AS RowNum
                 FROM 
-                    evasys_inspection i
+                    evains_inspection i
                 INNER JOIN 
                     evasys_users u ON u.User_Id = i.Inspection_IdUser
                 INNER JOIN 
@@ -155,7 +155,7 @@ router.get('/informes', async (req, res) => {
                 INNER JOIN 
                     evasys_companyvehicle cv ON cv.CompanyVehicle_Id = v.Vehicle_IdCompanyVehicle
                 INNER JOIN 
-                    evasys_inspectiondate id ON id.InspectionDate_IdInspection = i.Inspection_Id
+                    evains_inspectiondate id ON id.InspectionDate_IdInspection = i.Inspection_Id
             )
             SELECT 
                 Inspection_Id, 
@@ -215,10 +215,10 @@ router.get('/pdf/:Inspection_Id/:InspectionDate_Date', async (req, res) => {
         SELECT Inspection_Id, User_UserName,User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName,  
         Driver_Phone, Driver_CategoryLicense, Driver_NumLicense, Driver_ExpirationDate, Vehicle_Id, Vehicle_Plate, Vehicle_IdType, Vehicle_Model, 
         TypeVehicle_Name, ColorVehicle_Name, Belongs_Text, CompanyVehicle_Name, ImagesProfile_Data 
-        FROM evasys_inspection
-        INNER JOIN evasys_users ON evasys_users.User_Id = evasys_inspection.Inspection_IdUser
+        FROM evains_inspection
+        INNER JOIN evasys_users ON evasys_users.User_Id = evains_inspection.Inspection_IdUser
         INNER JOIN evasys_driver ON evasys_driver.Driver_Id = evasys_users.User_Id
-        INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evasys_inspection.Inspection_IdVehicle
+        INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evains_inspection.Inspection_IdVehicle
         INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
         INNER JOIN evasys_colorvehicle ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
         INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
@@ -228,25 +228,25 @@ router.get('/pdf/:Inspection_Id/:InspectionDate_Date', async (req, res) => {
         WHERE Inspection_Id = `+ Inspection_Id);
 
             const [inspection] = await pool.query(`
-        SELECT InspectionDate_Date, InspectionSubSpecification_Id, InspectionSubSpecification_Name, InspectionConvention_Name, InspectionSubSpecification_IdSpecification  FROM evasys_inspectiondate
-        INNER JOIN evasys_inspectiondata ON evasys_inspectiondata.InspectionData_IdDate = evasys_inspectiondate.InspectionDate_id
-        INNER JOIN evasys_inspectionsubspecifications ON evasys_inspectionsubspecifications.InspectionSubSpecification_Id = evasys_inspectiondata.InspectionData_IdSubSpecification
-        INNER JOIN evasys_inspectionconvetions ON evasys_inspectionconvetions.InspectionConvention_Id = evasys_inspectiondata.InspectionData_IdConvention
+        SELECT InspectionDate_Date, InspectionSubSpecification_Id, InspectionSubSpecification_Name, InspectionConvention_Name, InspectionSubSpecification_IdSpecification  FROM evains_inspectiondate
+        INNER JOIN evains_inspectiondata ON evains_inspectiondata.InspectionData_IdDate = evains_inspectiondate.InspectionDate_id
+        INNER JOIN evains_inspectionsubspecifications ON evains_inspectionsubspecifications.InspectionSubSpecification_Id = evains_inspectiondata.InspectionData_IdSubSpecification
+        INNER JOIN evains_inspectionconvetions ON evains_inspectionconvetions.InspectionConvention_Id = evains_inspectiondata.InspectionData_IdConvention
         WHERE InspectionDate_IdInspection = ${Inspection_Id} AND InspectionDate_Date LIKE '%${InspectionDate_Date}%'`);
 
             const [breachedcriteria] = await pool.query(`
             SELECT DISTINCT breachedCriteria_Id, breachedCriteria_Description,breachedCriteria_ClosingAction, breachedCriteria_UserName,
             DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') AS MesAnioInspeccion,
             breachedCriteria_Date
-            FROM evasys_inspectiondate eid
-            LEFT JOIN evasys_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
+            FROM evains_inspectiondate eid
+            LEFT JOIN evains_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
                 AND DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') = DATE_FORMAT(ebc.breachedCriteria_Date, '%Y-%m')
             WHERE DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') LIKE ? AND eid.InspectionDate_IdInspection = ?
                 AND ebc.breachedCriteria_Date IS NOT NULL
             ORDER BY MesAnioInspeccion, ebc.breachedCriteria_Date;
             `, [InspectionDate_Date, Inspection_Id]);
 
-            const [specification] = await pool.query(`SELECT * FROM evasys_inspectionsubspecifications`);
+            const [specification] = await pool.query(`SELECT * FROM evains_inspectionsubspecifications`);
             //terminar pdf
             const content = generateContent(vehicleReport[0], inspection, specification, breachedcriteria);
             let docDefinition = {
@@ -283,10 +283,10 @@ router.get('/informe/:Inspection_Id/:InspectionDate_DateFormat', async (req, res
             SELECT Inspection_Id, User_UserName,User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName,  
             Driver_Phone, Driver_CategoryLicense, Driver_NumLicense, Driver_ExpirationDate, Vehicle_Id, Vehicle_Plate, Vehicle_IdType, Vehicle_Model, 
             TypeVehicle_Name, ColorVehicle_Name, Belongs_Text, CompanyVehicle_Name, ImagesProfile_Data 
-            FROM evasys_inspection
-            INNER JOIN evasys_users ON evasys_users.User_Id = evasys_inspection.Inspection_IdUser
+            FROM evains_inspection
+            INNER JOIN evasys_users ON evasys_users.User_Id = evains_inspection.Inspection_IdUser
             INNER JOIN evasys_driver ON evasys_driver.Driver_Id = evasys_users.User_Id
-            INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evasys_inspection.Inspection_IdVehicle
+            INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evains_inspection.Inspection_IdVehicle
             INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
             INNER JOIN evasys_colorvehicle ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
             INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
@@ -296,18 +296,18 @@ router.get('/informe/:Inspection_Id/:InspectionDate_DateFormat', async (req, res
             WHERE Inspection_Id = `+ Inspection_Id);
 
             const [inspection] = await pool.query(`
-            SELECT InspectionDate_Date, InspectionSubSpecification_Id, InspectionSubSpecification_Name, InspectionConvention_Name, InspectionSubSpecification_IdSpecification  FROM evasys_inspectiondate
-            INNER JOIN evasys_inspectiondata ON evasys_inspectiondata.InspectionData_IdDate = evasys_inspectiondate.InspectionDate_id
-            INNER JOIN evasys_inspectionsubspecifications ON evasys_inspectionsubspecifications.InspectionSubSpecification_Id = evasys_inspectiondata.InspectionData_IdSubSpecification
-            INNER JOIN evasys_inspectionconvetions ON evasys_inspectionconvetions.InspectionConvention_Id = evasys_inspectiondata.InspectionData_IdConvention
+            SELECT InspectionDate_Date, InspectionSubSpecification_Id, InspectionSubSpecification_Name, InspectionConvention_Name, InspectionSubSpecification_IdSpecification  FROM evains_inspectiondate
+            INNER JOIN evains_inspectiondata ON evains_inspectiondata.InspectionData_IdDate = evains_inspectiondate.InspectionDate_id
+            INNER JOIN evains_inspectionsubspecifications ON evains_inspectionsubspecifications.InspectionSubSpecification_Id = evains_inspectiondata.InspectionData_IdSubSpecification
+            INNER JOIN evains_inspectionconvetions ON evains_inspectionconvetions.InspectionConvention_Id = evains_inspectiondata.InspectionData_IdConvention
             WHERE InspectionDate_IdInspection = ${Inspection_Id} AND InspectionDate_Date LIKE '%${InspectionDate_Date}%'`);
 
             const [breachedcriteria] = await pool.query(`
             SELECT DISTINCT breachedCriteria_Id, breachedCriteria_Description,breachedCriteria_ClosingAction, breachedCriteria_UserName,
             DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') AS MesAnioInspeccion,
             breachedCriteria_Date
-            FROM evasys_inspectiondate eid
-            LEFT JOIN evasys_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
+            FROM evains_inspectiondate eid
+            LEFT JOIN evains_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
                 AND DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') = DATE_FORMAT(ebc.breachedCriteria_Date, '%Y-%m')
             WHERE DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') LIKE ? AND eid.InspectionDate_IdInspection = ?
                 AND ebc.breachedCriteria_Date IS NOT NULL
@@ -315,7 +315,7 @@ router.get('/informe/:Inspection_Id/:InspectionDate_DateFormat', async (req, res
             `, [InspectionDate_Date, Inspection_Id]);
 
 
-            const [specification] = await pool.query(`SELECT * FROM evasys_inspectionsubspecifications`);
+            const [specification] = await pool.query(`SELECT * FROM evains_inspectionsubspecifications`);
             //terminar pdf
             const content = generateContent(vehicleReport[0], inspection, specification, breachedcriteria);
             let docDefinition = {
@@ -369,8 +369,8 @@ router.get('/getDatesReport/:Inspection_Id/:year/:month', async (req, res) => {
 
             const query = `
             SELECT DAY(InspectionDate_Date) AS day 
-            FROM evasys_inspectiondate 
-            INNER JOIN evasys_inspection ON evasys_inspection.Inspection_Id = evasys_inspectiondate.InspectionDate_IdInspection
+            FROM evains_inspectiondate 
+            INNER JOIN evains_inspection ON evains_inspection.Inspection_Id = evains_inspectiondate.InspectionDate_IdInspection
             WHERE MONTH(InspectionDate_Date) = ? AND Inspection_Id = ? AND YEAR(InspectionDate_Date) = ? `;
 
             const [fechasInforme] = await pool.query(query, [year, month, Inspection_Id]);

@@ -19,13 +19,13 @@ router.get('/link', async (req, res) => {
         INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
         INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
         INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
-        WHERE Vehicle_IdStatus = 1 AND NOT EXISTS (SELECT 1 FROM evasys_inspection WHERE Inspection_IdVehicle = Vehicle_Id AND Inspection_IdStatus = 1)`
+        WHERE Vehicle_IdStatus = 1 AND NOT EXISTS (SELECT 1 FROM evains_inspection WHERE Inspection_IdVehicle = Vehicle_Id AND Inspection_IdStatus = 1)`
             );
 
             const [resultUsers] = await pool.query(`
         SELECT User_Id, User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName, User_UserName, StatusEvaSys_Name FROM evasys_users 
         INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_users.User_StatusId 
-        WHERE User_IdRole = 3 AND User_StatusId = 1  AND NOT EXISTS (SELECT 1 FROM evasys_inspection WHERE Inspection_IdUser = User_Id AND Inspection_IdStatus = 1)
+        WHERE User_IdRole = 3 AND User_StatusId = 1  AND NOT EXISTS (SELECT 1 FROM evains_inspection WHERE Inspection_IdUser = User_Id AND Inspection_IdStatus = 1)
         `);
 
             const list = true;
@@ -53,7 +53,7 @@ router.get('/findVehicle/:Vehicle_Plate', async (req, res) => {
         INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
         INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
         INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
-        WHERE Vehicle_IdStatus = 1 AND NOT EXISTS (SELECT 1 FROM evasys_inspection WHERE Inspection_IdVehicle = Vehicle_Id AND Inspection_IdStatus = 1) AND Vehicle_Plate = ?`;
+        WHERE Vehicle_IdStatus = 1 AND NOT EXISTS (SELECT 1 FROM evains_inspection WHERE Inspection_IdVehicle = Vehicle_Id AND Inspection_IdStatus = 1) AND Vehicle_Plate = ?`;
 
             const [results] = await pool.query(query, [Vehicle_Plate]);
 
@@ -77,7 +77,7 @@ router.get('/findUser/:User_UserName', async (req, res) => {
             const User_UserName = req.params.User_UserName;
             const query = `SELECT User_Id, User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName, User_UserName, StatusEvaSys_Name FROM evasys_users 
             INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_users.User_StatusId 
-            WHERE User_IdRole = 3 AND User_StatusId = 1 AND NOT EXISTS (SELECT 1 FROM evasys_inspection WHERE Inspection_IdUser = User_Id AND Inspection_IdStatus = 1) AND User_UserName = ?`;
+            WHERE User_IdRole = 3 AND User_StatusId = 1 AND NOT EXISTS (SELECT 1 FROM evains_inspection WHERE Inspection_IdUser = User_Id AND Inspection_IdStatus = 1) AND User_UserName = ?`;
 
             const [results] = await pool.query(query, [User_UserName]);
 
@@ -95,15 +95,13 @@ router.get('/findUser/:User_UserName', async (req, res) => {
     }
 });
 
-
-
 router.post('/linkVehicles', async (req, res) => {
     if (req.session && req.session.user) {
         try {
             const Inspection_IdVehicle = req.body.Vehicle_Id;
             const Inspection_IdUser = req.body.User_Id;
             const insertInspection = { Inspection_IdUser, Inspection_IdVehicle };
-            await pool.query('INSERT INTO evasys_inspection SET ?', [insertInspection]);
+            await pool.query('INSERT INTO evains_inspection SET ?', [insertInspection]);
             req.toastr.success('Has hecho una vinculación', 'Vinculación exitosa', { "positionClass": "toast-top-right my-custom-class" });
             res.redirect('/listInspect');
         } catch (err) {
@@ -119,8 +117,8 @@ router.get('/inspectVehiculo/:Inspection_Id', async (req, res) => {
     if (req.session && req.session.user) {
         try {
             const Inspection_Id = req.params.Inspection_Id;
-            const [specifications] = await pool.query('SELECT * FROM evasys_inspectionspecification');
-            const [subspecifications] = await pool.query('SELECT *  FROM evasys_inspectionsubspecifications');
+            const [specifications] = await pool.query('SELECT * FROM evains_inspectionspecification');
+            const [subspecifications] = await pool.query('SELECT *  FROM evains_inspectionsubspecifications');
             const inspectVehicle = true;
             const rolDriver = true;
             const list = true;
@@ -138,7 +136,7 @@ router.get('/inspectVehiculo/:Inspection_Id', async (req, res) => {
 router.post('/inspectVehiculo/:Inspection_Id', async (req, res) => {
     if (req.session && req.session.user) {
         try {
-            const [total] = await pool.query('SELECT COUNT(*) as total FROM evasys_inspectionsubspecifications;');
+            const [total] = await pool.query('SELECT COUNT(*) as total FROM evains_inspectionsubspecifications;');
             const numberOfQuestions = total[0].total;
             const InspectionDate_IdInspection = req.params.Inspection_Id;
             const InspectionDate_Date = req.body.date;
@@ -170,13 +168,13 @@ router.post('/inspectVehiculo/:Inspection_Id', async (req, res) => {
                 req.session.radioAnswers = radioRes;
                 return res.redirect(`/inspectVehiculo/${InspectionDate_IdInspection}`);
             } else {
-                const [date_bd] = await pool.query('SELECT * FROM evasys_inspectiondate WHERE InspectionDate_IdInspection = ? AND  InspectionDate_Date = ?', [InspectionDate_IdInspection, InspectionDate_Date]);
+                const [date_bd] = await pool.query('SELECT * FROM evains_inspectiondate WHERE InspectionDate_IdInspection = ? AND  InspectionDate_Date = ?', [InspectionDate_IdInspection, InspectionDate_Date]);
 
                 if (!date_bd[0]) {
                     const inspectiondata = { InspectionDate_IdInspection, InspectionDate_Date };
-                    await pool.query('INSERT INTO evasys_inspectiondate SET ?', [inspectiondata]);
+                    await pool.query('INSERT INTO evains_inspectiondate SET ?', [inspectiondata]);
 
-                    const [idInspection] = await pool.query("SELECT InspectionDate_id FROM evasys_inspectiondate WHERE InspectionDate_IdInspection = ? AND  InspectionDate_Date = ?", [InspectionDate_IdInspection, InspectionDate_Date]);
+                    const [idInspection] = await pool.query("SELECT InspectionDate_id FROM evains_inspectiondate WHERE InspectionDate_IdInspection = ? AND  InspectionDate_Date = ?", [InspectionDate_IdInspection, InspectionDate_Date]);
                     const InspectionDate_id = idInspection[0].InspectionDate_id;
                     const answers = [];
                     for (let i = 1; i <= numberOfQuestions; i++) {
@@ -185,17 +183,17 @@ router.post('/inspectVehiculo/:Inspection_Id', async (req, res) => {
                         answers.push([InspectionDate_id, pregunta, respuesta]);
                     }
 
-                    await pool.query('INSERT INTO evasys_inspectiondata (InspectionData_IdDate, InspectionData_IdSubSpecification, InspectionData_IdConvention) VALUES ?', [answers]);
+                    await pool.query('INSERT INTO evains_inspectiondata (InspectionData_IdDate, InspectionData_IdSubSpecification, InspectionData_IdConvention) VALUES ?', [answers]);
                     req.toastr.success('Realizo la inspeccion diaria', 'Inspeccion exitosa', { "positionClass": "toast-top-right my-custom-class" });
                     res.redirect('/informes');
                 } else if (date_bd[0].InspectionDate_Date === InspectionDate_Date) {
-                    const [idInspection] = await pool.query("SELECT InspectionDate_id FROM evasys_inspectiondate WHERE InspectionDate_IdInspection = ? AND  InspectionDate_Date = ?", [InspectionDate_IdInspection, InspectionDate_Date]);
+                    const [idInspection] = await pool.query("SELECT InspectionDate_id FROM evains_inspectiondate WHERE InspectionDate_IdInspection = ? AND  InspectionDate_Date = ?", [InspectionDate_IdInspection, InspectionDate_Date]);
                     const InspectionDate_id = idInspection[0].InspectionDate_id;
 
                     for (let i = 1; i <= numberOfQuestions; i++) {
                         const pregunta = `${i}`;
                         const respuesta = req.body[pregunta];
-                        await pool.query("UPDATE evasys_inspectiondata SET InspectionData_IdConvention = " + `${respuesta}` + " WHERE InspectionData_IdDate = " + InspectionDate_id + " AND InspectionData_IdSubSpecification = " + `${pregunta}`)
+                        await pool.query("UPDATE evains_inspectiondata SET InspectionData_IdConvention = " + `${respuesta}` + " WHERE InspectionData_IdDate = " + InspectionDate_id + " AND InspectionData_IdSubSpecification = " + `${pregunta}`)
                     }
                     req.toastr.success('Actualizo la inspección: ' + InspectionDate_id, 'Actualización exitosa', { "positionClass": "toast-top-right my-custom-class" });
                     res.redirect('/informes');
@@ -224,7 +222,7 @@ router.post('/addCriteria', (req, res) => {
         if (!breachedCriteria_Description || !breachedCriteria_ClosingAction || !breachedCriteria_UserName || !breachedCriteria_Date || !breachedCriteria_IdInspection) {
             res.json({ success: false });
         } else {
-            const sql = 'INSERT INTO evasys_breachedcriteria (breachedCriteria_Description, breachedCriteria_ClosingAction, breachedCriteria_UserName, breachedCriteria_Date, breachedCriteria_IdInspection) VALUES (?, ?, ?, ?, ?)';
+            const sql = 'INSERT INTO evains_breachedcriteria (breachedCriteria_Description, breachedCriteria_ClosingAction, breachedCriteria_UserName, breachedCriteria_Date, breachedCriteria_IdInspection) VALUES (?, ?, ?, ?, ?)';
             pool.query(sql, [breachedCriteria_Description, breachedCriteria_ClosingAction, breachedCriteria_UserName, breachedCriteria_Date, breachedCriteria_IdInspection]);
             res.json({ success: true });
         }
@@ -248,8 +246,8 @@ router.get('/listCriteria/:inspection', async (req, res) => {
             SELECT DISTINCT *,
             DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') AS MesAnioInspeccion,
             ebc.breachedCriteria_Date
-            FROM evasys_inspectiondate eid
-            LEFT JOIN evasys_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
+            FROM evains_inspectiondate eid
+            LEFT JOIN evains_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
                 AND DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') = DATE_FORMAT(ebc.breachedCriteria_Date, '%Y-%m')
             WHERE DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') LIKE ? AND eid.InspectionDate_IdInspection = ?
                 AND ebc.breachedCriteria_Date IS NOT NULL
@@ -275,7 +273,7 @@ router.get('/getDataCriteria/:id', async (req, res) => {
         try {
             const id = req.params.id;
             console.log(id);
-            const [data] = await pool.query('SELECT * FROM evasys_breachedcriteria WHERE breachedCriteria_Id = ?', id);
+            const [data] = await pool.query('SELECT * FROM evains_breachedcriteria WHERE breachedCriteria_Id = ?', id);
             res.json(data);
         } catch (error) {
             console.error('Error en la consulta a la base de datos:', error);
@@ -301,7 +299,7 @@ router.post('/editCriteria/:id', async (req, res) => {
                 res.status(400).json({ success: false, message: 'Error interno del servidor' });
             } else {
                 const sql = `
-                UPDATE evasys_breachedcriteria
+                UPDATE evains_breachedcriteria
                 SET
                     breachedCriteria_Description = ?,
                     breachedCriteria_ClosingAction = ?,
@@ -327,7 +325,7 @@ router.get('/deleteCriteria/:id', async (req, res) => {
         try {
             const id = req.params.id;
 
-            const sql = 'DELETE FROM evasys_breachedcriteria WHERE breachedCriteria_Id = ?';
+            const sql = 'DELETE FROM evains_breachedcriteria WHERE breachedCriteria_Id = ?';
             console.log('Antes de la consulta de eliminación');
             await pool.query(sql, [id]);
             console.log('Después de la consulta de eliminación');
@@ -346,7 +344,7 @@ router.get('/editLink/:Inspection_Id', async (req, res) => {
     if (req.session && req.session.user) {
         try {
             const Inspection_Id = req.params.Inspection_Id;
-            await pool.query("UPDATE evasys_inspection SET Inspection_IdStatus = CASE WHEN Inspection_IdStatus = 1 THEN 2 ELSE 1 END WHERE Inspection_Id = ?", [Inspection_Id]);
+            await pool.query("UPDATE evains_inspection SET Inspection_IdStatus = CASE WHEN Inspection_IdStatus = 1 THEN 2 ELSE 1 END WHERE Inspection_Id = ?", [Inspection_Id]);
             req.toastr.success('Exitoso', 'Cambio de estado', { "positionClass": "toast-top-right my-custom-class" });
             res.redirect('/listInspect');
         } catch (err) {
@@ -479,7 +477,6 @@ router.get('/exit', async (req, res) => {
             console.error('Error al limpiar sesiones:', err);
             res.status(500).send('Error interno del servidor');
         } else {
-            // Redirige después de destruir la sesión
             res.redirect('https://suratrans.jnixsoft.com/');
         }
     });

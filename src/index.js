@@ -81,7 +81,7 @@ app.get('/', async (req, res) => {
                 res.render('index.hbs', { index: index });
             } else if (user[0].User_IdRole == 3) {
                 const [user_valid] = await pool.query('SELECT * FROM evasys_users WHERE User_UserName = ?', user[0].User_UserName);
-                const [inspection] = await pool.query('SELECT * FROM evasys_inspection WHERE Inspection_IdUser = ? AND Inspection_IdStatus = 1', user_valid[0].User_Id);
+                const [inspection] = await pool.query('SELECT * FROM evains_inspection WHERE Inspection_IdUser = ? AND Inspection_IdStatus = 1', user_valid[0].User_Id);
                 if (!inspection || inspection.length === 0) {
                     const noinspection = true;
                     const error = true;
@@ -99,7 +99,7 @@ app.get('/', async (req, res) => {
             res.render('index.hbs', { index: index });
         } else if (user[0].User_IdRole == 3) {
             const [user_valid] = await pool.query('SELECT * FROM evasys_users WHERE User_UserName = ?', user[0].User_UserName);
-            const [inspection] = await pool.query('SELECT * FROM evasys_inspection WHERE Inspection_IdUser = ? AND Inspection_IdStatus = 1', user_valid[0].User_Id);
+            const [inspection] = await pool.query('SELECT * FROM evains_inspection WHERE Inspection_IdUser = ? AND Inspection_IdStatus = 1', user_valid[0].User_Id);
             if (!inspection || inspection.length === 0) {
                 const noinspection = true;
                 const error = true;
