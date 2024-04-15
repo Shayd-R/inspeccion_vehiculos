@@ -11,4 +11,4 @@ Pasos para ejecutarlo
    npm run dev
 7. ahi ya se puede entrar desde un buscador
    localhost:4000
-   
+   Excelente
