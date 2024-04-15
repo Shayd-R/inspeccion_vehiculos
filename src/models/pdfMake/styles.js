@@ -55,6 +55,9 @@ export default {
         alignment: 'center',
     },
 
-  
+    angle: {
+        alignment: 'center',
+        angle: 45,
+    },
 
 };

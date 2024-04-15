@@ -204,6 +204,7 @@
             type: 'GET',
             dataType: 'json',
             success: function (data) {
+        
                 // Destruir la instancia DataTable existente (si existe)
                 if ($.fn.DataTable.isDataTable('#tablaDatos')) {
                     $('#tablaDatos').DataTable().destroy();

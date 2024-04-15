@@ -1,33 +1,25 @@
-export const generateContent = (data, inspection, specification, breachedcriteria) => {
-
+export const generateContent = (data, inspection, specification, breachedcriteria, sign) => {
     var formatoFechaMasActual;
     var mesAnio;
 
     if (inspection.length > 0) {
         let fechaMasActual = new Date(inspection[0].InspectionDate_Date);
-        // console.log(fechaMasActual);
-        // Recorrer el array para encontrar la fecha más actual
+
         for (const insp of inspection) {
             const fechaInspeccion = new Date(insp.InspectionDate_Date);
 
-            // Comparar fechas
             if (fechaInspeccion > fechaMasActual) {
                 fechaMasActual = fechaInspeccion;
             }
         }
 
-        // Obtener mes y año de la fecha más actual
         mesAnio = `${fechaMasActual.getMonth() + 1}-${fechaMasActual.getFullYear()}`;
-
-        // Formatear la fecha más actual
         formatoFechaMasActual = `${fechaMasActual.getDate()}-${fechaMasActual.getMonth() + 1}-${fechaMasActual.getFullYear()}`;
-
     }
 
     const tableBody = [];
     const inspectionByDate = {};
 
-    // Agrupar inspecciones por fecha
     for (const inspections of inspection) {
         const inspectionDate = inspections['InspectionDate_Date'];
         var fechaInspe = `${inspectionDate.getDate()}`;
@@ -36,51 +28,97 @@ export const generateContent = (data, inspection, specification, breachedcriteri
             inspectionByDate[fechaInspe] = [];
         }
         inspectionByDate[fechaInspe].push(inspections);
-        // console.log(inspectionByDate);
     }
-
-    // Ordenar fechas de forma ascendente
     const sortedDates = Array.from({ length: 31 }, (_, i) => String(i + 1));
 
-    // Encabezado de la tabla
-    // const tableHeader = [
-    //     { text: 'N°', style: 'label' },
-    //     { text: 'Especificaciones', colSpan: 8, style: 'label' },
-    //     ...Array.from({ length: 7 }, () => ({})),
-    //     ...sortedDates.map(date => ({ text: date, style: 'label' }))
-    // ];
-    // tableBody.push(tableHeader);
 
-    // Iterar sobre las especificaciones y construir filas
-    for (const [index, specifications] of specification.entries()) {
-        const row = [
-            { text: specifications['InspectionSubSpecification_Id'], style: ['label', 'center'] },
-            // ...Array.from({ length: 1 }, () => ({})),
-            { text: specifications['InspectionSubSpecification_Name'], colSpan: 8, style: 'label' },
-            ...Array.from({ length: 7 }, () => ({})),
+    for (const spec of specification) {
+        const rowHeader = [
+            { fillColor: '#EEECE1', text: 'N°', style: ['label', 'center'] },
+            { fillColor: '#EEECE1', text: spec['InspectionSpecification_Name'], colSpan: 39, style: ['label', 'center'] },
+            ...Array.from({ length: 38 }, () => ({})), // Crear 37 columnas vacías
         ];
+        tableBody.push(rowHeader);
 
-        // Agregar datos para cada fecha
-        for (const date of sortedDates) {
-            const inspectionsForDate = inspectionByDate[date] || [];
-            const matchingInspection = inspectionsForDate.find(inspections => inspections['InspectionSubSpecification_Id'] === specifications['InspectionSubSpecification_Id']);
+        for (const inspe of inspection) {
+            if (inspe['InspectionSubSpecification_IdSpecification'] == spec['InspectionSpecification_Id']) {
+                const row = [
+                    { text: inspe['InspectionSubSpecification_Id'], style: ['label', 'center'] },
+                    { text: inspe['InspectionSubSpecification_Name'], colSpan: 8, style: 'label' },
+                    ...Array.from({ length: 7 }, () => ({})), // Crear 7 columnas vacías
 
-            let conventionColor = {};
-            if (matchingInspection) {
-                if (matchingInspection['InspectionConvention_Name'] == 'Bueno') {
-                    conventionColor = { fillColor: '#84b432', text: ' ', color: '#ffffff', alignment: 'right', border: [true, true, true, true] };
-                } else if (matchingInspection['InspectionConvention_Name'] == 'Malo') {
-                    conventionColor = { fillColor: '#e30222', text: ' ', color: '#ffffff', alignment: 'right', border: [true, true, true, true] };
-                } else if (matchingInspection['InspectionConvention_Name'] == 'No aplica') {
-                    conventionColor = { fillColor: '#ffb102', text: ' ', color: '#ffffff', alignment: 'right', border: [true, true, true, true] };
-                }
+                    // Iterar sobre las fechas
+                    ...sortedDates.map(date => {
+                        const inspectionsForDate = inspectionByDate[date] || [];
+                        const matchingInspection = inspectionsForDate.find(insp => insp['InspectionSubSpecification_Id'] === inspe['InspectionSubSpecification_Id']);
+
+                        let conventionColor = {};
+                        if (matchingInspection) {
+                            if (matchingInspection['InspectionConvention_Name'] == 'Bueno') {
+                                conventionColor = { fillColor: '#84b432', text: ' ', color: '#ffffff', alignment: 'right', border: [true, true, true, true] };
+                            } else if (matchingInspection['InspectionConvention_Name'] == 'Malo') {
+                                conventionColor = { fillColor: '#e30222', text: ' ', color: '#ffffff', alignment: 'right', border: [true, true, true, true] };
+                            } else if (matchingInspection['InspectionConvention_Name'] == 'No aplica') {
+                                conventionColor = { fillColor: '#ffb102', text: ' ', color: '#ffffff', alignment: 'right', border: [true, true, true, true] };
+                            }
+                        }
+                        return conventionColor;
+                    })
+                ];
+                tableBody.push(row);
             }
-
-            row.push(conventionColor);
         }
-
-        tableBody.push(row);
     }
+
+
+
+    const tableSign = [];
+    const inspectionByDateSign = {};
+
+    // Agrupar inspecciones por fecha
+    for (const inspections of inspection) {
+        const inspectionDate = inspections['InspectionDate_Date'];
+        var fechaInspe = `${inspectionDate.getDate()}`;
+
+        if (!inspectionByDateSign[fechaInspe]) {
+            inspectionByDateSign[fechaInspe] = [];
+        }
+        inspectionByDateSign[fechaInspe].push(inspections);
+    }
+    const sortedDatesSign = Array.from({ length: 31 }, (_, i) => String(i + 1));
+
+    const row = [
+        { colSpan: 9, text: ' \nFIRMA CONDUCTOR \n\n', style: ['title', 'center', 'labelMiddle', 'angle'] },
+        ...Array.from({ length: 8 }, () => ({})), // Crear 7 columnas vacías
+
+        // Iterar sobre las fechas
+        ...sortedDatesSign.map(date => {
+            const inspectionsForDate = inspectionByDateSign[date] || [];
+            const matchingInspection = inspectionsForDate.some(insp => {
+                const inspectionDate = insp['InspectionDate_Date'];
+                const fechaInspe = `${inspectionDate.getDate()}`;
+                return fechaInspe === date; // Comparar la fecha de inspección con la fecha actual del map
+            });
+
+            if (matchingInspection) {
+                return { image: sign, width: 30, style: ['center', 'labelMiddle'] };
+            } else {
+                // Agregar una celda vacía si no hay datos en este día
+                return {};
+            }
+        })
+    ];
+    tableSign.push(row);
+
+
+
+
+
+
+
+
+
+
 
     const tableTypeVehicle = [];
     switch (data.Vehicle_IdType) {
@@ -227,6 +265,9 @@ export const generateContent = (data, inspection, specification, breachedcriteri
         default:
     }
 
+    // const tableSign = [];
+
+
     const tableCriteria = [];
 
     const headersRow = [
@@ -351,7 +392,7 @@ export const generateContent = (data, inspection, specification, breachedcriteri
                         ...Array.from({ length: 39 }, () => ({})),
                     ],
                     [
-                        { text: 'PLACA TRAILER: \n\n\n', colSpan: 7, style: ['labelheader', 'center'] },
+                        { text: 'PLACA TRAILER: \n\n', colSpan: 7, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 6 }, () => ({})),
                         { text: 'TABLA DE AFORO:', colSpan: 8, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 7 }, () => ({})),
@@ -428,17 +469,13 @@ export const generateContent = (data, inspection, specification, breachedcriteri
                         { text: ' ', fillColor: '#FFFF00', colSpan: 40, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 39 }, () => ({})),
                     ],
+                    ...tableSign,
+                
                     [
-                        { colSpan: 10, text: ' \nFIRMA CONDUCTOR \n\n', style: ['title', 'center', 'labelMiddle'] },
-                        ...Array.from({ length: 9 }, () => ({})),
-                        { colSpan: 30, text: '', style: ['title', 'center', 'labelMiddle'] },
-                        ...Array.from({ length: 29 }, () => ({})),
-                    ],
-                    [
-                        { colSpan: 10, text: ' \nFIRMA AUTORIZACION \n\n', style: ['title', 'center', 'labelMiddle'] },
-                        ...Array.from({ length: 9 }, () => ({})),
-                        { colSpan: 30, text: '', style: ['title', 'center', 'labelMiddle'] },
-                        ...Array.from({ length: 29 }, () => ({})),
+                        { colSpan: 9, text: ' \nFIRMA AUTORIZACION \n\n', style: ['title', 'center', 'labelMiddle'] },
+                        ...Array.from({ length: 8 }, () => ({})),
+                        { colSpan: 31, text: ' ', style: ['labelheader', 'center'] },
+                        ...Array.from({ length: 30 }, () => ({})),
                     ],
                     [
                         { text: ' ', fillColor: '#FFFF00', colSpan: 40, style: ['labelheader', 'center'] },
@@ -454,9 +491,9 @@ export const generateContent = (data, inspection, specification, breachedcriteri
                         ...Array(9).fill({}),
                         { text: 'Fecha de entrega de planilla:', colSpan: 10, style: ['labelheader', 'center'] },
                         ...Array(9).fill({}),
-                        { text: 'Firma del conductor: \n\n'+data.User_FirstName + ' ' + data.User_FirstLastName + '\n\n', colSpan: 10, style: ['labelheader', 'center'] },
+                        { text: 'Firma del conductor: \n\n', colSpan: 10, style: ['labelheader', 'center'] },
                         ...Array(9).fill({}),
-                        { text: 'Firma de quien aprueba:', colSpan: 10, style: ['labelheader', 'center'] },
+                        { text: 'Firma de quien aprueba: \nCoordinador de Operaciones', colSpan: 10, style: ['labelheader', 'center'] },
                         ...Array(9).fill({}),
                     ],
                     [
@@ -464,9 +501,9 @@ export const generateContent = (data, inspection, specification, breachedcriteri
                         ...Array(9).fill({}),
                         { text: ' ', colSpan: 10, style: ['labelheader', 'center'] },
                         ...Array(9).fill({}),
-                        { text: 'conductor', colSpan: 10, style: ['labelheader', 'center'] },
+                        { image: data.ImagesSign_Data, width: 90, colSpan: 10, style: ['labelheader', 'center'] },
                         ...Array(9).fill({}),
-                        { text: 'Coordinador de Operaciones', colSpan: 10, style: ['labelheader', 'center'] },
+                        { text: ' ', colSpan: 10, style: ['labelheader', 'center'] },
                         ...Array(9).fill({}),
                     ],
                     [

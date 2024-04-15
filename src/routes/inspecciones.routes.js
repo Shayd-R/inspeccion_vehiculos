@@ -184,7 +184,8 @@ router.post('/inspectVehiculo/:Inspection_Id', async (req, res) => {
                     }
 
                     await pool.query('INSERT INTO evains_inspectiondata (InspectionData_IdDate, InspectionData_IdSubSpecification, InspectionData_IdConvention) VALUES ?', [answers]);
-                    req.toastr.success('Realizo la inspeccion diaria', 'Inspeccion exitosa', { "positionClass": "toast-top-right my-custom-class" });
+                    await pool.query("UPDATE evains_inspection SET Inspection_IdStatus = 2 WHERE Inspection_Id = " + `${InspectionDate_IdInspection}`);
+                    req.toastr.success('Realizo la inspeccion ', 'Inspeccion exitosa', { "positionClass": "toast-top-right my-custom-class" });
                     res.redirect('/informes');
                 } else if (date_bd[0].InspectionDate_Date === InspectionDate_Date) {
                     const [idInspection] = await pool.query("SELECT InspectionDate_id FROM evains_inspectiondate WHERE InspectionDate_IdInspection = ? AND  InspectionDate_Date = ?", [InspectionDate_IdInspection, InspectionDate_Date]);
@@ -195,7 +196,7 @@ router.post('/inspectVehiculo/:Inspection_Id', async (req, res) => {
                         const respuesta = req.body[pregunta];
                         await pool.query("UPDATE evains_inspectiondata SET InspectionData_IdConvention = " + `${respuesta}` + " WHERE InspectionData_IdDate = " + InspectionDate_id + " AND InspectionData_IdSubSpecification = " + `${pregunta}`)
                     }
-                    req.toastr.success('Actualizo la inspección: ' + InspectionDate_id, 'Actualización exitosa', { "positionClass": "toast-top-right my-custom-class" });
+                    req.toastr.success('Actualizo la inspección', 'Actualización exitosa', { "positionClass": "toast-top-right my-custom-class" });
                     res.redirect('/informes');
                 }
             }
@@ -243,16 +244,16 @@ router.get('/listCriteria/:inspection', async (req, res) => {
                 const date = `${year}-${month}`;
                 const inspection = req.params.inspection;
                 const [breachedcriteria] = await pool.query(`
-            SELECT DISTINCT *,
-            DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') AS MesAnioInspeccion,
-            ebc.breachedCriteria_Date
-            FROM evains_inspectiondate eid
-            LEFT JOIN evains_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
-                AND DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') = DATE_FORMAT(ebc.breachedCriteria_Date, '%Y-%m')
-            WHERE DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') LIKE ? AND eid.InspectionDate_IdInspection = ?
-                AND ebc.breachedCriteria_Date IS NOT NULL
-            ORDER BY MesAnioInspeccion, ebc.breachedCriteria_Date;
-            `, [date, inspection]);
+                    SELECT DISTINCT *,
+                    DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') AS MesAnioInspeccion,
+                    ebc.breachedCriteria_Date
+                    FROM evains_inspectiondate eid
+                    LEFT JOIN evains_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
+                        AND DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') = DATE_FORMAT(ebc.breachedCriteria_Date, '%Y-%m')
+                    WHERE DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') LIKE ? AND eid.InspectionDate_IdInspection = ?
+                        AND ebc.breachedCriteria_Date IS NOT NULL
+                    ORDER BY MesAnioInspeccion, ebc.breachedCriteria_Date;
+                    `, [date, inspection]);
                 res.json(breachedcriteria);
             } else {
                 const error = true;
@@ -326,9 +327,9 @@ router.get('/deleteCriteria/:id', async (req, res) => {
             const id = req.params.id;
 
             const sql = 'DELETE FROM evains_breachedcriteria WHERE breachedCriteria_Id = ?';
-            console.log('Antes de la consulta de eliminación');
+            // console.log('Antes de la consulta de eliminación');
             await pool.query(sql, [id]);
-            console.log('Después de la consulta de eliminación');
+            // console.log('Después de la consulta de eliminación');
             res.json({ success: true });
         } catch (error) {
             console.error('Error en la eliminación de datos:', error);

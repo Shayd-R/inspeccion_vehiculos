@@ -1,11 +1,11 @@
 <section class="container">
     <header>Tabla de inspección diaria pre operacional de vehículos</header>
     <br>
-    <div class="col d-flex justify-content-initial">
+    {{!-- <div class="col d-flex justify-content-initial">
         <a href="/link" class="btn btn-info" style="text-decoration: none;">
             Vicular vehiculo
         </a>
-    </div>
+    </div> --}}
     {{#if inspections}}
     <div class="col md-3" style="padding-top: 5px;">
         <table id="inspections" class="table table-hover" style="width: 100%;">
@@ -17,7 +17,7 @@
                     <th>TIPO DE VEHICULO</th>
                     <th>PERTENECE</th>
                     <th>COMPAÑIA</th>
-                    <th>ESTADO</th>
+                    {{!-- <th>ESTADO</th> --}}
                     <th>OPCIONES</th>
                 </tr>
             </thead>
@@ -42,7 +42,7 @@
                     <td>
                         {{CompanyVehicle_Name}}
                     </td>
-                    <td>
+                    {{!-- <td>
                         {{#if (eq StatusEvaSys_Name "Activo")}}
                         <a href="/editLink/{{Inspection_Id}}"
                             style="width: 100%; text-align: center; background-color: rgb(8, 238, 8); display: block; border-radius: 20px; margin-top: 5px; padding: 2px; color: white; text-decoration: none;">
@@ -54,7 +54,7 @@
                             {{StatusEvaSys_Name}}
                         </a>
                         {{/if}}
-                    </td>
+                    </td> --}}
                     <td>
 
                         {{#if (eq StatusEvaSys_Name "Activo")}}
