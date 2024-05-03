@@ -213,21 +213,63 @@ router.get('/pdf/:Inspection_Id/:InspectionDate_Date', async (req, res) => {
             const Inspection_Id = req.params.Inspection_Id;
             const InspectionDate_Date = req.params.InspectionDate_Date;
 
-            const [vehicleReport] = await pool.query(`
-            SELECT Inspection_Id, User_UserName,User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName,  
-            Driver_Phone, Driver_CategoryLicense, Driver_NumLicense, Driver_ExpirationDate, Vehicle_Id, Vehicle_Plate, Vehicle_IdType, Vehicle_Model, 
-            TypeVehicle_Name, ColorVehicle_Name, Belongs_Text, CompanyVehicle_Name, ImagesProfile_Data, ImagesSign_Data
-            FROM evains_inspection
-            INNER JOIN evasys_users ON evasys_users.User_Id = evains_inspection.Inspection_IdUser
-            INNER JOIN evasys_driver ON evasys_driver.Driver_Id = evasys_users.User_Id
-            INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evains_inspection.Inspection_IdVehicle
-            INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
-            INNER JOIN evasys_colorvehicle ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
-            INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
-            INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
-            INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
-            LEFT JOIN evasys_imagesprofile ON evasys_imagesprofile.ImagesProfile_UserName = evasys_users.User_UserName
-            WHERE Inspection_Id = `+ Inspection_Id);
+            const [vehicleReport] = await pool.query(`SELECT
+                Inspection_Id,
+                User_UserName,
+                User_FirstName,
+                User_SecondName,
+                User_FirstLastName,
+                User_SecondLastName,
+                Driver_Phone,
+                Driver_CategoryLicense,
+                Driver_NumLicense,
+                Vehicle_Id,
+                Vehicle_Plate,
+                Vehicle_IdType,
+                Vehicle_Model,
+                TypeVehicle_Name,
+                ColorVehicle_Name,
+                Belongs_Text,
+                CompanyVehicle_Name,
+                ImagesProfile_Data,
+                ImagesSign_Data,
+                # Formatted Dates
+                DATE_FORMAT(Driver_ExpirationDate, '%Y-%m-%d') AS Formatted_ExpirationDate,
+                DATE_FORMAT(vehicle_ExpiryCivilHydricarbidsPolicy, '%Y-%m-%d') AS Formatted_ExpiryCivilHydricarbidsPolicy,
+                DATE_FORMAT(vehicle_ExpiryCivilLiabilityPolicy, '%Y-%m-%d') AS Formatted_ExpiryCivilLiabilityPolicy,
+                DATE_FORMAT(vehicle_ExpiryLifeline, '%Y-%m-%d') AS Formatted_ExpiryLifeline,
+                DATE_FORMAT(vehicle_ExpiryMechanicalTechnicalReview, '%Y-%m-%d') AS Formatted_ExpiryMechanicalTechnicalReview,
+                DATE_FORMAT(vehicle_ExpirySoat, '%Y-%m-%d') AS Formatted_ExpirySoat,
+                DATE_FORMAT(tank_FifthWheelExpiry, '%Y-%m-%d') AS Formatted_FifthWheelExpiry,
+                DATE_FORMAT(tank_HydrostaticsExpiry, '%Y-%m-%d') AS Formatted_HydrostaticsExpiry,
+                DATE_FORMAT(tank_KingPinExpiry, '%Y-%m-%d') AS Formatted_KingPinExpiry,
+                #tank
+                vehicle_IdTanks,
+                tank_CapacityTable,
+                tank_TrailerPlate
+            FROM
+                evains_inspection
+                INNER JOIN evasys_users
+                    ON evasys_users.User_Id = evains_inspection.Inspection_IdUser
+                INNER JOIN evasys_driver
+                    ON evasys_driver.Driver_Id = evasys_users.User_Id
+                INNER JOIN evasys_vehicle
+                    ON evasys_vehicle.Vehicle_Id = evains_inspection.Inspection_IdVehicle
+                INNER JOIN evasys_typevehicle
+                    ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
+                INNER JOIN evasys_colorvehicle
+                    ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
+                INNER JOIN evasys_belongs
+                    ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
+                INNER JOIN evasys_status
+                    ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
+                INNER JOIN evasys_companyvehicle
+                    ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
+                LEFT JOIN evasys_imagesprofile
+                    ON evasys_imagesprofile.ImagesProfile_UserName = evasys_users.User_UserName
+                LEFT JOIN evasys_tanks 
+                    ON evasys_tanks.tank_Id = evasys_vehicle.vehicle_IdTanks
+                WHERE Inspection_Id = `+ Inspection_Id);
 
             if (vehicleReport.length > 0) {
                 const report = vehicleReport[0];
@@ -300,45 +342,87 @@ router.get('/informe/:Inspection_Id/:InspectionDate_DateFormat', async (req, res
     if (req.session && req.session.user) {
         try {
             const Inspection_Id = req.params.Inspection_Id;
-            const InspectionDate_Date = req.params.InspectionDate_Date;
+            const InspectionDate_Date = req.params.InspectionDate_DateFormat;
 
-            const [vehicleReport] = await pool.query(`
-                SELECT Inspection_Id, User_UserName,User_FirstName, User_SecondName, User_FirstLastName, User_SecondLastName,  
-                Driver_Phone, Driver_CategoryLicense, Driver_NumLicense, Driver_ExpirationDate, Vehicle_Id, Vehicle_Plate, Vehicle_IdType, Vehicle_Model, 
-                TypeVehicle_Name, ColorVehicle_Name, Belongs_Text, CompanyVehicle_Name, ImagesProfile_Data, ImagesSign_Data
-                FROM evains_inspection
-                INNER JOIN evasys_users ON evasys_users.User_Id = evains_inspection.Inspection_IdUser
-                INNER JOIN evasys_driver ON evasys_driver.Driver_Id = evasys_users.User_Id
-                INNER JOIN evasys_vehicle ON evasys_vehicle.Vehicle_Id = evains_inspection.Inspection_IdVehicle
-                INNER JOIN evasys_typevehicle ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
-                INNER JOIN evasys_colorvehicle ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
-                INNER JOIN evasys_belongs ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
-                INNER JOIN evasys_status ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
-                INNER JOIN evasys_companyvehicle ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
-                LEFT JOIN evasys_imagesprofile ON evasys_imagesprofile.ImagesProfile_UserName = evasys_users.User_UserName
+            const [vehicleReport] = await pool.query(`SELECT
+                Inspection_Id,
+                User_UserName,
+                User_FirstName,
+                User_SecondName,
+                User_FirstLastName,
+                User_SecondLastName,
+                Driver_Phone,
+                Driver_CategoryLicense,
+                Driver_NumLicense,
+                Vehicle_Id,
+                Vehicle_Plate,
+                Vehicle_IdType,
+                Vehicle_Model,
+                TypeVehicle_Name,
+                ColorVehicle_Name,
+                Belongs_Text,
+                CompanyVehicle_Name,
+                ImagesProfile_Data,
+                ImagesSign_Data,
+                # Formatted Dates
+                DATE_FORMAT(Driver_ExpirationDate, '%Y-%m-%d') AS Formatted_ExpirationDate,
+                DATE_FORMAT(vehicle_ExpiryCivilHydricarbidsPolicy, '%Y-%m-%d') AS Formatted_ExpiryCivilHydricarbidsPolicy,
+                DATE_FORMAT(vehicle_ExpiryCivilLiabilityPolicy, '%Y-%m-%d') AS Formatted_ExpiryCivilLiabilityPolicy,
+                DATE_FORMAT(vehicle_ExpiryLifeline, '%Y-%m-%d') AS Formatted_ExpiryLifeline,
+                DATE_FORMAT(vehicle_ExpiryMechanicalTechnicalReview, '%Y-%m-%d') AS Formatted_ExpiryMechanicalTechnicalReview,
+                DATE_FORMAT(vehicle_ExpirySoat, '%Y-%m-%d') AS Formatted_ExpirySoat,
+                DATE_FORMAT(tank_FifthWheelExpiry, '%Y-%m-%d') AS Formatted_FifthWheelExpiry,
+                DATE_FORMAT(tank_HydrostaticsExpiry, '%Y-%m-%d') AS Formatted_HydrostaticsExpiry,
+                DATE_FORMAT(tank_KingPinExpiry, '%Y-%m-%d') AS Formatted_KingPinExpiry,
+                #tank
+                vehicle_IdTanks,
+                tank_CapacityTable,
+                tank_TrailerPlate
+            FROM
+                evains_inspection
+                INNER JOIN evasys_users
+                    ON evasys_users.User_Id = evains_inspection.Inspection_IdUser
+                INNER JOIN evasys_driver
+                    ON evasys_driver.Driver_Id = evasys_users.User_Id
+                INNER JOIN evasys_vehicle
+                    ON evasys_vehicle.Vehicle_Id = evains_inspection.Inspection_IdVehicle
+                INNER JOIN evasys_typevehicle
+                    ON evasys_typevehicle.TypeVehicle_Id = evasys_vehicle.Vehicle_IdType
+                INNER JOIN evasys_colorvehicle
+                    ON evasys_colorvehicle.ColorVehicle_Id = evasys_vehicle.Vehicle_IdColorVehicle
+                INNER JOIN evasys_belongs
+                    ON evasys_belongs.Belongs_Id = evasys_vehicle.Vehicle_IdBelongs
+                INNER JOIN evasys_status
+                    ON evasys_status.StatusEvaSys_Id = evasys_vehicle.Vehicle_IdStatus
+                INNER JOIN evasys_companyvehicle
+                    ON evasys_companyvehicle.CompanyVehicle_Id = evasys_vehicle.Vehicle_IdCompanyVehicle
+                LEFT JOIN evasys_imagesprofile
+                    ON evasys_imagesprofile.ImagesProfile_UserName = evasys_users.User_UserName
+                LEFT JOIN evasys_tanks 
+                    ON evasys_tanks.tank_Id = evasys_vehicle.vehicle_IdTanks
                 WHERE Inspection_Id = `+ Inspection_Id);
 
             if (vehicleReport.length > 0) {
                 const report = vehicleReport[0];
                 if (report.ImagesSign_Data) {
                     const [inspection] = await pool.query(`
-                        SELECT InspectionDate_Date, InspectionSubSpecification_Id, InspectionSubSpecification_Name, InspectionConvention_Name, InspectionSubSpecification_IdSpecification  FROM evains_inspectiondate
-                        INNER JOIN evains_inspectiondata ON evains_inspectiondata.InspectionData_IdDate = evains_inspectiondate.InspectionDate_id
-                        INNER JOIN evains_inspectionsubspecifications ON evains_inspectionsubspecifications.InspectionSubSpecification_Id = evains_inspectiondata.InspectionData_IdSubSpecification
-                        INNER JOIN evains_inspectionconvetions ON evains_inspectionconvetions.InspectionConvention_Id = evains_inspectiondata.InspectionData_IdConvention
-                        WHERE InspectionDate_IdInspection = ${Inspection_Id} AND InspectionDate_Date LIKE '%${InspectionDate_Date}%'`);
+                    SELECT InspectionDate_Date, InspectionSubSpecification_Id, InspectionSubSpecification_Name, InspectionConvention_Name, InspectionSubSpecification_IdSpecification  FROM evains_inspectiondate
+                    INNER JOIN evains_inspectiondata ON evains_inspectiondata.InspectionData_IdDate = evains_inspectiondate.InspectionDate_id
+                    INNER JOIN evains_inspectionsubspecifications ON evains_inspectionsubspecifications.InspectionSubSpecification_Id = evains_inspectiondata.InspectionData_IdSubSpecification
+                    INNER JOIN evains_inspectionconvetions ON evains_inspectionconvetions.InspectionConvention_Id = evains_inspectiondata.InspectionData_IdConvention
+                    WHERE InspectionDate_IdInspection = ${Inspection_Id} AND InspectionDate_Date LIKE '%${InspectionDate_Date}%'`);
 
                     const [breachedcriteria] = await pool.query(`
-                        SELECT DISTINCT breachedCriteria_Id, breachedCriteria_Description,breachedCriteria_ClosingAction, breachedCriteria_UserName,
-                        DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') AS MesAnioInspeccion,
-                        breachedCriteria_Date
-                        FROM evains_inspectiondate eid
-                        LEFT JOIN evains_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
-                            AND DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') = DATE_FORMAT(ebc.breachedCriteria_Date, '%Y-%m')
-                        WHERE DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') LIKE ? AND eid.InspectionDate_IdInspection = ?
-                            AND ebc.breachedCriteria_Date IS NOT NULL
-                        ORDER BY MesAnioInspeccion, ebc.breachedCriteria_Date;
-                        `, [InspectionDate_Date, Inspection_Id]);
+                    SELECT DISTINCT breachedCriteria_Id, breachedCriteria_Description,breachedCriteria_ClosingAction, breachedCriteria_UserName,
+                    DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') AS MesAnioInspeccion,
+                    breachedCriteria_Date
+                    FROM evains_inspectiondate eid
+                    LEFT JOIN evains_breachedcriteria ebc ON eid.InspectionDate_IdInspection = ebc.breachedCriteria_IdInspection
+                        AND DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') = DATE_FORMAT(ebc.breachedCriteria_Date, '%Y-%m')
+                    WHERE DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') LIKE ? AND eid.InspectionDate_IdInspection = ?
+                        AND ebc.breachedCriteria_Date IS NOT NULL
+                    ORDER BY MesAnioInspeccion, ebc.breachedCriteria_Date;
+                    `, [InspectionDate_Date, Inspection_Id]);
 
                     const [specification] = await pool.query(`SELECT * FROM evains_inspectionspecification`);
 

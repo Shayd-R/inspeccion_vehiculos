@@ -21,14 +21,14 @@ export default {
     },
 
     subtitle:{
-        fontSize: 11,
+        fontSize: 10,
         bold: true,
         alignment: 'center', 
         color: '#000000',
     },
 
     label: {
-        fontSize: 6,
+        fontSize: 7,
         bold: true,
         color: '#000000'
     },
@@ -37,6 +37,10 @@ export default {
         fontSize: 10,
         cursiva: true,
         color: '#000000'
+    },
+
+    labelMiddletext: {
+        margin: [0, 45],
     },
 
     labelMiddle: {

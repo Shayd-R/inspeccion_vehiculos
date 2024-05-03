@@ -8,7 +8,7 @@ import pool from './database.js'
 
 
 import inspeccionesRoutes from './routes/inspecciones.routes.js'
-import conductoresRoutes from './routes/conductores.routes.js'
+// import conductoresRoutes from './routes/conductores.routes.js'
 import informesRoutes from './routes/informes.routes.js'
 // Alerts
 // Flash messages
@@ -113,7 +113,7 @@ app.get('/', async (req, res) => {
 });
 
 app.use(inspeccionesRoutes);
-app.use(conductoresRoutes);
+// app.use(conductoresRoutes);
 app.use(informesRoutes);
 
 //PUBLIC FILES

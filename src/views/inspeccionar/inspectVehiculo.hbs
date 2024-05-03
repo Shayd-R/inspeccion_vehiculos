@@ -181,12 +181,12 @@
                 }),
                 success: function (data) {
                     if (data.success) {
+                        updateTable();
                         toastr.success('Haz agregado un registro', 'Registro exitoso', { "positionClass": "toast-top-right my-custom-class" });
                         $('#descripcion').val('');
                         $('#accion-cierre').val('');
                         $('#responsable').val('');
                         $('#dateCriteria').val('');
-                        updateTable();
                     } else {
                         toastr.error(data.message || 'Ingresar datos', 'Error', { "positionClass": "toast-top-right my-custom-class" });
                     }
@@ -197,15 +197,16 @@
             });
         });
     });
-
     function updateTable() {
+
         $.ajax({
             url: `/listCriteria/{{Inspection_Id}}`,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
         
-                // Destruir la instancia DataTable existente (si existe)
+                //console.log(data);
+                //alert(data);
                 if ($.fn.DataTable.isDataTable('#tablaDatos')) {
                     $('#tablaDatos').DataTable().destroy();
                 }

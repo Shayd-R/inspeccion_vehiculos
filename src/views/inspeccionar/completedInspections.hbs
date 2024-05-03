@@ -1,57 +1,85 @@
 <style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
 
-    table,
-    th,
-    td {
-        border: 1px solid black;
-    }
 
-    th,
-    td {
-        padding: 10px;
-        text-align: center;
-    }
 
-    th {
-        background-color: #7eade4;
-    }
+.flex {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-    #month-year {
-        font-size: 18px;
-        margin-bottom: 10px;
-    }
+.btn {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-blue {
+  background-color: #4287f5;
+  color: #fff;
+  border: none;
+}
+
+.btn-blue:hover {
+  background-color: #2c6cdb;
+}
+
+#month-year {
+  margin: 0 20px;
+  font-size: 25px;
+  color: #fff;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  color: #333;
+}
+
+.table td {
+  color: #555;
+}
 </style>
 
-<section class="container">
-    <header>Calendario</header>
 
-    <br>
-  <div style="display: flex; justify-content: space-evenly; align-items: center; margin-top: 20px;">
-    <button style="padding: 10px; font-size: 16px; cursor: pointer; background-color: #3498db; color: #fff; border: none; border-radius: 5px;" onclick="cambiarMes(-1)">Mes Anterior</button>
+<section class="container">
+  <header class="header">Calendario</header>
+
+  <br />
+  <div class="flex justify-center items-center mt-20">
+    <button class="btn btn-blue" onclick="cambiarMes(-1)">Mes Anterior</button>
     <h2 id="month-year"></h2>
-    <button style="padding: 10px; font-size: 16px; cursor: pointer; background-color: #3498db; color: #fff; border: none; border-radius: 5px;" onclick="cambiarMes(1)">Mes Siguiente</button>
+    <button class="btn btn-blue" onclick="cambiarMes(1)">Mes Siguiente</button>
   </div>
 
-    <table id="calendar">
-        <tr>
-            <th>Lun</th>
-            <th>Mar</th>
-            <th>Mié</th>
-            <th>Jue</th>
-            <th>Vie</th>
-            <th>Sáb</th>
-            <th>Dom</th>
-        </tr>
-    </table>
-
-
-
+  <table class="table" id="calendar">
+    <tr>
+      <th>Lun</th>
+      <th>Mar</th>
+      <th>Mié</th>
+      <th>Jue</th>
+      <th>Vie</th>
+      <th>Sáb</th>
+      <th>Dom</th>
+    </tr>
+  </table>
 </section>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
@@ -95,7 +123,7 @@
                 dateCounter++;
                 const days = informeDates.map(item => item.day);
                 if (days.includes(day)) {
-                    cell.style.backgroundColor = 'green'; // Cambiar a tu color preferido
+                    cell.style.backgroundColor = '#bfdc68'; // Cambiar a tu color preferido
                 }
 
                 if (cell.cellIndex === 6) {

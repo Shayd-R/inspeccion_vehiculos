@@ -34,8 +34,8 @@ export const generateContent = (data, inspection, specification, breachedcriteri
 
     for (const spec of specification) {
         const rowHeader = [
-            { fillColor: '#EEECE1', text: 'N°', style: ['label', 'center'] },
-            { fillColor: '#EEECE1', text: spec['InspectionSpecification_Name'], colSpan: 39, style: ['label', 'center'] },
+            { fillColor: '#EEECE1', text: 'N°', style: ['subtitle', 'center'] },
+            { fillColor: '#EEECE1', text: spec['InspectionSpecification_Name'], colSpan: 39, style: ['subtitle', 'center'] },
             ...Array.from({ length: 38 }, () => ({})), // Crear 37 columnas vacías
         ];
         tableBody.push(rowHeader);
@@ -88,7 +88,7 @@ export const generateContent = (data, inspection, specification, breachedcriteri
     const sortedDatesSign = Array.from({ length: 31 }, (_, i) => String(i + 1));
 
     const row = [
-        { colSpan: 9, text: ' \nFIRMA CONDUCTOR \n\n', style: ['title', 'center', 'labelMiddle', 'angle'] },
+        { colSpan: 9, text: 'FIRMA CONDUCTOR', style: ['title', 'center', 'labelMiddletext'] },
         ...Array.from({ length: 8 }, () => ({})), // Crear 7 columnas vacías
 
         // Iterar sobre las fechas
@@ -101,7 +101,7 @@ export const generateContent = (data, inspection, specification, breachedcriteri
             });
 
             if (matchingInspection) {
-                return { image: sign, width: 30, style: ['center', 'labelMiddle'] };
+                return { image: sign, height: 90, style: ['center'] };
             } else {
                 // Agregar una celda vacía si no hay datos en este día
                 return {};
@@ -113,19 +113,12 @@ export const generateContent = (data, inspection, specification, breachedcriteri
 
 
 
-
-
-
-
-
-
-
     const tableTypeVehicle = [];
     switch (data.Vehicle_IdType) {
         case 1:
             tableTypeVehicle.push(
                 [
-                    { text: 'TIPO DE VEHÍCULO:', colSpan: 5, style: ['labelheader', 'center'] },
+                    { text: 'Tipo de vehiculo:', colSpan: 5, style: ['labelheader', 'center'] },
                     ...Array.from({ length: 4 }, () => ({})),
                     { text: 'Sencillo:', colSpan: 4, style: ['labelheader', 'center'] },
                     ...Array.from({ length: 3 }, () => ({})),
@@ -153,7 +146,7 @@ export const generateContent = (data, inspection, specification, breachedcriteri
         case 2:
             tableTypeVehicle.push(
                 [
-                    { text: 'TIPO DE VEHÍCULO:', colSpan: 5, style: ['labelheader', 'center'] },
+                    { text: 'Tipo de vehiculo:', colSpan: 5, style: ['labelheader', 'center'] },
                     ...Array.from({ length: 4 }, () => ({})),
                     { text: 'Sencillo:', colSpan: 4, style: ['labelheader', 'center'] },
                     ...Array.from({ length: 3 }, () => ({})),
@@ -181,7 +174,7 @@ export const generateContent = (data, inspection, specification, breachedcriteri
         case 3:
             tableTypeVehicle.push(
                 [
-                    { text: 'TIPO DE VEHÍCULO:', colSpan: 5, style: ['labelheader', 'center'] },
+                    { text: 'Tipo de vehiculo:', colSpan: 5, style: ['labelheader', 'center'] },
                     ...Array.from({ length: 4 }, () => ({})),
                     { text: 'Sencillo:', colSpan: 4, style: ['labelheader', 'center'] },
                     ...Array.from({ length: 3 }, () => ({})),
@@ -209,7 +202,7 @@ export const generateContent = (data, inspection, specification, breachedcriteri
         case 4:
             tableTypeVehicle.push(
                 [
-                    { text: 'TIPO DE VEHÍCULO:', colSpan: 5, style: ['labelheader', 'center'] },
+                    { text: 'Tipo de vehiculo:', colSpan: 5, style: ['labelheader', 'center'] },
                     ...Array.from({ length: 4 }, () => ({})),
                     { text: 'Sencillo:', colSpan: 4, style: ['labelheader', 'center'] },
                     ...Array.from({ length: 3 }, () => ({})),
@@ -237,7 +230,7 @@ export const generateContent = (data, inspection, specification, breachedcriteri
         case 5:
             tableTypeVehicle.push(
                 [
-                    { text: 'TIPO DE VEHÍCULO:', colSpan: 5, style: ['labelheader', 'center'] },
+                    { text: 'Tipo de vehiculo:', colSpan: 5, style: ['labelheader', 'center'] },
                     ...Array.from({ length: 4 }, () => ({})),
                     { text: 'Sencillo:', colSpan: 4, style: ['labelheader', 'center'] },
                     ...Array.from({ length: 3 }, () => ({})),
@@ -264,9 +257,6 @@ export const generateContent = (data, inspection, specification, breachedcriteri
             break;
         default:
     }
-
-    // const tableSign = [];
-
 
     const tableCriteria = [];
 
@@ -310,7 +300,7 @@ export const generateContent = (data, inspection, specification, breachedcriteri
     const content = [
         {
             table: {
-                widths: Array.from({ length: 40 }, () => 'auto'),
+                widths: Array.from({ length: 40 }, () => 10.5),
                 body: [
                     [
                         { colSpan: 8, rowSpan: 3, image: 'src/public/img/logo/logo-number.png', width: 90, style: ['labelMiddle'] },
@@ -360,31 +350,31 @@ export const generateContent = (data, inspection, specification, breachedcriteri
                     ],
                     ...tableTypeVehicle,
                     [
-                        { text: 'VEN. LICENCIA DE CONDUCCION:', colSpan: 7, style: ['labelheader', 'center'] },
+                        { text: 'VEN. LICENCIA DE CONDUCCION: ', colSpan: 7, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 6 }, () => ({})),
-                        { text: data.ExpirationDate, colSpan: 6, style: ['labelheader', 'center'] },
+                        { text: data.Formatted_ExpirationDate, colSpan: 6, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 5 }, () => ({})),
-                        { text: 'VEN. REVISION TECNICO MECANICA:', colSpan: 9, style: ['labelheader', 'center'] },
+                        { text: 'VEN. REVISION TECNICO MECANICA: \n', colSpan: 9, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 8 }, () => ({})),
-                        { text: '', colSpan: 5, style: ['labelheader', 'center'] },
+                        { text: data.Formatted_ExpiryMechanicalTechnicalReview, colSpan: 5, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 4 }, () => ({})),
                         { text: 'VEN. SOAT:', colSpan: 7, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 6 }, () => ({})),
-                        { text: '', colSpan: 6, style: ['labelheader', 'center'] },
+                        { text: data.Formatted_ExpirySoat, colSpan: 6, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 5 }, () => ({})),
                     ],
                     [
                         { text: 'VEN. LINEA DE VIDA:', colSpan: 7, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 6 }, () => ({})),
-                        { text: '', colSpan: 6, style: ['labelheader', 'center'] },
+                        { text: data.Formatted_ExpiryLifeline, colSpan: 6, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 5 }, () => ({})),
                         { text: 'VEN. POLIZA DE RESPONSABILIDAD CIVIL:', colSpan: 9, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 8 }, () => ({})),
-                        { text: '', colSpan: 5, style: ['label', 'labelLeft'] },
+                        { text: data.Formatted_ExpiryCivilLiabilityPolicy, colSpan: 5, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 4 }, () => ({})),
                         { text: 'VEN. POLIZA CIVIL HIDROCARBUROS:', colSpan: 7, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 6 }, () => ({})),
-                        { text: '', colSpan: 6, style: ['labelheader', 'center'] },
+                        { text: data.Formatted_ExpiryCivilHydricarbidsPolicy, colSpan: 6, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 5 }, () => ({})),
                     ],
                     [
@@ -392,19 +382,19 @@ export const generateContent = (data, inspection, specification, breachedcriteri
                         ...Array.from({ length: 39 }, () => ({})),
                     ],
                     [
-                        { text: 'PLACA TRAILER: \n\n', colSpan: 7, style: ['labelheader', 'center'] },
+                        { text: 'PLACA TRAILER: \n'+data.tank_TrailerPlate+'\n', colSpan: 7, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 6 }, () => ({})),
-                        { text: 'TABLA DE AFORO:', colSpan: 8, style: ['labelheader', 'center'] },
+                        { text: 'TABLA DE AFORO: \n'+data.tank_CapacityTable+'\n', colSpan: 8, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 7 }, () => ({})),
-                        { text: 'VEN. HIDROESTATICA:', colSpan: 8, style: ['labelheader', 'center'] },
+                        { text: 'VEN. HIDROESTATICA: \n'+data.Formatted_HydrostaticsExpiry+'\n', colSpan: 8, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 7 }, () => ({})),
-                        { text: 'VEN. QUINTA RUEDA', colSpan: 8, style: ['labelheader', 'center'] },
+                        { text: 'VEN. QUINTA RUEDA: \n'+data.Formatted_FifthWheelExpiry+'\n', colSpan: 8, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 7 }, () => ({})),
-                        { text: 'VEN. KING PING:', colSpan: 9, style: ['labelheader', 'center'] },
+                        { text: 'VEN. KING PING: \n'+data.Formatted_KingPinExpiry+'\n', colSpan: 9, style: ['labelheader', 'center'] },
                         ...Array.from({ length: 8 }, () => ({})),
                     ],
                     [
-                        { text: ' ', fillColor: '#FFFF00', colSpan: 40, style: ['labelheader', 'center'] },
+                        { text: ' ', fillColor: '#FFFF00', colSpan: 40 },
                         ...Array.from({ length: 39 }, () => ({})),
                     ],
                     [
@@ -461,16 +451,38 @@ export const generateContent = (data, inspection, specification, breachedcriteri
                         { fillColor: '#ffb102', text: '         ' }, // Cuadro de color amarillo para =No Aplica 
                     ],
                     [
-                        { text: ' ', fillColor: '#FFFF00', colSpan: 40, style: ['labelheader', 'center'] },
+                        { text: ' ', fillColor: '#FFFF00', colSpan: 40},
                         ...Array.from({ length: 39 }, () => ({})),
                     ],
                     ...tableBody,
+                ],
+            },
+            layout: {
+                paddingLeft: function (i, node) {
+                    return 1;
+                },
+                paddingRight: function (i, node) {
+                    return 0;
+                },
+                paddingTop: function (i, node) {
+                    return 2;
+                },
+                paddingBottom: function (i, node) {
+                    return 0;
+                }
+            },
+        },
+        { text: ' ', pageBreak: 'after' },
+        {
+            table: {
+                widths: Array.from({ length: 40 }, () => 10.5),
+                body: [
                     [
-                        { text: ' ', fillColor: '#FFFF00', colSpan: 40, style: ['labelheader', 'center'] },
+                        { text: ' ', fillColor: '#FFFF00', colSpan: 40 },
                         ...Array.from({ length: 39 }, () => ({})),
                     ],
                     ...tableSign,
-                
+
                     [
                         { colSpan: 9, text: ' \nFIRMA AUTORIZACION \n\n', style: ['title', 'center', 'labelMiddle'] },
                         ...Array.from({ length: 8 }, () => ({})),
@@ -478,7 +490,7 @@ export const generateContent = (data, inspection, specification, breachedcriteri
                         ...Array.from({ length: 30 }, () => ({})),
                     ],
                     [
-                        { text: ' ', fillColor: '#FFFF00', colSpan: 40, style: ['labelheader', 'center'] },
+                        { text: ' ', fillColor: '#FFFF00', colSpan: 40},
                         ...Array.from({ length: 39 }, () => ({})),
                     ],
                     [
@@ -486,6 +498,48 @@ export const generateContent = (data, inspection, specification, breachedcriteri
                         ...Array.from({ length: 39 }, () => ({})),
                     ],
                     ...tableCriteria,
+                    [
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                        { text: ' ', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: ' ', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                    ],
+                    [
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                        { text: ' ', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: ' ', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                    ],
+                    [
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                        { text: ' ', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: ' ', colSpan: 10, style: ['labelheader', 'center'] },
+                        ...Array(9).fill({}),
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                        { text: ' ', colSpan: 5, style: ['labelheader', 'center'] },
+                        ...Array(4).fill({}),
+                    ],
                     [
                         { text: 'Registro del Kilometraje actual a fin de mes:', colSpan: 10, style: ['labelheader', 'center'] },
                         ...Array(9).fill({}),

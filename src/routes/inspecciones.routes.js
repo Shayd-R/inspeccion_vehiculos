@@ -219,12 +219,21 @@ router.post('/addCriteria', (req, res) => {
             breachedCriteria_Date,
             breachedCriteria_IdInspection,
         } = req.body;
-
+        const data = { breachedCriteria_Description,
+            breachedCriteria_ClosingAction,
+            breachedCriteria_UserName,
+            breachedCriteria_Date,
+            breachedCriteria_IdInspection};
+        console.log(data);
         if (!breachedCriteria_Description || !breachedCriteria_ClosingAction || !breachedCriteria_UserName || !breachedCriteria_Date || !breachedCriteria_IdInspection) {
+            console.log('false');
+            
             res.json({ success: false });
         } else {
             const sql = 'INSERT INTO evains_breachedcriteria (breachedCriteria_Description, breachedCriteria_ClosingAction, breachedCriteria_UserName, breachedCriteria_Date, breachedCriteria_IdInspection) VALUES (?, ?, ?, ?, ?)';
             pool.query(sql, [breachedCriteria_Description, breachedCriteria_ClosingAction, breachedCriteria_UserName, breachedCriteria_Date, breachedCriteria_IdInspection]);
+            console.log('true');
+            
             res.json({ success: true });
         }
     } else {
@@ -243,6 +252,7 @@ router.get('/listCriteria/:inspection', async (req, res) => {
 
                 const date = `${year}-${month}`;
                 const inspection = req.params.inspection;
+                console.log(inspection+" "+date);
                 const [breachedcriteria] = await pool.query(`
                     SELECT DISTINCT *,
                     DATE_FORMAT(eid.InspectionDate_Date, '%Y-%m') AS MesAnioInspeccion,
@@ -254,6 +264,7 @@ router.get('/listCriteria/:inspection', async (req, res) => {
                         AND ebc.breachedCriteria_Date IS NOT NULL
                     ORDER BY MesAnioInspeccion, ebc.breachedCriteria_Date;
                     `, [date, inspection]);
+                    console.log(breachedcriteria); 
                 res.json(breachedcriteria);
             } else {
                 const error = true;
@@ -275,6 +286,7 @@ router.get('/getDataCriteria/:id', async (req, res) => {
             const id = req.params.id;
             console.log(id);
             const [data] = await pool.query('SELECT * FROM evains_breachedcriteria WHERE breachedCriteria_Id = ?', id);
+            console.log(data);
             res.json(data);
         } catch (error) {
             console.error('Error en la consulta a la base de datos:', error);
@@ -341,6 +353,10 @@ router.get('/deleteCriteria/:id', async (req, res) => {
     }
 });
 
+
+
+
+
 router.get('/editLink/:Inspection_Id', async (req, res) => {
     if (req.session && req.session.user) {
         try {
@@ -384,9 +400,9 @@ router.post('/addInspect', async (req, res) => {
                 idTrailerPlate, capacityTable, hydrostaticExpiration, expiryFifthWheel, kingPinExpiry
             }
             const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", driverId);
-            const driverVerification = driverVerificationData[0];
+            const driverVerification = driverVerificationData[0];//
 
-            if (!vehicleVerification) {
+            if (!driverVerification) {// de donde viene esa variable
                 const [driverVerificationData] = await pool.query("SELECT * FROM drivers WHERE idDriver = ?", driverId);
                 const driverVerification = driverVerificationData[0];
                 if (!driverVerification) {
